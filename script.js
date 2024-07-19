@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const genders = ['♂️', '♀️'];
     const weapons = ['🗡️', '🏹', '🪓', '🔪', '🔨', '⚔️'];
     const districts = Array.from({ length: 12 }, (_, i) => i + 1);
+    const weatherTypes = ['☀️', '🌧️', '⛈️', '❄️', '🌫️'];
 
     const firstNames = [
         'Aria', 'Zephyr', 'Nova', 'Caspian', 'Luna', 'Orion', 'Sage', 'Phoenix', 'Lyra', 'Atlas', 
@@ -56,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: tributes.length + 1,
                 name: maleName,
                 health: 100,
+                hunger: 100,
                 isAlive: true,
                 isBleeding: false,
                 kills: 0,
@@ -66,12 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 weapon: null,
                 personality: generatePersonality(),
                 injuries: [],
-                alliances: []
+                alliances: [],
+                actions: 0 // Track actions for fan favorite
             });
             tributes.push({
                 id: tributes.length + 1,
                 name: femaleName,
                 health: 100,
+                hunger: 100,
                 isAlive: true,
                 isBleeding: false,
                 kills: 0,
@@ -82,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 weapon: null,
                 personality: generatePersonality(),
                 injuries: [],
-                alliances: []
+                alliances: [],
+                actions: 0 // Track actions for fan favorite
             });
         });
 
@@ -99,10 +104,26 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('victors', JSON.stringify(victors));
     };
 
+    const clearVictorsFromStorage = () => {
+        localStorage.removeItem('victors');
+        updateVictorsList();
+    };
+
     const updateVictorsList = () => {
         const victorsList = getVictorsFromStorage();
         const victorsListElement = document.getElementById('victors-list');
-        victorsListElement.innerHTML = victorsList.map(victor => `<li>${victor}</li>`).join('');
+        victorsListElement.innerHTML = victorsList.map((victor, index) => `
+            <div class="victor-item">${index + 1} - ${victor}</div>
+        `).join('');
+    };
+
+    const toggleVictorsList = () => {
+        const victorsList = document.querySelector('.victors-list');
+        victorsList.classList.toggle('collapsed');
+    };
+
+    const toggleDarkMode = () => {
+        document.body.classList.toggle('dark-mode');
     };
 
     let tributes = generateTributes();
@@ -113,15 +134,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let interval;
     let speed = 2000;
     let placementCounter = 24;
+    let currentWeather = '';
 
     const tributesContainer = document.getElementById('tributes-container');
     const dayCounter = document.getElementById('day');
     const timeCounter = document.getElementById('time');
     const dayNightIcon = document.getElementById('day-night-icon');
+    const weatherIcon = document.getElementById('weather-icon');
     const logContainer = document.getElementById('log-container');
     const tributesLeftCounter = document.getElementById('tributes-left');
     const mostKillsCounter = document.getElementById('most-kills');
     const mostKillsNameCounter = document.getElementById('most-kills-name');
+    const fanFavoriteCounter = document.getElementById('fan-favorite');
     const eventFrequencyInput = document.getElementById('event-frequency');
 
     const updateTributesDisplay = () => {
@@ -133,6 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div>${tribute.gender} ${tribute.age}</div>
                 <div class="health-bar">
                     <div class="health-bar-fill" style="width: ${tribute.health}%"></div>
+                </div>
+                <div class="hunger-bar">
+                    <div class="hunger-bar-fill" style="width: ${tribute.hunger}%"></div>
                 </div>
                 <div class="weapon">${tribute.weapon || '🤲'}</div>
                 ${!tribute.isAlive ? `<div class="placement">${tribute.placement}</div>` : ''}
@@ -149,13 +176,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const tributeWithMostKills = tributes.find(t => t.kills === mostKills && mostKills > 0);
         mostKillsCounter.textContent = mostKills > 0 ? mostKills : '0';
         mostKillsNameCounter.textContent = tributeWithMostKills ? tributeWithMostKills.name : 'N/A';
+
+        const mostActions = Math.max(...tributes.map(t => t.actions));
+        const tributeWithMostActions = tributes.find(t => t.actions === mostActions);
+        fanFavoriteCounter.textContent = tributeWithMostActions ? tributeWithMostActions.name : 'N/A';
     };
 
     const addEvent = (message, type) => {
-        events.unshift({ message, type });
-        if (events.length > 10) events.pop(); // Increase log size to 10
+        const formattedHour = hour < 10 ? `0${hour}:00` : `${hour}:00`;
+        events.push({ message: `${formattedHour} - ${message}`, type });
         logContainer.innerHTML = events.map(event => `<div class="event ${event.type}">${event.message}</div>`).join('');
-        logContainer.scrollTop = 0; // Ensure log scrolls to top
+        logContainer.scrollTop = logContainer.scrollHeight; // Ensure log scrolls to bottom
     };
 
     const applyBounceEffect = (tributeId) => {
@@ -166,15 +197,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const applyShakeEffect = (tributeId) => {
+        const tributeElement = document.getElementById(`tribute-${tributeId}`);
+        if (tributeElement) {
+            tributeElement.classList.add('shake');
+            setTimeout(() => tributeElement.classList.remove('shake'), 500);
+        }
+    };
+
     const applyBleedingEffect = (tribute) => {
         if (tribute.isBleeding) {
             const bleedDamage = Math.floor(Math.random() * 5) + 1;
             tribute.health = Math.max(0, tribute.health - bleedDamage);
+            tribute.actions++;
             if (tribute.health === 0) {
                 tribute.isAlive = false;
                 tribute.placement = placementCounter--;
+                applyShakeEffect(tribute.id); // Apply shake effect when tribute dies
+            } else {
+                applyBounceEffect(tribute.id);
             }
-            applyBounceEffect(tribute.id);
         }
     };
 
@@ -182,6 +224,15 @@ document.addEventListener('DOMContentLoaded', () => {
         tributes.forEach(tribute => {
             if (tribute.isAlive) {
                 applyBleedingEffect(tribute);
+                tribute.hunger = Math.max(0, tribute.hunger - 1);
+                if (tribute.hunger === 0 && tribute.health < 100) { // Only reduce health if hunger is zero and health is not full
+                    tribute.health = Math.max(0, tribute.health - 10); // Reduce health if hunger is 0
+                    if (tribute.health === 0) {
+                        tribute.isAlive = false;
+                        tribute.placement = placementCounter--;
+                        applyShakeEffect(tribute.id); // Apply shake effect when tribute dies
+                    }
+                }
                 // Update other attributes here...
             }
         });
@@ -194,9 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (aliveTributes.length <= 1) return;
 
         const eventTypes = [
+            { type: 'nothing', weight: 2 }, // Add more weight for nothing to happen
             { type: 'death', weight: 1 },
             { type: 'fight', weight: hour >= 6 && hour < 18 ? 3 : 1 }, // Less fights at night
-            { type: 'alliance', weight: 1 },
+            { type: 'alliance', weight: 2 }, // Increased alliance chances
             { type: 'resource', weight: 3 },
             { type: 'heal', weight: 2 },
             { type: 'trap', weight: 1 },
@@ -214,56 +266,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let event of eventTypes) {
             if (random < event.weight) {
+                if (event.type === 'nothing') {
+                    return addEvent('Nothing significant happens this hour.', 'nothing');
+                }
+
                 const tribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-                const tribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+                let tribute2 = null;
+                do {
+                    tribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+                } while (tribute1.id === tribute2.id);
 
                 switch (event.type) {
                     case 'death':
                         tribute1.isAlive = false;
                         tribute1.health = 0;
                         tribute1.placement = placementCounter--;
+                        applyShakeEffect(tribute1.id); // Apply shake effect when tribute dies
                         return addEvent(`${tribute1.emoji} ${tribute1.name} has died in the arena.`, 'death');
                     case 'fight':
                         let damage = Math.floor(Math.random() * 30) + 10;
-                        if (Math.random() < 0.1) {
-                            // 10% chance to instantly kill in combat
+                        if (Math.random() < 0.25) { // 25% chance to instantly kill in combat
                             damage = tribute2.health;
+                            addEvent('INSTANT KILL!', 'fight');
                         }
                         if (tribute1.weapon) {
                             damage += 20; // Weapons add more damage
                         }
                         tribute2.health = Math.max(0, tribute2.health - damage);
                         applyBounceEffect(tribute2.id);
+                        tribute1.actions++;
+                        tribute2.actions++;
                         if (tribute2.health === 0) {
                             tribute2.isAlive = false;
                             tribute2.placement = placementCounter--;
                             tribute1.kills += 1;
+                            applyShakeEffect(tribute2.id); // Apply shake effect when tribute dies
                         }
                         return addEvent(
                             `${tribute1.emoji} ${tribute1.name} attacks ${tribute2.emoji} ${tribute2.name} with ${tribute1.weapon || 'bare hands'}, dealing ${damage} damage!${tribute2.health === 0 ? ` ${tribute2.name} has died!` : ''}`,
                             tribute2.health === 0 ? 'death' : 'fight'
                         );
                     case 'alliance':
-                        if (!tribute1.alliances.includes(tribute2.id)) {
+                        if (!tribute1.alliances.includes(tribute2.id) && Math.random() < 0.4 && tribute1.district === tribute2.district) { // 40% chance to align with district
                             tribute1.alliances.push(tribute2.id);
                             tribute2.alliances.push(tribute1.id);
+                            tribute1.actions++;
+                            tribute2.actions++;
+                            return addEvent(`${tribute1.emoji} ${tribute1.name} and ${tribute2.emoji} ${tribute2.name} form an uneasy alliance.`, 'alliance');
+                        }
+                        if (!tribute1.alliances.includes(tribute2.id) && Math.random() < 0.4) { // General alliances more common
+                            tribute1.alliances.push(tribute2.id);
+                            tribute2.alliances.push(tribute1.id);
+                            tribute1.actions++;
+                            tribute2.actions++;
                             return addEvent(`${tribute1.emoji} ${tribute1.name} and ${tribute2.emoji} ${tribute2.name} form an uneasy alliance.`, 'alliance');
                         }
                         break;
                     case 'resource':
                         if (!tribute1.weapon) {
                             tribute1.weapon = weapons[Math.floor(Math.random() * weapons.length)];
+                            tribute1.actions++;
                             return addEvent(`${tribute1.emoji} ${tribute1.name} finds a ${tribute1.weapon}!`, 'resource');
                         }
+                        tribute1.hunger = Math.min(100, tribute1.hunger + 30); // Replenish hunger
+                        tribute1.actions++;
                         return addEvent(`${tribute1.emoji} ${tribute1.name} discovers a hidden cache of supplies.`, 'resource');
                     case 'heal':
                         const healAmount = Math.floor(Math.random() * 30) + 10;
                         tribute1.health = Math.min(100, tribute1.health + healAmount);
+                        tribute1.actions++;
                         return addEvent(`${tribute1.emoji} ${tribute1.name} finds medicine and heals ${healAmount} health.`, 'heal');
                     case 'trap':
                         const trapDamage = Math.floor(Math.random() * 40) + 10;
                         tribute1.health = Math.max(0, tribute1.health - trapDamage);
-                        applyBounceEffect(tribute1.id);
+                        tribute1.actions++;
+                        applyShakeEffect(tribute1.id); // Apply shake effect when tribute gets hurt
                         if (tribute1.health === 0) {
                             tribute1.isAlive = false;
                             tribute1.placement = placementCounter--;
@@ -283,18 +360,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         tributes.forEach(t => {
                             if (t.isAlive) {
                                 t.health = Math.max(0, t.health - weatherDamage);
-                                applyBounceEffect(t.id);
+                                t.actions++;
+                                applyShakeEffect(t.id); // Apply shake effect when tribute gets hurt
                                 if (t.health === 0) {
                                     t.isAlive = false;
                                     t.placement = placementCounter--;
                                 }
                             }
                         });
+                        currentWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
+                        weatherIcon.textContent = currentWeather;
                         return addEvent(`${weatherEvents[Math.floor(Math.random() * weatherEvents.length)]}, affecting all tributes by ${weatherDamage} damage.`, 'weather');
                     case 'accident':
                         const accidentDamage = Math.floor(Math.random() * 40) + 10;
                         tribute1.health = Math.max(0, tribute1.health - accidentDamage);
-                        applyBounceEffect(tribute1.id);
+                        tribute1.actions++;
+                        applyShakeEffect(tribute1.id); // Apply shake effect when tribute gets hurt
                         if (tribute1.health === 0) {
                             tribute1.isAlive = false;
                             tribute1.placement = placementCounter--;
@@ -303,7 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     case 'poison':
                         const poisonDamage = Math.floor(Math.random() * 30) + 20;
                         tribute1.health = Math.max(0, tribute1.health - poisonDamage);
-                        applyBounceEffect(tribute1.id);
+                        tribute1.actions++;
+                        applyShakeEffect(tribute1.id); // Apply shake effect when tribute gets hurt
                         if (tribute1.health === 0) {
                             tribute1.isAlive = false;
                             tribute1.placement = placementCounter--;
@@ -313,11 +395,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         tribute1.health = 0;
                         tribute1.isAlive = false;
                         tribute1.placement = placementCounter--;
+                        applyShakeEffect(tribute1.id); // Apply shake effect when tribute dies
                         return addEvent(`${tribute1.emoji} ${tribute1.name} has died of starvation.`, 'death');
                     case 'wildAnimal':
                         const animalDamage = Math.floor(Math.random() * 40) + 10;
                         tribute1.health = Math.max(0, tribute1.health - animalDamage);
-                        applyBounceEffect(tribute1.id);
+                        tribute1.actions++;
+                        applyShakeEffect(tribute1.id); // Apply shake effect when tribute gets hurt
                         if (tribute1.health === 0) {
                             tribute1.isAlive = false;
                             tribute1.placement = placementCounter--;
@@ -334,7 +418,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         tributes.forEach(t => {
                             if (t.isAlive) {
                                 t.health = Math.max(0, t.health - disasterDamage);
-                                applyBounceEffect(t.id);
+                                t.actions++;
+                                applyShakeEffect(t.id); // Apply shake effect when tribute gets hurt
                                 if (t.health === 0) {
                                     t.isAlive = false;
                                     t.placement = placementCounter--;
@@ -345,7 +430,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     case 'disease':
                         const diseaseDamage = Math.floor(Math.random() * 30) + 10;
                         tribute1.health = Math.max(0, tribute1.health - diseaseDamage);
-                        applyBounceEffect(tribute1.id);
+                        tribute1.actions++;
+                        applyShakeEffect(tribute1.id); // Apply shake effect when tribute gets hurt
                         if (tribute1.health === 0) {
                             tribute1.isAlive = false;
                             tribute1.placement = placementCounter--;
@@ -371,6 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         interval = null;
                         if (aliveTributes.length === 1) {
                             const victor = `${aliveTributes[0].emoji} ${aliveTributes[0].name} from District ${aliveTributes[0].district}`;
+                            document.getElementById(`tribute-${aliveTributes[0].id}`).classList.add('winner');
                             addEvent(`${victor} is the victor of The Hunger Games!`, 'victory');
                             saveVictorToStorage(victor);
                         } else {
@@ -424,6 +511,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pause-button').addEventListener('click', pauseSimulation);
     document.getElementById('resume-button').addEventListener('click', resumeSimulation);
     document.getElementById('restart-button').addEventListener('click', restartSimulation);
+    document.getElementById('clear-victors-button').addEventListener('click', clearVictorsFromStorage);
+    document.getElementById('toggle-dark-mode').addEventListener('click', toggleDarkMode);
+
+    document.querySelector('.victors-list h3').addEventListener('click', toggleVictorsList);
 
     updateTributesDisplay();
     updateScoreboard();

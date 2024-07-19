@@ -6,16 +6,18 @@
   <title>THE HUNGER GAMES</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='25' font-size='30'>🏹</text></svg>">
   <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAADEUlfTAAAAqElEQVR42mNgIAKMAgcGBgbS1tZWUVFR/A8DQyMTkxOp8dA8dTAYkNACgQUSkJXVFbD6+xtbGxkX/FYLGdpYmJi/xdDQwMZxMhES8jMSBYrKx4IYmFgDGIILhEEwaLi1HR/z8vLy+GSctLn0e3srb2xjZhZiYAD2xuDAwCBmBgZBZFQyMjKwVVdXWB3N2NlZeWXt7GhlUVJSPl6xcRGVFRUU5xlh8wDAwDXeo//BzJcHgAAAABJRU5ErkJggg==" type="image/png">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='25' font-size='30'>🏹</text></svg>">
 </head>
 <body>
+  <div class="background"></div>
   <div class="container">
     <div class="header">
       <h1>THE HUNGER GAMES</h1>
       <div class="day-counter">
         <span id="day-card">
           <span class="day-night-icon" id="day-night-icon">☀️</span>
+          <span class="weather-icon" id="weather-icon"></span>
           <div>Day: <span id="day">1</span></div>
           <div>Time: <span id="time">06:00</span></div>
         </span>
@@ -29,15 +31,18 @@
           <button id="pause-button">Pause</button>
           <button id="resume-button">Resume</button>
           <button id="restart-button">Restart</button>
+          <button id="clear-victors-button">Clear Victors</button>
+          <button id="toggle-dark-mode">Toggle Dark Mode</button>
         </div>
         <div class="scoreboard">
           <h3>Scoreboard</h3>
           <div>Tributes Left: <span id="tributes-left">24</span></div>
           <div>Most Kills: <span id="most-kills">0</span> (<span id="most-kills-name">N/A</span>)</div>
+          <div>Fan Favorite: <span id="fan-favorite">N/A</span></div>
         </div>
-        <div class="victors-list">
+        <div class="victors-list collapsed">
           <h3>Previous Victors</h3>
-          <ul id="victors-list"></ul>
+          <div class="victors-content" id="victors-list"></div>
         </div>
         <div class="settings">
           <h3>Settings</h3>
