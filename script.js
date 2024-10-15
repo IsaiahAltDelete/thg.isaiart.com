@@ -14,8 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'Remy', 'Peyton', 'Quincy', 'Rowan', 'Sydney', 'Dylan', 'Logan', 'Parker', 'Rory', 'Sloan',
         'Amara', 'Beau', 'Chance', 'Dahlia', 'Elliot', 'Freya', 'Gideon', 'Hazel', 'Isla', 'Jasper',
         'Kira', 'Lachlan', 'Maeve', 'Nico', 'Opal', 'Piper', 'Quinn', 'Rafael', 'Sierra', 'Teagan',
-        'Ulric', 'Vera', 'Wyatt', 'Xander', 'Yara', 'Zane'
+        'Ulric', 'Vera', 'Wyatt', 'Xander', 'Yara', 'Zane',
+        // Added Names
+        'Hawk', 'Ayla', 'Elio', 'Seren', 'Alden', 'Tessa', 'Juno', 'Callum', 'Willa', 'Bran',
+        'Elara', 'Maven', 'Clover', 'Eris', 'Thorne', 'Galen', 'Vale', 'Rook', 'Kael', 'Maia',
+        'Elowen', 'Frost', 'Vesper', 'Raine', 'Cyrus', 'Dorian', 'Lyric', 'Winter', 'Arrow', 'Talon',
+        'Isolde', 'Sable', 'Aurelia', 'Sol', 'Finnian', 'Juniper', 'Soren', 'Echo', 'Rune', 'Drake',
+        'Elian', 'Lucian', 'Isolde', 'Kalon', 'Sorrel', 'Niamh', 'Corwin', 'Xanthe', 'Liora', 'Selene'
     ];
+
     const lastNames = [
         'Frost', 'Storm', 'Wilde', 'Blackwood', 'Rivers', 'Sky', 'Stone', 'Moon', 'Flame', 'Star', 
         'Vale', 'Haven', 'Thorne', 'Winter', 'Ember', 'Blaze', 'Shadow', 'Lark', 'Fable', 'Noble', 
@@ -24,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
         'Cliff', 'Meadow', 'Ridge', 'Holt', 'Cove', 'Dell', 'Fern', 'Leaf', 'Briar', 'Vale',
         'Knightley', 'Black', 'Dusk', 'Hart', 'Whisper', 'Shade', 'Bright', 'Crest', 'Hollow', 'Dawn',
         'Evergreen', 'Fable', 'Glimmer', 'Haze', 'Jewel', 'Kite', 'Loom', 'Mist', 'Night', 'Owl',
-        'Petal', 'Quest', 'Rune', 'Stone', 'Thyme', 'Underwood', 'Vine', 'Warden', 'Xane', 'Yew', 'Zenith'
+        'Petal', 'Quest', 'Rune', 'Stone', 'Thyme', 'Underwood', 'Vine', 'Warden', 'Xane', 'Yew', 'Zenith',
+        // Added Names
+        'Alder', 'Bane', 'Crimson', 'Frostborn', 'Driftwood', 'Hawke', 'Ironwood', 'Lowell', 'Nightshade', 'Ravenwood',
+        'Silverwind', 'Stormrider', 'Thistle', 'Wildflower', 'Windrider', 'Winterfell', 'Whitestone', 'Wolfstone', 'Duskwalker', 'Ironheart'
     ];
 
     const generateUniqueName = (usedNames, usedFirstNames) => {
