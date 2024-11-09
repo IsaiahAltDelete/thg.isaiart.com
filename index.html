@@ -2,58 +2,586 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>THE HUNGER GAMES</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAADEUlfTAAAAqElEQVR42mNgIAKMAgcGBgbS1tZWUVFR/A8DQyMTkxOp8dA8dTAYkNACgQUSkJXVFbD6+xtbGxkX/FYLGdpYmJi/xdDQwMZxMhES8jMSBYrKx4IYmFgDGIILhEEwaLi1HR/z8vLy+GSctLn0e3srb2xjZhZiYAD2xuDAwCBmBgZBZFQyMjKwVVdXWB3N2NlZeWXt7GhlUVJSPl6xcRGVFRUU5xlh8wDAwDXeo//BzJcHgAAAABJRU5ErkJggg==" type="image/png">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='25' font-size='30'>🏹</text></svg>">
+  <style>
+    /* Ultra-minimalist monochrome design */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #000;
+    }
+    .container {
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 2rem;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .controls button {
+      padding: 1rem 2rem;
+      border: 2px solid #000;
+      border-radius: 15px;
+      background-color: #fff;
+      color: #000;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .controls button:hover {
+      background-color: #000;
+      color: #fff;
+    }
+    .tributes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .tribute {
+      width: 150px;
+      padding: 1.5rem;
+      border: 2px solid #000;
+      border-radius: 15px;
+      background-color: #fff;
+      transition: transform 0.2s;
+      position: relative;
+    }
+    .tribute:hover {
+      transform: scale(1.05);
+    }
+    .tribute.dead {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .tribute.dead .placement {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #721c24;
+      color: #fff;
+      padding: 0.3rem 0.6rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+    .tribute.winner {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .health-bar {
+      width: 100%;
+      background-color: #ccc;
+      height: 10px;
+      border-radius: 5px;
+      margin-top: 0.5rem;
+      position: relative;
+    }
+    .health-bar-fill {
+      background-color: #4caf50;
+      height: 100%;
+      border-radius: 5px;
+    }
+    .log {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 2px solid #000;
+      border-radius: 15px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+    .log-entry {
+      margin-bottom: 1rem;
+    }
+    .log-entry.death {
+      color: red;
+    }
+    .log-entry.fight {
+      color: orange;
+    }
+    .log-entry.alliance {
+      color: green;
+    }
+    .log-entry.resource {
+      color: blue;
+    }
+    .log-entry.heal {
+      color: purple;
+    }
+    .log-entry.natural {
+      color: brown;
+    }
+    .scoreboard {
+      margin-bottom: 2rem;
+    }
+    .scoreboard div {
+      margin-bottom: 0.5rem;
+    }
+    .settings {
+      margin-bottom: 2rem;
+    }
+    .settings label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .settings input[type="range"] {
+      width: 100%;
+    }
+    .victors-button {
+      padding: 1rem 2rem;
+      border: 2px solid #000;
+      border-radius: 15px;
+      background-color: #fff;
+      color: #000;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 2rem;
+    }
+    .victors-button:hover {
+      background-color: #000;
+      color: #fff;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 2rem;
+      border: 2px solid #000;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 600px;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .close {
+      color: #000;
+      float: right;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .victor-item {
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="background"></div>
   <div class="container">
-    <div class="header">
-      <h1>THE HUNGER GAMES</h1>
-      <div class="day-counter">
-        <span id="day-card">
-          <span class="day-night-icon" id="day-night-icon">☀️</span>
-          <span class="weather-icon" id="weather-icon"></span>
-          <div>Day: <span id="day">1</span></div>
-          <div>Time: <span id="time">06:00</span></div>
-        </span>
-      </div>
+    <h1>THE HUNGER GAMES</h1>
+    <div class="controls">
+      <button id="start-button">Start</button>
+      <button id="pause-button">Pause</button>
+      <button id="resume-button">Resume</button>
+      <button id="restart-button">Restart</button>
+      <button id="clear-victors-button">Clear Victors</button>
     </div>
-    <div class="main-content">
-      <div class="tributes" id="tributes-container"></div>
-      <div class="side-content">
-        <div class="controls">
-          <button id="start-button">Start</button>
-          <button id="pause-button">Pause</button>
-          <button id="resume-button">Resume</button>
-          <button id="restart-button">Restart</button>
-          <button id="clear-victors-button">Clear Victors</button>
-          <button id="toggle-dark-mode">Toggle Dark Mode</button>
-        </div>
-        <div class="scoreboard">
-          <h3>Scoreboard</h3>
-          <div>Tributes Left: <span id="tributes-left">24</span></div>
-          <div>Most Kills: <span id="most-kills">0</span> (<span id="most-kills-name">N/A</span>)</div>
-          <div>Fan Favorite: <span id="fan-favorite">N/A</span></div>
-        </div>
-        <div class="victors-list collapsed">
-          <h3>Previous Victors</h3>
-          <div class="victors-content" id="victors-list"></div>
-        </div>
-        <div class="settings">
-          <h3>Settings</h3>
-          <label for="event-frequency">Event Frequency:</label>
-          <input type="range" id="event-frequency" name="event-frequency" min="1" max="10" value="5">
-        </div>
-      </div>
+    <button class="victors-button" id="victors-button">Victors' Village</button>
+    <div class="scoreboard">
+      <div>Day: <span id="day">1</span></div>
+      <div>Time: <span id="time">06:00</span></div>
+      <div>Tributes Left: <span id="tributes-left">24</span></div>
+      <div>Most Kills: <span id="most-kills">0</span> (<span id="most-kills-name">N/A</span>)</div>
+      <div>Fan Favorite: <span id="fan-favorite">N/A</span></div>
     </div>
+    <div class="tributes" id="tributes-container"></div>
     <div class="log" id="log-container"></div>
+    <div class="settings">
+      <label for="event-frequency">Event Frequency:</label>
+      <input type="range" id="event-frequency" name="event-frequency" min="1" max="10" value="5">
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Victors' Village Modal -->
+  <div id="victors-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="victors-close">&times;</span>
+      <h2>Victors' Village</h2>
+      <div id="victors-list"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const weapons = [
+        { name: 'Short Sword', emoji: '🗡️', damage: '1d6' },
+        { name: 'Longbow', emoji: '🏹', damage: '1d8' },
+        { name: 'Battle Axe', emoji: '🪓', damage: '1d8' },
+        { name: 'Dagger', emoji: '🔪', damage: '1d4' },
+        { name: 'Warhammer', emoji: '🔨', damage: '1d8' },
+        { name: 'Greatsword', emoji: '⚔️', damage: '2d6' },
+        // Legendary weapons
+        { name: 'Excalibur', emoji: '🗡️', damage: '3d8', legendary: true },
+        { name: 'Mjolnir', emoji: '🔨', damage: '4d6', legendary: true },
+      ];
+      const skinTones = ['🏻', '🏼', '🏽', '🏾', '🏿'];
+      const genders = ['♂️', '♀️'];
+      const firstNames = [
+        'Aria', 'Zephyr', 'Nova', 'Caspian', 'Luna', 'Orion', 'Sage', 'Phoenix', 'Lyra', 'Atlas',
+        'Kai', 'Jade', 'Ezra', 'Rowan', 'Skye', 'Ember', 'Ash', 'Finn', 'Quinn', 'Raven'
+      ];
+      const lastNames = [
+        'Frost', 'Storm', 'Wilde', 'Blackwood', 'Rivers', 'Sky', 'Stone', 'Moon', 'Flame', 'Star'
+      ];
+      const naturalEvents = [
+        'A sudden storm hits the arena',
+        'An earthquake shakes the ground',
+        'A wildfire spreads rapidly',
+        'A dense fog covers the arena',
+      ];
+      let tributes = [];
+      let events = [];
+      let day = 1;
+      let hour = 6;
+      let interval;
+      let speed = 2000;
+      let placementCounter = 24;
+      let gameOver = false;
+
+      const generateUniqueName = (usedNames) => {
+        let name;
+        do {
+          name = `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
+        } while (usedNames.has(name));
+        usedNames.add(name);
+        return name;
+      };
+
+      const generateEmoji = (gender) => {
+        const baseEmoji = gender === '♂️' ? '👨' : '👩';
+        const skinTone = skinTones[Math.floor(Math.random() * skinTones.length)];
+        return baseEmoji + skinTone;
+      };
+
+      const generateTributes = () => {
+        const usedNames = new Set();
+        let tributes = [];
+        for (let i = 0; i < 24; i++) {
+          const name = generateUniqueName(usedNames);
+          const gender = genders[Math.floor(Math.random() * genders.length)];
+          tributes.push({
+            id: i + 1,
+            name: name,
+            health: 20,
+            AC: 10,
+            attackBonus: 2,
+            isAlive: true,
+            kills: 0,
+            weapon: null,
+            emoji: generateEmoji(gender),
+            actions: 0,
+            alliances: [],
+          });
+        }
+        return tributes;
+      };
+
+      const rollDice = (diceExpression) => {
+        const [numDice, diceType] = diceExpression.toLowerCase().split('d').map(Number);
+        let total = 0;
+        let rolls = [];
+        for (let i = 0; i < numDice; i++) {
+          const roll = Math.floor(Math.random() * diceType) + 1;
+          total += roll;
+          rolls.push(roll);
+        }
+        return { total, rolls };
+      };
+
+      const attack = (attacker, defender) => {
+        const attackRoll = Math.floor(Math.random() * 20) + 1;
+        const attackTotal = attackRoll + attacker.attackBonus;
+        const hit = attackTotal >= defender.AC;
+        let damage = 0;
+        let damageRollResult = null;
+        if (hit) {
+          if (attacker.weapon) {
+            damageRollResult = rollDice(attacker.weapon.damage);
+          } else {
+            damageRollResult = rollDice('1d6');
+          }
+          damage = damageRollResult.total;
+          defender.health = Math.max(0, defender.health - damage);
+        }
+        return {
+          attackRoll,
+          attackTotal,
+          hit,
+          damage,
+          damageRollResult,
+        };
+      };
+
+      const updateTributesDisplay = () => {
+        const tributesContainer = document.getElementById('tributes-container');
+        tributesContainer.innerHTML = tributes.map(tribute => `
+          <div class="tribute ${tribute.isAlive ? '' : 'dead'} ${tribute.isAlive && tribute.placement === 1 ? 'winner' : ''}" id="tribute-${tribute.id}">
+            ${!tribute.isAlive ? `<div class="placement">${tribute.placement}${getOrdinalSuffix(tribute.placement)} Place</div>` : ''}
+            <div>${tribute.emoji} ${tribute.name}</div>
+            <div>HP: ${tribute.health}</div>
+            <div class="health-bar">
+              <div class="health-bar-fill" style="width: ${(tribute.health / 20) * 100}%"></div>
+            </div>
+            <div>Weapon: ${tribute.weapon ? tribute.weapon.emoji + ' ' + tribute.weapon.name : 'None'}</div>
+          </div>
+        `).join('');
+      };
+
+      const getOrdinalSuffix = (i) => {
+        const j = i % 10,
+              k = i % 100;
+        if (j == 1 && k != 11) {
+          return "st";
+        }
+        if (j == 2 && k != 12) {
+          return "nd";
+        }
+        if (j == 3 && k != 13) {
+          return "rd";
+        }
+        return "th";
+      };
+
+      const addEvent = (message, type) => {
+        const logContainer = document.getElementById('log-container');
+        events.unshift({ message, type });
+        logContainer.innerHTML = events.map(event => `
+          <div class="log-entry ${event.type}">${event.message}</div>
+        `).join('');
+      };
+
+      const updateScoreboard = () => {
+        const aliveTributes = tributes.filter(t => t.isAlive);
+        document.getElementById('tributes-left').textContent = aliveTributes.length;
+
+        const mostKills = Math.max(...tributes.map(t => t.kills));
+        const tributeWithMostKills = tributes.find(t => t.kills === mostKills && mostKills > 0);
+        document.getElementById('most-kills').textContent = mostKills > 0 ? mostKills : '0';
+        document.getElementById('most-kills-name').textContent = tributeWithMostKills ? tributeWithMostKills.name : 'N/A';
+
+        const mostActions = Math.max(...tributes.map(t => t.actions));
+        const tributeWithMostActions = tributes.find(t => t.actions === mostActions);
+        document.getElementById('fan-favorite').textContent = tributeWithMostActions ? tributeWithMostActions.name : 'N/A';
+      };
+
+      const getVictorsFromStorage = () => {
+        return JSON.parse(localStorage.getItem('victors')) || [];
+      };
+
+      const saveVictorToStorage = (victor) => {
+        const victors = getVictorsFromStorage();
+        victors.push(victor);
+        localStorage.setItem('victors', JSON.stringify(victors));
+      };
+
+      const clearVictorsFromStorage = () => {
+        localStorage.removeItem('victors');
+        updateVictorsList();
+      };
+
+      const updateVictorsList = () => {
+        const victorsList = getVictorsFromStorage();
+        const victorsListElement = document.getElementById('victors-list');
+        victorsListElement.innerHTML = victorsList.map((victor, index) => `
+          <div class="victor-item">${index + 1} - ${victor}</div>
+        `).join('');
+      };
+
+      const gameLoop = () => {
+        tributes.forEach(tribute => {
+          if (tribute.isAlive && tribute.health <= 0) {
+            tribute.isAlive = false;
+            tribute.placement = placementCounter--;
+          }
+        });
+        updateTributesDisplay();
+        updateScoreboard();
+      };
+
+      const generateEvent = () => {
+        const aliveTributes = tributes.filter(t => t.isAlive);
+        if (aliveTributes.length <= 1) return;
+        const eventTypes = ['fight', 'resource', 'alliance', 'heal', 'natural'];
+        const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+
+        switch (eventType) {
+          case 'fight':
+            const attacker = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+            let defender;
+            do {
+              defender = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+            } while (defender.id === attacker.id || (attacker.alliances.includes(defender.id)));
+            const attackResult = attack(attacker, defender);
+            attacker.actions++;
+            if (attackResult.hit) {
+              if (defender.health === 0) {
+                defender.isAlive = false;
+                defender.placement = placementCounter--;
+                attacker.kills++;
+                addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and hits! (${attackResult.attackRoll} + ${attacker.attackBonus} vs AC ${defender.AC}). Damage: ${attackResult.damageRollResult.rolls.join('+')} = ${attackResult.damage}. ${defender.name} has died.`, 'death');
+              } else {
+                addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and hits! (${attackResult.attackRoll} + ${attacker.attackBonus} vs AC ${defender.AC}). Damage: ${attackResult.damageRollResult.rolls.join('+')} = ${attackResult.damage}. ${defender.name} has ${defender.health} HP left.`, 'fight');
+              }
+            } else {
+              addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and misses. (${attackResult.attackRoll} + ${attacker.attackBonus} vs AC ${defender.AC})`, 'fight');
+            }
+            break;
+          case 'resource':
+            const tribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+            if (!tribute.weapon) {
+              tribute.weapon = weapons[Math.floor(Math.random() * weapons.length)];
+              addEvent(`${tribute.emoji} ${tribute.name} finds a ${tribute.weapon.legendary ? 'legendary ' : ''}${tribute.weapon.name}!`, 'resource');
+            }
+            break;
+          case 'alliance':
+            const tribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+            let tribute2;
+            do {
+              tribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+            } while (tribute2.id === tribute1.id || tribute1.alliances.includes(tribute2.id));
+            tribute1.alliances.push(tribute2.id);
+            tribute2.alliances.push(tribute1.id);
+            tribute1.actions++;
+            tribute2.actions++;
+            addEvent(`${tribute1.emoji} ${tribute1.name} forms an alliance with ${tribute2.emoji} ${tribute2.name}.`, 'alliance');
+            break;
+          case 'heal':
+            const healer = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+            const healAmount = Math.floor(Math.random() * 5) + 5;
+            healer.health = Math.min(20, healer.health + healAmount);
+            healer.actions++;
+            addEvent(`${healer.emoji} ${healer.name} finds a healing herb and restores ${healAmount} HP.`, 'heal');
+            break;
+          case 'natural':
+            const event = naturalEvents[Math.floor(Math.random() * naturalEvents.length)];
+            aliveTributes.forEach(t => {
+              const damage = Math.floor(Math.random() * 5) + 1;
+              t.health = Math.max(0, t.health - damage);
+              if (t.health === 0) {
+                t.isAlive = false;
+                t.placement = placementCounter--;
+              }
+            });
+            addEvent(`${event}, causing damage to all tributes!`, 'natural');
+            break;
+        }
+      };
+
+      const startSimulation = () => {
+        if (!interval) {
+          interval = setInterval(() => {
+            if (!gameOver) {
+              generateEvent();
+              gameLoop();
+              const aliveTributes = tributes.filter(t => t.isAlive);
+              if (aliveTributes.length <= 1) {
+                gameOver = true;
+                clearInterval(interval);
+                interval = null;
+                if (aliveTributes.length === 1) {
+                  aliveTributes[0].placement = 1;
+                  addEvent(`${aliveTributes[0].emoji} ${aliveTributes[0].name} is the victor of The Hunger Games!`, 'victory');
+                  saveVictorToStorage(`${aliveTributes[0].emoji} ${aliveTributes[0].name}`);
+                  updateVictorsList();
+                } else {
+                  addEvent('No survivors. The arena is silent.', 'gameOver');
+                }
+                updateTributesDisplay();
+              }
+              hour += 1;
+              if (hour >= 24) {
+                hour = 0;
+                day += 1;
+              }
+              document.getElementById('day').textContent = day;
+              document.getElementById('time').textContent = hour < 10 ? `0${hour}:00` : `${hour}:00`;
+            }
+          }, speed / document.getElementById('event-frequency').value);
+        }
+      };
+
+      const pauseSimulation = () => {
+        if (interval) {
+          clearInterval(interval);
+          interval = null;
+        }
+      };
+
+      const resumeSimulation = () => {
+        if (!interval && !gameOver) {
+          startSimulation();
+        }
+      };
+
+      const restartSimulation = () => {
+        tributes = generateTributes();
+        events = [];
+        day = 1;
+        hour = 6;
+        gameOver = false;
+        placementCounter = 24;
+        updateTributesDisplay();
+        updateScoreboard();
+        document.getElementById('log-container').innerHTML = '';
+      };
+
+      document.getElementById('start-button').addEventListener('click', startSimulation);
+      document.getElementById('pause-button').addEventListener('click', pauseSimulation);
+      document.getElementById('resume-button').addEventListener('click', resumeSimulation);
+      document.getElementById('restart-button').addEventListener('click', restartSimulation);
+      document.getElementById('clear-victors-button').addEventListener('click', clearVictorsFromStorage);
+
+      // Victors' Village Modal
+      const victorsModal = document.getElementById('victors-modal');
+      const victorsButton = document.getElementById('victors-button');
+      const victorsClose = document.getElementById('victors-close');
+
+      victorsButton.onclick = function() {
+        victorsModal.style.display = "block";
+        updateVictorsList();
+      }
+
+      victorsClose.onclick = function() {
+        victorsModal.style.display = "none";
+      }
+
+      window.onclick = function(event) {
+        if (event.target == victorsModal) {
+          victorsModal.style.display = "none";
+        }
+      }
+
+      tributes = generateTributes();
+      updateTributesDisplay();
+      updateScoreboard();
+    });
+  </script>
 </body>
 </html>
