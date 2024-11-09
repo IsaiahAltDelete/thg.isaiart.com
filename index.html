@@ -123,6 +123,9 @@
     .log-entry.alliance {
       color: green;
     }
+    .log-entry.break_alliance {
+      color: darkred;
+    }
     .log-entry.resource {
       color: blue;
     }
@@ -249,7 +252,8 @@
     <div class="log" id="log-container"></div>
     <div class="settings">
       <label for="event-frequency">Event Frequency:</label>
-      <input type="range" id="event-frequency" name="event-frequency" min="1" max="10" value="5">
+      <input type="range" id="event-frequency" name="event-frequency" min="0" max="4" value="1" step="1">
+      <span id="event-frequency-label">5 Seconds</span>
     </div>
   </div>
 
@@ -325,12 +329,13 @@
         'Snow starts falling heavily',
       ];
       const weatherTypes = ['Clear', 'Rain', 'Storm', 'Fog', 'Heatwave', 'Snow'];
+      const eventIntervals = [1000, 5000, 15000, 30000, 60000];
+      const eventIntervalLabels = ['1 Second', '5 Seconds', '15 Seconds', '30 Seconds', '1 Minute'];
       let tributes = [];
       let events = [];
       let day = 1;
       let hour = 6;
       let interval;
-      let speed = 2000;
       let placementCounter = 24;
       let gameOver = false;
       let currentWeather = 'Clear';
@@ -544,16 +549,29 @@
       const generateEvent = () => {
         const aliveTributes = tributes.filter(t => t.isAlive);
         if (aliveTributes.length <= 1) return;
-        const eventTypes = ['fight', 'resource', 'alliance', 'heal', 'natural', 'hunt', 'forage'];
+        const eventTypes = ['fight', 'resource', 'alliance', 'break_alliance', 'heal', 'natural', 'hunt', 'forage'];
         const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
 
         switch (eventType) {
           case 'fight':
             const attacker = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-            let defender;
-            do {
-              defender = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-            } while (defender.id === attacker.id || (attacker.alliances.includes(defender.id)));
+            let potentialDefenders = aliveTributes.filter(t => t.id !== attacker.id && !attacker.alliances.includes(t.id));
+            if (potentialDefenders.length === 0) {
+              // No valid defenders, break alliance if possible
+              if (attacker.alliances.length > 0) {
+                const allyId = attacker.alliances[Math.floor(Math.random() * attacker.alliances.length)];
+                const ally = tributes.find(t => t.id === allyId);
+                // Break alliance
+                attacker.alliances = attacker.alliances.filter(id => id !== allyId);
+                ally.alliances = ally.alliances.filter(id => id !== attacker.id);
+                addEvent(`${attacker.emoji} ${attacker.name} breaks the alliance with ${ally.emoji} ${ally.name}.`, 'break_alliance');
+                potentialDefenders = [ally];
+              } else {
+                // Only one tribute left, nothing to do
+                return;
+              }
+            }
+            const defender = potentialDefenders[Math.floor(Math.random() * potentialDefenders.length)];
             const attackResult = attack(attacker, defender);
             attacker.actions++;
             if (attackResult.hit) {
@@ -592,6 +610,16 @@
             tribute1.actions++;
             tribute2.actions++;
             addEvent(`${tribute1.emoji} ${tribute1.name} forms an alliance with ${tribute2.emoji} ${tribute2.name}.`, 'alliance');
+            break;
+          case 'break_alliance':
+            const breaker = aliveTributes.find(t => t.alliances.length > 0);
+            if (breaker) {
+              const allyId = breaker.alliances[Math.floor(Math.random() * breaker.alliances.length)];
+              const ally = tributes.find(t => t.id === allyId);
+              breaker.alliances = breaker.alliances.filter(id => id !== allyId);
+              ally.alliances = ally.alliances.filter(id => id !== breaker.id);
+              addEvent(`${breaker.emoji} ${breaker.name} breaks the alliance with ${ally.emoji} ${ally.name}.`, 'break_alliance');
+            }
             break;
           case 'heal':
             const healer = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
@@ -641,36 +669,41 @@
         }
       };
 
+      const startInterval = () => {
+        const intervalValue = eventIntervals[parseInt(document.getElementById('event-frequency').value)];
+        interval = setInterval(() => {
+          if (!gameOver) {
+            generateEvent();
+            gameLoop();
+            const aliveTributes = tributes.filter(t => t.isAlive);
+            if (aliveTributes.length <= 1) {
+              gameOver = true;
+              clearInterval(interval);
+              interval = null;
+              if (aliveTributes.length === 1) {
+                aliveTributes[0].placement = 1;
+                addEvent(`${aliveTributes[0].emoji} ${aliveTributes[0].name} is the victor of The Hunger Games!`, 'victory');
+                saveVictorToStorage(`${aliveTributes[0].emoji} ${aliveTributes[0].name}`);
+                updateVictorsList();
+              } else {
+                addEvent('No survivors. The arena is silent.', 'gameOver');
+              }
+              updateTributesDisplay();
+            }
+            hour += 1;
+            if (hour >= 24) {
+              hour = 0;
+              day += 1;
+            }
+            document.getElementById('day').textContent = day;
+            document.getElementById('time').textContent = hour < 10 ? `0${hour}:00` : `${hour}:00`;
+          }
+        }, intervalValue);
+      };
+
       const startSimulation = () => {
         if (!interval) {
-          interval = setInterval(() => {
-            if (!gameOver) {
-              generateEvent();
-              gameLoop();
-              const aliveTributes = tributes.filter(t => t.isAlive);
-              if (aliveTributes.length <= 1) {
-                gameOver = true;
-                clearInterval(interval);
-                interval = null;
-                if (aliveTributes.length === 1) {
-                  aliveTributes[0].placement = 1;
-                  addEvent(`${aliveTributes[0].emoji} ${aliveTributes[0].name} is the victor of The Hunger Games!`, 'victory');
-                  saveVictorToStorage(`${aliveTributes[0].emoji} ${aliveTributes[0].name}`);
-                  updateVictorsList();
-                } else {
-                  addEvent('No survivors. The arena is silent.', 'gameOver');
-                }
-                updateTributesDisplay();
-              }
-              hour += 1;
-              if (hour >= 24) {
-                hour = 0;
-                day += 1;
-              }
-              document.getElementById('day').textContent = day;
-              document.getElementById('time').textContent = hour < 10 ? `0${hour}:00` : `${hour}:00`;
-            }
-          }, speed / document.getElementById('event-frequency').value);
+          startInterval();
         }
       };
 
@@ -683,7 +716,7 @@
 
       const resumeSimulation = () => {
         if (!interval && !gameOver) {
-          startSimulation();
+          startInterval();
         }
       };
 
@@ -762,6 +795,16 @@
         `;
         tributeModal.style.display = 'block';
       };
+
+      // Event Frequency Slider
+      document.getElementById('event-frequency').addEventListener('input', function() {
+        const index = parseInt(this.value);
+        document.getElementById('event-frequency-label').textContent = eventIntervalLabels[index];
+        if (interval) {
+          clearInterval(interval);
+          startInterval();
+        }
+      });
 
       // Initialize the simulation
       tributes = generateTributes();
