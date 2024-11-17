@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'treasure',
     'stealth_mission',
     'environmental_hazard',
-    'sabotage',
+    // Removed 'sabotage' from here
     'secret_alliance',
     'resource_cache',
     'wildlife_attack'
@@ -392,6 +392,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+
+    // Automatically break all alliances if tributes <= 5
+    const aliveTributes = tributes.filter(t => t.isAlive);
+    if (aliveTributes.length <= 5 && aliveTributes.length > 1) {
+      breakAllAlliances();
+    }
+
     updateTributesDisplay();
     updateScoreboard();
   };
@@ -399,7 +406,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const generateEvent = () => {
     const aliveTributes = tributes.filter(t => t.isAlive);
     if (aliveTributes.length <= 1) return;
-    const eventTypes = ['fight', 'resource', 'alliance', 'break_alliance', 'heal', 'natural', 'hunt', 'forage', ...additionalEvents];
+
+    // Increase the frequency of 'fight' events
+    const eventTypes = [
+      'fight', 'fight', 'fight', // Increased weight for 'fight'
+      'resource', 'alliance', 'break_alliance', 'heal', 'natural',
+      'hunt', 'forage',
+      ...additionalEvents
+    ];
+
     const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
 
     switch (eventType) {
@@ -450,16 +465,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         break;
       case 'alliance':
-        const allianceTribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        let allianceTribute2;
-        do {
-          allianceTribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        } while (allianceTribute2.id === allianceTribute1.id || allianceTribute1.alliances.includes(allianceTribute2.id));
-        allianceTribute1.alliances.push(allianceTribute2.id);
-        allianceTribute2.alliances.push(allianceTribute1.id);
-        allianceTribute1.actions++;
-        allianceTribute2.actions++;
-        addEvent(`${allianceTribute1.emoji} ${allianceTribute1.name} forms an alliance with ${allianceTribute2.emoji} ${allianceTribute2.name}.`, 'alliance');
+        if (aliveTributes.length > 5) { // Only allow alliances if tributes > 5
+          const allianceTribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+          let allianceTribute2;
+          do {
+            allianceTribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+          } while (allianceTribute2.id === allianceTribute1.id || allianceTribute1.alliances.includes(allianceTribute2.id));
+          allianceTribute1.alliances.push(allianceTribute2.id);
+          allianceTribute2.alliances.push(allianceTribute1.id);
+          allianceTribute1.actions++;
+          allianceTribute2.actions++;
+          addEvent(`${allianceTribute1.emoji} ${allianceTribute1.name} forms an alliance with ${allianceTribute2.emoji} ${allianceTribute2.name}.`, 'alliance');
+        }
         break;
       case 'break_alliance':
         const breaker = aliveTributes.find(t => t.alliances.length > 0);
@@ -572,24 +589,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         addEvent(`${selectedHazard} has occurred in the arena, dealing ${hazardDamage} damage to tributes!`, 'environmental_hazard');
         break;
-      case 'sabotage':
-        const saboteur = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        const target = tributes.filter(t => t.id !== saboteur.id && t.isAlive);
-        if (target.length > 0) {
-          const victim = target[Math.floor(Math.random() * target.length)];
-          const sabotageDamage = Math.floor(Math.random() * 3) + 1;
-          victim.health = Math.max(0, victim.health - sabotageDamage);
-          saboteur.actions++;
-          if (victim.health === 0) {
-            victim.isAlive = false;
-            victim.placement = placementCounter--;
-            addEvent(`${saboteur.emoji} ${saboteur.name} sabotages ${victim.emoji} ${victim.name}, dealing ${sabotageDamage} damage and causing death.`, 'sabotage');
-          } else {
-            addEvent(`${saboteur.emoji} ${saboteur.name} sabotages ${victim.emoji} ${victim.name}, dealing ${sabotageDamage} damage.`, 'sabotage');
-            triggerAnimation(victim.id, 'damage');
-          }
-        }
-        break;
       case 'secret_alliance':
         const secretTribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
         let secretTribute2;
@@ -623,6 +622,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         break;
     }
+  };
+
+  const breakAllAlliances = () => {
+    tributes.forEach(tribute => {
+      if (tribute.alliances.length > 0) {
+        tribute.alliances.forEach(allyId => {
+          const ally = tributes.find(t => t.id === allyId);
+          if (ally) {
+            ally.alliances = ally.alliances.filter(id => id !== tribute.id);
+          }
+        });
+        tribute.alliances = [];
+      }
+    });
+    addEvent('All alliances have been broken as the number of tributes dwindles.', 'break_alliance');
   };
 
   const startInterval = () => {
