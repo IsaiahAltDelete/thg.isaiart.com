@@ -1,3 +1,4 @@
+
 /* Reset some default styles */
 * {
   margin: 0;
@@ -22,6 +23,7 @@ header {
 
 header h1 {
   margin-bottom: 10px;
+  letter-spacing: 2px;
 }
 
 header .info {
@@ -68,8 +70,43 @@ main {
   margin: 0 20px;
 }
 
+#event-frequency-label {
+  margin-bottom: 5px;
+}
+
 #event-frequency {
   width: 150px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 5px;
+  background: #444;
+  outline: none;
+  transition: background 0.3s;
+}
+
+#event-frequency::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2196f3; /* Changed to match theme */
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#event-frequency::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2196f3; /* Changed to match theme */
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#event-frequency:hover {
+  background: #555;
 }
 
 #victors-button {
@@ -108,7 +145,7 @@ main {
   border-radius: 8px;
   cursor: pointer;
   position: relative;
-  transition: transform 0.2s, background-color 0.3s;
+  transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
 }
 
 .tribute:hover {
@@ -119,6 +156,18 @@ main {
 .tribute.dead {
   background-color: #555;
   opacity: 0.7;
+  position: relative;
+}
+
+.tribute.dead::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 0, 0, 0.5); /* Red overlay */
+  border-radius: 8px;
 }
 
 .tribute.winner {
@@ -171,6 +220,7 @@ main {
   border-radius: 8px;
   max-height: 300px;
   overflow-y: auto;
+  position: relative;
 }
 
 #log-section h2 {
@@ -182,6 +232,7 @@ main {
   display: flex;
   flex-direction: column-reverse;
   gap: 5px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .log-entry {
@@ -189,6 +240,9 @@ main {
   border-radius: 5px;
   background-color: #444;
   font-size: 0.95em;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.5s forwards;
 }
 
 .log-entry.fight {
@@ -254,6 +308,19 @@ main {
   background-color: #616161;
 }
 
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Styling */
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -304,9 +371,59 @@ main {
   cursor: pointer;
 }
 
-footer {
-  background-color: #2c2c2c;
-  text-align: center;
-  padding: 10px;
-  font-size: 0.9em;
+/* Card Animation Effects */
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+@keyframes glowRed {
+  from { box-shadow: 0 0 10px red; }
+  to { box-shadow: 0 0 0px red; }
+}
+
+@keyframes glowGreen {
+  from { box-shadow: 0 0 10px green; }
+  to { box-shadow: 0 0 0px green; }
+}
+
+@keyframes glowBlue {
+  from { box-shadow: 0 0 10px blue; }
+  to { box-shadow: 0 0 0px blue; }
+}
+
+.tribute.damage {
+  animation: shake 0.5s;
+  animation-fill-mode: forwards;
+  box-shadow: 0 0 10px red;
+}
+
+.tribute.heal {
+  animation: glowGreen 1s forwards;
+}
+
+.tribute.heal-blue {
+  animation: glowBlue 1s forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  header .info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-content {
+    width: 90%;
+    margin: 20% auto;
+  }
 }
