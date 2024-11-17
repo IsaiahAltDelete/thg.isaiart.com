@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   const weapons = [
     { name: 'Short Sword', emoji: '🗡️', damage: '1d6' },
@@ -324,14 +323,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const logEntry = document.createElement('div');
     logEntry.classList.add('log-entry', type);
     logEntry.textContent = message;
-    logContainer.prepend(logEntry);
+    logContainer.insertBefore(logEntry, logContainer.firstChild); // Insert at the top
 
     // Remove older events if more than 25
     if (logContainer.children.length > 25) {
       logContainer.removeChild(logContainer.lastChild);
     }
 
-    // Smooth scroll to top
+    // Auto-scroll to the top (newest message)
     logContainer.scrollTop = 0;
   };
 
@@ -367,9 +366,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateVictorsList = () => {
     const victorsList = getVictorsFromStorage();
     const victorsListElement = document.getElementById('victors-list');
-    victorsListElement.innerHTML = victorsList.map((victor, index) => `
-      <div class="victor-item">${index + 1} - ${victor}</div>
-    `).join('');
+    if (victorsList.length === 0) {
+      victorsListElement.innerHTML = '<p>No victors yet.</p>';
+    } else {
+      victorsListElement.innerHTML = victorsList.map((victor, index) => `
+        <div class="victor-item">${index + 1} - ${victor}</div>
+      `).join('');
+    }
   };
 
   const gameLoop = () => {
