@@ -13,34 +13,85 @@ document.addEventListener('DOMContentLoaded', () => {
   const skinTones = ['🏻', '🏼', '🏽', '🏾', '🏿'];
   const genders = ['♂️', '♀️'];
   const districts = Array.from({ length: 12 }, (_, i) => i + 1);
+  
+  // Updated firstNames array with more common names from different countries
   const firstNames = [
-    'Aria', 'Zephyr', 'Nova', 'Caspian', 'Luna', 'Orion', 'Sage', 'Phoenix', 'Lyra', 'Atlas',
-    'Kai', 'Jade', 'Ezra', 'Rowan', 'Skye', 'Ember', 'Ash', 'Finn', 'Quinn', 'Raven',
-    'Eden', 'Reed', 'Jett', 'Milo', 'Ivy', 'Faye', 'Blake', 'Coral', 'Dane', 'Wren',
-    'Leo', 'Mara', 'Avery', 'Asher', 'Harper', 'River', 'Storm', 'Indigo', 'Zara', 'Silas',
-    'Riley', 'Kendall', 'Jordan', 'Morgan', 'Casey', 'Taylor', 'Reese', 'Alex', 'Skyler', 'Blair',
-    'Remy', 'Peyton', 'Quincy', 'Sydney', 'Dylan', 'Logan', 'Parker', 'Rory', 'Sloan', 'Amara',
-    'Beau', 'Chance', 'Dahlia', 'Elliot', 'Freya', 'Gideon', 'Hazel', 'Isla', 'Jasper', 'Kira',
-    'Lachlan', 'Maeve', 'Nico', 'Opal', 'Piper', 'Rafael', 'Sierra', 'Teagan', 'Ulric',
-    'Vera', 'Wyatt', 'Xander', 'Yara', 'Zane', 'Hawk', 'Ayla', 'Elio', 'Seren', 'Alden',
-    'Tessa', 'Juno', 'Callum', 'Willa', 'Bran', 'Elara', 'Maven', 'Clover', 'Eris', 'Thorne',
-    'Galen', 'Vale', 'Rook', 'Kael', 'Maia', 'Elowen', 'Frost', 'Vesper', 'Raine', 'Cyrus',
-    'Dorian', 'Lyric', 'Winter', 'Arrow', 'Talon', 'Isolde', 'Sable', 'Aurelia', 'Sol', 'Finnian',
-    'Juniper', 'Soren', 'Echo', 'Rune', 'Drake', 'Elian', 'Lucian', 'Kalon', 'Sorrel',
-    'Niamh', 'Corwin', 'Xanthe', 'Liora', 'Selene'
+    // English
+    'James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda',
+    'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
+    'Thomas', 'Sarah', 'Charles', 'Karen',
+    // Spanish
+    'José', 'María', 'Luis', 'Carmen', 'Carlos', 'Ana', 'Juan', 'Lucía',
+    'Miguel', 'Sofía',
+    // Chinese
+    'Wei', 'Jing', 'Li', 'Hao', 'Mei', 'Xiao', 'Jun', 'Fang',
+    'Ying', 'Tian',
+    // Indian
+    'Amit', 'Priya', 'Ravi', 'Anjali', 'Vijay', 'Deepa', 'Rahul', 'Pooja',
+    'Sanjay', 'Neha',
+    // Russian
+    'Ivan', 'Olga', 'Dmitry', 'Natalia', 'Sergey', 'Ekaterina', 'Alexei', 'Tatiana',
+    'Mikhail', 'Anastasia',
+    // Arabic
+    'Ahmed', 'Fatima', 'Mohamed', 'Aisha', 'Omar', 'Layla', 'Youssef', 'Huda',
+    'Hassan', 'Mariam',
+    // French
+    'Jean', 'Marie', 'Pierre', 'Sophie', 'Michel', 'Isabelle', 'Alain', 'Claire',
+    'Laurent', 'Céline',
+    // German
+    'Hans', 'Anna', 'Karl', 'Emma', 'Fritz', 'Lena', 'Heinz', 'Mia',
+    'Günther', 'Lea',
+    // Japanese
+    'Hiroshi', 'Yuki', 'Kenji', 'Aiko', 'Takashi', 'Miyu', 'Daiki', 'Sakura',
+    'Yuto', 'Hana',
+    // Additional international names
+    'Liam', 'Noah', 'Oliver', 'Elijah', 'Benjamin', 'Lucas',
+    'Henry', 'Alexander', 'Charlotte', 'Amelia', 'Olivia', 'Emma',
+    'Ava', 'Sophia', 'Isabella', 'Mia', 'Evelyn', 'Harper',
+    // Adding more names to ensure diversity
+    'Mateo', 'Santiago', 'Valentina', 'Leonardo', 'Gabriela', 'Sebastián', 'Camila',
+    'Fernando', 'Catalina', 'Diego', 'Daniela', 'Emilio', 'Julieta', 'Ricardo', 'Luciana',
+    'Pedro', 'Bianca', 'Francisco', 'Mariana'
   ];
+
+  // Updated lastNames array with more common names from different countries
   const lastNames = [
-    'Frost', 'Storm', 'Wilde', 'Blackwood', 'Rivers', 'Sky', 'Stone', 'Moon', 'Flame', 'Star',
-    'Vale', 'Haven', 'Thorne', 'Winter', 'Ember', 'Blaze', 'Shadow', 'Lark', 'Fable', 'Noble',
-    'Brook', 'Shade', 'Finch', 'Knight', 'Gale', 'Hunter', 'Fox', 'Ash', 'Viper', 'Falcon',
-    'Moss', 'Reed', 'Bluff', 'Dune', 'Pine', 'Grove', 'Heath', 'Marsh', 'Glade', 'Field',
-    'Cliff', 'Meadow', 'Ridge', 'Holt', 'Cove', 'Dell', 'Fern', 'Leaf', 'Briar', 'Vale',
-    'Knightley', 'Black', 'Dusk', 'Hart', 'Whisper', 'Shade', 'Bright', 'Crest', 'Hollow', 'Dawn',
-    'Evergreen', 'Fable', 'Glimmer', 'Haze', 'Jewel', 'Kite', 'Loom', 'Mist', 'Night', 'Owl',
-    'Petal', 'Quest', 'Rune', 'Stone', 'Thyme', 'Underwood', 'Vine', 'Warden', 'Xane', 'Yew', 'Zenith',
-    'Alder', 'Bane', 'Crimson', 'Frostborn', 'Driftwood', 'Hawke', 'Ironwood', 'Lowell', 'Nightshade', 'Ravenwood',
-    'Silverwind', 'Stormrider', 'Thistle', 'Wildflower', 'Windrider', 'Winterfell', 'Whitestone', 'Wolfstone', 'Duskwalker', 'Ironheart'
+    // English
+    'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
+    'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
+    'Taylor', 'Moore', 'Jackson', 'Martin',
+    // Spanish
+    'García', 'Martínez', 'Rodríguez', 'López', 'Hernández', 'Sánchez', 'Pérez', 'Gómez',
+    'Martín', 'Jiménez',
+    // Chinese
+    'Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao',
+    'Wu', 'Zhou',
+    // Indian
+    'Patel', 'Singh', 'Sharma', 'Kumar', 'Gupta', 'Verma', 'Reddy', 'Mehta',
+    'Jain', 'Shah',
+    // Russian
+    'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasiliev', 'Sokolov',
+    'Mikhailov', 'Fedorov',
+    // Arabic
+    'Mohamed', 'Ali', 'Hassan', 'Hussein', 'Ahmed', 'Abdullah', 'Khan', 'Rahman',
+    'Saleh', 'Amin',
+    // French
+    'Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand',
+    'Leroy', 'Moreau',
+    // German
+    'Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker',
+    'Hoffmann', 'Schulz',
+    // Japanese
+    'Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura',
+    'Kobayashi', 'Kato',
+    // Additional international last names
+    'Nguyen', 'Tran', 'Le', 'Pham', 'Hoang', 'Dang', 'Bui', 'Do',
+    'Vo', 'Dinh', 'Pham', 'Mai', 'Lai', 'Ngo', 'Lam', 'Ho',
+    'Chan', 'Lee', 'Kim', 'Park',
+    'Singh', 'Khan', 'Chowdhury', 'Rana', 'Das', 'Gupta', 'Joshi', 'Nair',
+    'Bhattacharya', 'Mitra'
   ];
+
   const naturalEvents = [
     'A sudden storm hits the arena',
     'An earthquake shakes the ground',
