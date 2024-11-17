@@ -10,11 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Excalibur', emoji: '🗡️', damage: '3d8', legendary: true },
     { name: 'Mjolnir', emoji: '🔨', damage: '4d6', legendary: true },
   ];
+  
   const skinTones = ['🏻', '🏼', '🏽', '🏾', '🏿'];
   const genders = ['Male', 'Female'];
   const genderEmojis = {
     'Male': '👨',
-    'Female': '👩'
+    'Female': '👩‍🦰' // Using '👩‍🦰' to represent female with hair, can adjust as needed
   };
   const districts = Array.from({ length: 12 }, (_, i) => i + 1);
   
@@ -137,9 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
     'Lightning strikes the arena',
     'A landslide blocks a major area',
   ];
+  
   const weatherTypes = ['Clear', 'Rain', 'Storm', 'Fog', 'Heatwave', 'Snow', 'Volcano', 'Lightning', 'Landslide'];
   const eventIntervals = [1000, 5000, 15000, 30000, 60000];
   const eventIntervalLabels = ['1 Second', '5 Seconds', '15 Seconds', '30 Seconds', '1 Minute'];
+  
   let tributes = [];
   let events = [];
   let day = 1;
@@ -273,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div>${tribute.emoji} ${tribute.name}</div>
         <div>District ${tribute.district}</div>
         <div>Age: ${tribute.age}</div>
-        <div>Gender: ${tribute.gender}</div>
+        <!-- Removed Gender Display from Tribute Preview -->
         <div>HP: ${tribute.health}</div>
         <div class="health-bar">
           <div class="health-bar-fill" style="width: ${(tribute.health / 20) * 100}%"></div>
