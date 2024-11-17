@@ -11,7 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Mjolnir', emoji: '🔨', damage: '4d6', legendary: true },
   ];
   const skinTones = ['🏻', '🏼', '🏽', '🏾', '🏿'];
-  const genders = ['♂️', '♀️'];
+  const genders = ['Male', 'Female', 'Non-binary'];
+  const genderEmojis = {
+    'Male': '♂️',
+    'Female': '♀️',
+    'Non-binary': '⚧️'
+  };
   const districts = Array.from({ length: 12 }, (_, i) => i + 1);
   
   // Updated firstNames array with more common names from different countries
@@ -100,8 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
     'A torrential rain begins',
     'A blistering heatwave strikes',
     'Snow starts falling heavily',
+    'A volcanic eruption occurs nearby',
+    'Lightning strikes the arena',
+    'A landslide blocks a major area',
   ];
-  const weatherTypes = ['Clear', 'Rain', 'Storm', 'Fog', 'Heatwave', 'Snow'];
+  const weatherTypes = ['Clear', 'Rain', 'Storm', 'Fog', 'Heatwave', 'Snow', 'Volcano', 'Lightning', 'Landslide'];
   const eventIntervals = [1000, 5000, 15000, 30000, 60000];
   const eventIntervalLabels = ['1 Second', '5 Seconds', '15 Seconds', '30 Seconds', '1 Minute'];
   let tributes = [];
@@ -112,6 +120,18 @@ document.addEventListener('DOMContentLoaded', () => {
   let placementCounter = 24;
   let gameOver = false;
   let currentWeather = 'Clear';
+
+  // Added: Define possible new events
+  const additionalEvents = [
+    'trap',
+    'treasure',
+    'stealth_mission',
+    'environmental_hazard',
+    'sabotage',
+    'secret_alliance',
+    'resource_cache',
+    'wildlife_attack'
+  ];
 
   const generateUniqueName = (usedNames, usedFirstNames) => {
     let name;
@@ -125,10 +145,16 @@ document.addEventListener('DOMContentLoaded', () => {
     return name;
   };
 
+  const generateGender = () => {
+    return genders[Math.floor(Math.random() * genders.length)];
+  };
+
+  const generateAge = () => {
+    return Math.floor(Math.random() * 3) + 16; // Ages between 16 and 18
+  };
+
   const generateEmoji = (gender) => {
-    const baseEmoji = gender === '♂️' ? '👨' : '👩';
-    const skinTone = skinTones[Math.floor(Math.random() * skinTones.length)];
-    return baseEmoji + skinTone;
+    return genderEmojis[gender] || '⚧️';
   };
 
   const generateStats = () => {
@@ -147,10 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
     districts.forEach(district => {
       for (let g = 0; g < 2; g++) {
         const name = generateUniqueName(usedNames, usedFirstNames);
-        const gender = genders[g];
+        const gender = generateGender();
+        const age = generateAge();
         tributes.push({
           id: tributes.length + 1,
           name: name,
+          gender: gender,
+          age: age,
           health: 20,
           hunger: 100,
           AC: 10,
@@ -213,6 +242,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ${!tribute.isAlive ? `<div class="placement">${tribute.placement}${getOrdinalSuffix(tribute.placement)} Place</div>` : ''}
         <div>${tribute.emoji} ${tribute.name}</div>
         <div>District ${tribute.district}</div>
+        <div>Age: ${tribute.age}</div>
+        <div>Gender: ${tribute.gender}</div>
         <div>HP: ${tribute.health}</div>
         <div class="health-bar">
           <div class="health-bar-fill" style="width: ${(tribute.health / 20) * 100}%"></div>
@@ -322,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const generateEvent = () => {
     const aliveTributes = tributes.filter(t => t.isAlive);
     if (aliveTributes.length <= 1) return;
-    const eventTypes = ['fight', 'resource', 'alliance', 'break_alliance', 'heal', 'natural', 'hunt', 'forage'];
+    const eventTypes = ['fight', 'resource', 'alliance', 'break_alliance', 'heal', 'natural', 'hunt', 'forage', ...additionalEvents];
     const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
 
     switch (eventType) {
@@ -361,28 +392,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         break;
       case 'resource':
-        const tribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        if (!tribute.weapon) {
-          tribute.weapon = weapons[Math.floor(Math.random() * weapons.length)];
-          tribute.inventory.push(tribute.weapon);
-          addEvent(`${tribute.emoji} ${tribute.name} finds a ${tribute.weapon.legendary ? 'legendary ' : ''}${tribute.weapon.name}!`, 'resource');
+        const resourceTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        if (!resourceTribute.weapon) {
+          resourceTribute.weapon = weapons[Math.floor(Math.random() * weapons.length)];
+          resourceTribute.inventory.push(resourceTribute.weapon);
+          addEvent(`${resourceTribute.emoji} ${resourceTribute.name} finds a ${resourceTribute.weapon.legendary ? 'legendary ' : ''}${resourceTribute.weapon.name}!`, 'resource');
         } else {
           const itemFound = { name: 'Food Ration', effect: 'hunger', value: 20 };
-          tribute.inventory.push(itemFound);
-          addEvent(`${tribute.emoji} ${tribute.name} finds a ${itemFound.name}.`, 'resource');
+          resourceTribute.inventory.push(itemFound);
+          addEvent(`${resourceTribute.emoji} ${resourceTribute.name} finds a ${itemFound.name}.`, 'resource');
         }
         break;
       case 'alliance':
-        const tribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        let tribute2;
+        const allianceTribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        let allianceTribute2;
         do {
-          tribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        } while (tribute2.id === tribute1.id || tribute1.alliances.includes(tribute2.id));
-        tribute1.alliances.push(tribute2.id);
-        tribute2.alliances.push(tribute1.id);
-        tribute1.actions++;
-        tribute2.actions++;
-        addEvent(`${tribute1.emoji} ${tribute1.name} forms an alliance with ${tribute2.emoji} ${tribute2.name}.`, 'alliance');
+          allianceTribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        } while (allianceTribute2.id === allianceTribute1.id || allianceTribute1.alliances.includes(allianceTribute2.id));
+        allianceTribute1.alliances.push(allianceTribute2.id);
+        allianceTribute2.alliances.push(allianceTribute1.id);
+        allianceTribute1.actions++;
+        allianceTribute2.actions++;
+        addEvent(`${allianceTribute1.emoji} ${allianceTribute1.name} forms an alliance with ${allianceTribute2.emoji} ${allianceTribute2.name}.`, 'alliance');
         break;
       case 'break_alliance':
         const breaker = aliveTributes.find(t => t.alliances.length > 0);
@@ -402,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addEvent(`${healer.emoji} ${healer.name} finds a healing herb and restores ${healAmount} HP.`, 'heal');
         break;
       case 'natural':
-        const event = naturalEvents[Math.floor(Math.random() * naturalEvents.length)];
+        const naturalEvent = naturalEvents[Math.floor(Math.random() * naturalEvents.length)];
         currentWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
         document.getElementById('weather').textContent = currentWeather;
         aliveTributes.forEach(t => {
@@ -413,30 +444,123 @@ document.addEventListener('DOMContentLoaded', () => {
             t.placement = placementCounter--;
           }
         });
-        addEvent(`${event}, causing damage to all tributes!`, 'natural');
+        addEvent(`${naturalEvent}, causing damage to all tributes!`, 'natural');
         break;
-      case 'hunt':
-        const hunter = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        const success = Math.random() < hunter.stats.agility / 20;
-        hunter.actions++;
-        if (success) {
-          const foodFound = Math.floor(Math.random() * 20) + 10;
-          hunter.hunger = Math.min(100, hunter.hunger + foodFound);
-          addEvent(`${hunter.emoji} ${hunter.name} successfully hunts and gains ${foodFound}% hunger.`, 'resource');
+      // New Event Types
+      case 'trap':
+        const trapTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        const trapDamage = Math.floor(Math.random() * 5) + 1;
+        trapTribute.health = Math.max(0, trapTribute.health - trapDamage);
+        trapTribute.actions++;
+        if (trapTribute.health === 0) {
+          trapTribute.isAlive = false;
+          trapTribute.placement = placementCounter--;
+          addEvent(`${trapTribute.emoji} ${trapTribute.name} triggered a trap and took ${trapDamage} damage, resulting in death.`, 'trap');
         } else {
-          addEvent(`${hunter.emoji} ${hunter.name} fails to hunt anything.`, 'resource');
+          addEvent(`${trapTribute.emoji} ${trapTribute.name} triggered a trap and took ${trapDamage} damage.`, 'trap');
         }
         break;
-      case 'forage':
-        const forager = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        const forageSuccess = Math.random() < forager.stats.intelligence / 20;
-        forager.actions++;
-        if (forageSuccess) {
-          const foodFound = Math.floor(Math.random() * 15) + 5;
-          forager.hunger = Math.min(100, forager.hunger + foodFound);
-          addEvent(`${forager.emoji} ${forager.name} forages and finds edible plants, gaining ${foodFound}% hunger.`, 'resource');
+      case 'treasure':
+        const treasureTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        const treasureType = Math.random() < 0.3 ? 'legendary_weapon' : 'rare_item';
+        if (treasureType === 'legendary_weapon') {
+          const legendaryWeapons = weapons.filter(w => w.legendary);
+          if (legendaryWeapons.length > 0) {
+            const weapon = legendaryWeapons[Math.floor(Math.random() * legendaryWeapons.length)];
+            treasureTribute.weapon = weapon;
+            treasureTribute.inventory.push(weapon);
+            addEvent(`${treasureTribute.emoji} ${treasureTribute.name} discovers a legendary ${weapon.name}!`, 'treasure');
+          }
         } else {
-          addEvent(`${forager.emoji} ${forager.name} fails to find anything edible.`, 'resource');
+          const rareItems = [
+            { name: 'Advanced Healing Kit', effect: 'heal', value: 10 },
+            { name: 'Sturdy Armor', effect: 'AC', value: 2 },
+            { name: 'Energy Booster', effect: 'hunger', value: 30 }
+          ];
+          const item = rareItems[Math.floor(Math.random() * rareItems.length)];
+          treasureTribute.inventory.push(item);
+          addEvent(`${treasureTribute.emoji} ${treasureTribute.name} finds a ${item.name}, which can ${item.effect === 'heal' ? 'heal' : item.effect === 'AC' ? 'increase AC' : 'boost hunger'} by ${item.value}.`, 'treasure');
+        }
+        break;
+      case 'stealth_mission':
+        const stealthTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        const stealthSuccess = Math.random() < stealthTribute.stats.stealth / 20;
+        stealthTribute.actions++;
+        if (stealthSuccess) {
+          const stealFrom = tributes.filter(t => t.id !== stealthTribute.id && t.isAlive);
+          if (stealFrom.length > 0) {
+            const victim = stealFrom[Math.floor(Math.random() * stealFrom.length)];
+            if (victim.inventory.length > 0) {
+              const stolenItem = victim.inventory.pop();
+              stealthTribute.inventory.push(stolenItem);
+              addEvent(`${stealthTribute.emoji} ${stealthTribute.name} successfully steals a ${stolenItem.name} from ${victim.emoji} ${victim.name}.`, 'stealth_mission');
+            } else {
+              addEvent(`${stealthTribute.emoji} ${stealthTribute.name} attempted a stealth mission but found nothing to steal from ${victim.emoji} ${victim.name}.`, 'stealth_mission');
+            }
+          }
+        } else {
+          addEvent(`${stealthTribute.emoji} ${stealthTribute.name} failed the stealth mission and was spotted.`, 'stealth_mission');
+        }
+        break;
+      case 'environmental_hazard':
+        const hazardEvent = ['Toxic Gas Leak', 'Radioactive Spill', 'Sudden Avalanche'];
+        const selectedHazard = hazardEvent[Math.floor(Math.random() * hazardEvent.length)];
+        const hazardDamage = Math.floor(Math.random() * 4) + 2;
+        aliveTributes.forEach(t => {
+          t.health = Math.max(0, t.health - hazardDamage);
+          if (t.health === 0) {
+            t.isAlive = false;
+            t.placement = placementCounter--;
+          }
+        });
+        addEvent(`${selectedHazard} has occurred in the arena, dealing ${hazardDamage} damage to all tributes!`, 'environmental_hazard');
+        break;
+      case 'sabotage':
+        const saboteur = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        const target = tributes.filter(t => t.id !== saboteur.id && t.isAlive);
+        if (target.length > 0) {
+          const victim = target[Math.floor(Math.random() * target.length)];
+          const sabotageDamage = Math.floor(Math.random() * 3) + 1;
+          victim.health = Math.max(0, victim.health - sabotageDamage);
+          saboteur.actions++;
+          if (victim.health === 0) {
+            victim.isAlive = false;
+            victim.placement = placementCounter--;
+            addEvent(`${saboteur.emoji} ${saboteur.name} sabotages ${victim.emoji} ${victim.name}, dealing ${sabotageDamage} damage and causing death.`, 'sabotage');
+          } else {
+            addEvent(`${saboteur.emoji} ${saboteur.name} sabotages ${victim.emoji} ${victim.name}, dealing ${sabotageDamage} damage.`, 'sabotage');
+          }
+        }
+        break;
+      case 'secret_alliance':
+        const secretTribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        let secretTribute2;
+        do {
+          secretTribute2 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        } while (secretTribute2.id === secretTribute1.id || secretTribute1.alliances.includes(secretTribute2.id) || secretTribute2.alliances.includes(secretTribute1.id));
+        secretTribute1.alliances.push(secretTribute2.id);
+        secretTribute2.alliances.push(secretTribute1.id);
+        secretTribute1.actions++;
+        secretTribute2.actions++;
+        addEvent(`${secretTribute1.emoji} ${secretTribute1.name} forms a secret alliance with ${secretTribute2.emoji} ${secretTribute2.name}.`, 'secret_alliance');
+        break;
+      case 'resource_cache':
+        const cacheTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        const cacheItem = { name: 'Energy Drink', effect: 'hunger', value: 25 };
+        cacheTribute.inventory.push(cacheItem);
+        addEvent(`${cacheTribute.emoji} ${cacheTribute.name} discovers a hidden resource cache containing an ${cacheItem.name}.`, 'resource_cache');
+        break;
+      case 'wildlife_attack':
+        const wildlifeTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
+        const wildlifeDamage = Math.floor(Math.random() * 4) + 1;
+        wildlifeTribute.health = Math.max(0, wildlifeTribute.health - wildlifeDamage);
+        wildlifeTribute.actions++;
+        if (wildlifeTribute.health === 0) {
+          wildlifeTribute.isAlive = false;
+          wildlifeTribute.placement = placementCounter--;
+          addEvent(`${wildlifeTribute.emoji} ${wildlifeTribute.name} was attacked by wildlife and died from ${wildlifeDamage} damage.`, 'wildlife_attack');
+        } else {
+          addEvent(`${wildlifeTribute.emoji} ${wildlifeTribute.name} was attacked by wildlife and took ${wildlifeDamage} damage.`, 'wildlife_attack');
         }
         break;
     }
@@ -554,6 +678,8 @@ document.addEventListener('DOMContentLoaded', () => {
     tributeModalName.textContent = `${tribute.emoji} ${tribute.name}`;
     tributeModalStats.innerHTML = `
       <div><strong>District:</strong> ${tribute.district}</div>
+      <div><strong>Age:</strong> ${tribute.age}</div>
+      <div><strong>Gender:</strong> ${tribute.gender}</div>
       <div><strong>Health:</strong> ${tribute.health}</div>
       <div><strong>Hunger:</strong> ${tribute.hunger}%</div>
       <div><strong>Weapon:</strong> ${tribute.weapon ? tribute.weapon.emoji + ' ' + tribute.weapon.name : 'None'}</div>
