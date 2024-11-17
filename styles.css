@@ -1,223 +1,312 @@
-/* Ultra-minimalist monochrome design */
-body {
+/* Reset some default styles */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: Arial, sans-serif;
-  background-color: #fff;
-  color: #000;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.container {
+
+header {
+  background-color: #2c2c2c;
+  padding: 20px;
   text-align: center;
-  padding: 2rem;
 }
-h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
+
+header h1 {
+  margin-bottom: 10px;
 }
-.controls {
+
+header .info {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 20px;
+  font-size: 1.1em;
 }
-.controls button {
-  padding: 1rem 2rem;
-  border: 2px solid #000;
-  border-radius: 15px;
-  background-color: #fff;
-  color: #000;
-  font-weight: 700;
-  font-size: 1rem;
-  text-transform: uppercase;
+
+main {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+#controls button {
+  padding: 10px 20px;
+  background-color: #444;
+  border: none;
+  color: #f0f0f0;
   cursor: pointer;
-  transition: all 0.3s;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
-.controls button:hover {
-  background-color: #000;
-  color: #fff;
+
+#controls button:hover {
+  background-color: #666;
 }
-.tributes {
+
+.slider-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 20px;
 }
-.tribute {
+
+#event-frequency {
   width: 150px;
-  padding: 1.5rem;
-  border: 2px solid #000;
-  border-radius: 15px;
-  background-color: #fff;
-  transition: transform 0.2s;
-  position: relative;
+}
+
+#victors-button {
+  background-color: #555;
+}
+
+#victors-button:hover {
+  background-color: #777;
+}
+
+#scoreboard {
+  background-color: #2c2c2c;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+#scoreboard h2 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.score-item {
+  margin-bottom: 8px;
+  font-size: 1em;
+}
+
+#tributes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.tribute {
+  background-color: #3c3c3c;
+  padding: 15px;
+  border-radius: 8px;
   cursor: pointer;
+  position: relative;
+  transition: transform 0.2s, background-color 0.3s;
 }
+
 .tribute:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  background-color: #4c4c4c;
 }
+
 .tribute.dead {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: #555;
+  opacity: 0.7;
 }
-.tribute.dead .placement {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #721c24;
-  color: #fff;
-  padding: 0.3rem 0.6rem;
-  border-radius: 10px;
-  font-size: 0.9rem;
-}
+
 .tribute.winner {
-  background-color: #d4edda;
-  color: #155724;
+  border: 2px solid gold;
 }
+
+.placement {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background-color: gold;
+  color: #000;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.tribute div {
+  margin-bottom: 8px;
+  text-align: center;
+}
+
 .health-bar, .hunger-bar {
   width: 100%;
-  background-color: #ccc;
   height: 10px;
+  background-color: #555;
   border-radius: 5px;
-  margin-top: 0.5rem;
-  position: relative;
+  overflow: hidden;
+  margin-bottom: 8px;
 }
+
 .health-bar-fill {
+  height: 100%;
   background-color: #4caf50;
-  height: 100%;
-  border-radius: 5px;
+  width: 100%;
+  transition: width 0.3s;
 }
+
 .hunger-bar-fill {
-  background-color: orange;
   height: 100%;
-  border-radius: 5px;
+  background-color: #ff9800;
+  width: 100%;
+  transition: width 0.3s;
 }
-.log {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: left;
+
+#log-section {
+  background-color: #2c2c2c;
+  padding: 15px;
+  border-radius: 8px;
   max-height: 300px;
   overflow-y: auto;
-  border: 2px solid #000;
-  border-radius: 15px;
-  padding: 1rem;
-  margin-bottom: 2rem;
 }
+
+#log-section h2 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#log-container {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 5px;
+}
+
 .log-entry {
-  margin-bottom: 1rem;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: #444;
+  font-size: 0.95em;
 }
-.log-entry.death {
-  color: red;
-}
+
 .log-entry.fight {
-  color: orange;
+  border-left: 4px solid #f44336;
 }
-.log-entry.alliance {
-  color: green;
+
+.log-entry.death {
+  border-left: 4px solid #e91e63;
 }
-.log-entry.break_alliance {
-  color: darkred;
-}
+
 .log-entry.resource {
-  color: blue;
+  border-left: 4px solid #4caf50;
 }
+
+.log-entry.alliance, .log-entry.secret_alliance {
+  border-left: 4px solid #2196f3;
+}
+
+.log-entry.break_alliance {
+  border-left: 4px solid #ff9800;
+}
+
 .log-entry.heal {
-  color: purple;
+  border-left: 4px solid #8bc34a;
 }
+
 .log-entry.natural {
-  color: brown;
+  border-left: 4px solid #9c27b0;
 }
-.scoreboard {
-  margin-bottom: 2rem;
+
+.log-entry.trap {
+  border-left: 4px solid #ff5722;
 }
-.scoreboard div {
-  margin-bottom: 0.5rem;
+
+.log-entry.treasure {
+  border-left: 4px solid #ffc107;
 }
-.settings {
-  margin-bottom: 2rem;
+
+.log-entry.stealth_mission {
+  border-left: 4px solid #00bcd4;
 }
-.settings label {
-  display: block;
-  margin-bottom: 0.5rem;
+
+.log-entry.environmental_hazard {
+  border-left: 4px solid #795548;
 }
-.settings input[type="range"] {
-  width: 100%;
+
+.log-entry.sabotage {
+  border-left: 4px solid #673ab7;
 }
-.victors-button {
-  padding: 1rem 2rem;
-  border: 2px solid #000;
-  border-radius: 15px;
-  background-color: #fff;
+
+.log-entry.wildlife_attack {
+  border-left: 4px solid #3f51b5;
+}
+
+.log-entry.victory {
+  border-left: 4px solid gold;
+  background-color: #ffd700;
   color: #000;
-  font-weight: 700;
-  font-size: 1rem;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-bottom: 2rem;
 }
-.victors-button:hover {
-  background-color: #000;
-  color: #fff;
+
+.log-entry.gameOver {
+  border-left: 4px solid #9e9e9e;
+  background-color: #616161;
 }
+
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  background-color: rgba(0,0,0,0.4);
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
 }
+
 .modal-content {
-  background-color: #fff;
-  margin: 5% auto;
-  padding: 2rem;
-  border: 2px solid #000;
-  border-radius: 15px;
+  background-color: #2c2c2c;
+  margin: 10% auto; /* 10% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
   width: 80%;
-  max-width: 600px;
+  max-width: 500px; /* Could be more or less, depending on screen size */
+  border-radius: 8px;
+  position: relative;
 }
+
 .modal-content h2 {
-  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
 }
+
+.modal-content div {
+  margin-bottom: 10px;
+}
+
 .close {
-  color: #000;
+  color: #aaa;
   float: right;
-  font-size: 1.5rem;
+  font-size: 28px;
   font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
   cursor: pointer;
 }
-.victor-item {
-  margin-bottom: 1rem;
-}
-.tribute-modal-content {
-  background-color: #fff;
-  margin: 5% auto;
-  padding: 2rem;
-  border: 2px solid #000;
-  border-radius: 15px;
-  width: 80%;
-  max-width: 400px;
-}
-.tribute-modal-content h2 {
-  margin-top: 0;
-}
-.tribute-modal-content .close {
-  color: #000;
-  float: right;
-  font-size: 1.5rem;
-  font-weight: bold;
+
+.close:hover,
+.close:focus {
+  color: #fff;
+  text-decoration: none;
   cursor: pointer;
 }
-.tribute-modal-content .stats {
-  text-align: left;
-  margin-top: 1rem;
-}
-.tribute-modal-content .stats div {
-  margin-bottom: 0.5rem;
+
+footer {
+  background-color: #2c2c2c;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.9em;
 }
