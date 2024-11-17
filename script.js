@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const weapons = [
     { name: 'Short Sword', emoji: '🗡️', damage: '1d6' },
@@ -181,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const generateAge = () => {
-    return Math.floor(Math.random() * 3) + 16; // Ages between 16 and 18
+    return Math.floor(Math.random() * 6) + 13; // Ages between 13 and 18
   };
 
   const generateEmoji = (gender) => {
@@ -258,6 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       damage = damageRollResult.total + Math.floor((attacker.stats.strength - 10) / 2);
       defender.health = Math.max(0, defender.health - damage);
+      
+      // Trigger damage animation
+      triggerAnimation(defender.id, 'damage');
     }
     return {
       attackRoll,
@@ -303,13 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const getOrdinalSuffix = (i) => {
     const j = i % 10,
           k = i % 100;
-    if (j == 1 && k != 11) {
+    if (j === 1 && k !== 11) {
       return "st";
     }
-    if (j == 2 && k != 12) {
+    if (j === 2 && k !== 12) {
       return "nd";
     }
-    if (j == 3 && k != 13) {
+    if (j === 3 && k !== 13) {
       return "rd";
     }
     return "th";
@@ -317,16 +321,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const addEvent = (message, type) => {
     const logContainer = document.getElementById('log-container');
-    events.unshift({ message, type });
+    const logEntry = document.createElement('div');
+    logEntry.classList.add('log-entry', type);
+    logEntry.textContent = message;
+    logContainer.prepend(logEntry);
 
-    // Keep only the latest 25 events
-    if (events.length > 25) {
-      events = events.slice(0, 25);
+    // Remove older events if more than 25
+    if (logContainer.children.length > 25) {
+      logContainer.removeChild(logContainer.lastChild);
     }
 
-    logContainer.innerHTML = events.map(event => `
-      <div class="log-entry ${event.type}">${event.message}</div>
-    `).join('');
+    // Smooth scroll to top
+    logContainer.scrollTop = 0;
   };
 
   const updateScoreboard = () => {
@@ -372,10 +378,14 @@ document.addEventListener('DOMContentLoaded', () => {
         tribute.hunger = Math.max(0, tribute.hunger - 1);
         if (tribute.hunger === 0) {
           tribute.health = Math.max(0, tribute.health - 2);
+          if (tribute.health > 0) {
+            triggerAnimation(tribute.id, 'damage');
+          }
         }
         if (tribute.health <= 0) {
           tribute.isAlive = false;
           tribute.placement = placementCounter--;
+          addEvent(`${tribute.emoji} ${tribute.name} has fallen.`, 'death');
         }
       }
     });
@@ -464,20 +474,27 @@ document.addEventListener('DOMContentLoaded', () => {
         healer.health = Math.min(20, healer.health + healAmount);
         healer.actions++;
         addEvent(`${healer.emoji} ${healer.name} finds a healing herb and restores ${healAmount} HP.`, 'heal');
+        
+        // Trigger heal animation
+        triggerAnimation(healer.id, 'heal');
         break;
       case 'natural':
         const naturalEvent = naturalEvents[Math.floor(Math.random() * naturalEvents.length)];
         currentWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
         document.getElementById('weather').textContent = currentWeather;
         aliveTributes.forEach(t => {
-          const damage = Math.floor(Math.random() * 3) + 1;
+          const damage = Math.floor(Math.random() * 2) + 1; // Reduced damage
           t.health = Math.max(0, t.health - damage);
+          if (damage > 0 && t.isAlive) {
+            triggerAnimation(t.id, 'damage');
+          }
           if (t.health === 0) {
             t.isAlive = false;
             t.placement = placementCounter--;
+            addEvent(`${t.emoji} ${t.name} has fallen due to ${naturalEvent}.`, 'death');
           }
         });
-        addEvent(`${naturalEvent}, causing damage to all tributes!`, 'natural');
+        addEvent(`${naturalEvent}, causing minor damage to tributes!`, 'natural');
         break;
       // New Event Types
       case 'trap':
@@ -491,6 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
           addEvent(`${trapTribute.emoji} ${trapTribute.name} triggered a trap and took ${trapDamage} damage, resulting in death.`, 'trap');
         } else {
           addEvent(`${trapTribute.emoji} ${trapTribute.name} triggered a trap and took ${trapDamage} damage.`, 'trap');
+          triggerAnimation(trapTribute.id, 'damage');
         }
         break;
       case 'treasure':
@@ -544,9 +562,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (t.health === 0) {
             t.isAlive = false;
             t.placement = placementCounter--;
+            addEvent(`${t.emoji} ${t.name} has fallen due to ${selectedHazard}.`, 'environmental_hazard');
+          } else if (hazardDamage > 0) {
+            triggerAnimation(t.id, 'damage');
           }
         });
-        addEvent(`${selectedHazard} has occurred in the arena, dealing ${hazardDamage} damage to all tributes!`, 'environmental_hazard');
+        addEvent(`${selectedHazard} has occurred in the arena, dealing ${hazardDamage} damage to tributes!`, 'environmental_hazard');
         break;
       case 'sabotage':
         const saboteur = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
@@ -562,6 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
             addEvent(`${saboteur.emoji} ${saboteur.name} sabotages ${victim.emoji} ${victim.name}, dealing ${sabotageDamage} damage and causing death.`, 'sabotage');
           } else {
             addEvent(`${saboteur.emoji} ${saboteur.name} sabotages ${victim.emoji} ${victim.name}, dealing ${sabotageDamage} damage.`, 'sabotage');
+            triggerAnimation(victim.id, 'damage');
           }
         }
         break;
@@ -594,6 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
           addEvent(`${wildlifeTribute.emoji} ${wildlifeTribute.name} was attacked by wildlife and died from ${wildlifeDamage} damage.`, 'wildlife_attack');
         } else {
           addEvent(`${wildlifeTribute.emoji} ${wildlifeTribute.name} was attacked by wildlife and took ${wildlifeDamage} damage.`, 'wildlife_attack');
+          triggerAnimation(wildlifeTribute.id, 'damage');
         }
         break;
     }
@@ -742,4 +765,24 @@ document.addEventListener('DOMContentLoaded', () => {
   tributes = generateTributes();
   updateTributesDisplay();
   updateScoreboard();
+
+  /* Animation Trigger Function */
+  function triggerAnimation(tributeId, type) {
+    const tributeCard = document.getElementById(`tribute-${tributeId}`);
+    if (!tributeCard) return;
+
+    if (type === 'damage') {
+      tributeCard.classList.add('damage');
+      setTimeout(() => {
+        tributeCard.classList.remove('damage');
+      }, 500);
+    } else if (type === 'heal') {
+      // Randomly decide between green or blue glow
+      const glowType = Math.random() < 0.5 ? 'heal' : 'heal-blue';
+      tributeCard.classList.add(glowType);
+      setTimeout(() => {
+        tributeCard.classList.remove(glowType);
+      }, 1000);
+    }
+  }
 });
