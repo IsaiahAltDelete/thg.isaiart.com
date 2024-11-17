@@ -11,11 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Mjolnir', emoji: '🔨', damage: '4d6', legendary: true },
   ];
   const skinTones = ['🏻', '🏼', '🏽', '🏾', '🏿'];
-  const genders = ['Male', 'Female', 'Non-binary'];
+  const genders = ['Male', 'Female'];
   const genderEmojis = {
-    'Male': '♂️',
-    'Female': '♀️',
-    'Non-binary': '⚧️'
+    'Male': '👨',
+    'Female': '👩'
   };
   const districts = Array.from({ length: 12 }, (_, i) => i + 1);
   
@@ -183,7 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const generateEmoji = (gender) => {
-    return genderEmojis[gender] || '⚧️';
+    const baseEmoji = genderEmojis[gender];
+    const skinTone = skinTones[Math.floor(Math.random() * skinTones.length)];
+    return baseEmoji + skinTone;
   };
 
   const generateStats = () => {
@@ -200,9 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const usedFirstNames = new Set();
     let tributes = [];
     districts.forEach(district => {
-      for (let g = 0; g < 2; g++) {
+      // Ensure one Male and one Female per district
+      genders.forEach(gender => {
         const name = generateUniqueName(usedNames, usedFirstNames);
-        const gender = generateGender();
         const age = generateAge();
         tributes.push({
           id: tributes.length + 1,
@@ -223,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
           stats: generateStats(),
           district: district,
         });
-      }
+      });
     });
     return tributes;
   };
