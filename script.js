@@ -302,15 +302,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (attackRoll === 20) { // Natural 20: Instant Kill
       defender.health = 0;
-      damage = simulationSettings.baseHealth; // For log message clarity, set damage to max health
+      damage = simulationSettings.baseHealth;
       triggerAnimation(defender.id, 'damage');
       return {
         attackRoll,
         attackTotal,
         hit: true,
-        criticalHit: true, // Indicate critical hit
+        criticalHit: true,
         damage,
-        damageRollResult: { total: damage, rolls: ['Instant Kill'] }, // Mock damage roll result
+        damageRollResult: { total: damage, rolls: ['Instant Kill'] },
         defenderAC
       };
     } else if (hit) {
@@ -476,8 +476,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const updateClock = () => {
+    hour++;
+    if (hour > 23) {
+      hour = 0;
+      day++;
+    }
+    const displayHour = hour.toString().padStart(2, '0');
+    document.getElementById('time').textContent = `${displayHour}:00`;
+    document.getElementById('day').textContent = day;
+  };
+
 
   const gameLoop = () => {
+    updateClock(); // Progress time at the start of each game loop
+
     tributes.forEach(tribute => {
       if (tribute.isAlive) {
         applyStatusEffects(tribute);
@@ -606,7 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const attackResult = attack(attacker, defender);
         attacker.actions++;
         if (attackResult.hit) {
-          if (attackResult.criticalHit) { // Check for critical hit
+          if (attackResult.criticalHit) {
             defender.isAlive = false;
             defender.placement = placementCounter--;
             attacker.kills++;
@@ -694,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           if (t.health <= 0) {
             t.isAlive = false;
-            t.placement = placementCounter--;
+            tribute.placement = placementCounter--;
             addEvent(`${t.emoji} ${t.name} has fallen due to ${naturalEvent}.`, 'death');
           }
         });
@@ -1034,4 +1047,6 @@ document.addEventListener('DOMContentLoaded', () => {
   tributes = generateTributes();
   updateTributesDisplay();
   updateScoreboard();
+  // Initial clock update
+  updateClock();
 });
