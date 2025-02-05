@@ -43,54 +43,52 @@ document.addEventListener('DOMContentLoaded', () => {
   const districts = Array.from({ length: 12 }, (_, i) => i + 1);
 
   const firstNames = [
-        // ... (previous names - you can keep them or replace entirely) ...
-        'Wei', 'Jing', 'Li', 'Hao', 'Mei', 'Xiao', 'Jun', 'Fang', 'Ying', 'Tian', // Chinese
-        'Amit', 'Priya', 'Ravi', 'Anjali', 'Vijay', 'Deepa', 'Rahul', 'Pooja', 'Sanjay', 'Neha', // Indian
-        'Ivan', 'Olga', 'Dmitry', 'Natalia', 'Sergey', 'Ekaterina', 'Alexei', 'Tatiana', 'Mikhail', 'Anastasia', // Russian
-        'Ahmed', 'Fatima', 'Mohamed', 'Aisha', 'Omar', 'Layla', 'Youssef', 'Huda', 'Hassan', 'Mariam', // Arabic
-        'Jean', 'Marie', 'Pierre', 'Sophie', 'Michel', 'Isabelle', 'Alain', 'Claire', 'Laurent', 'Céline', // French
-        'Hans', 'Anna', 'Karl', 'Emma', 'Fritz', 'Lena', 'Heinz', 'Mia', 'Günther', 'Lea', // German
-        'Hiroshi', 'Yuki', 'Kenji', 'Aiko', 'Takashi', 'Miyu', 'Daiki', 'Sakura', 'Yuto', 'Hana', // Japanese
-        'Liam', 'Noah', 'Oliver', 'Elijah', 'Benjamin', 'Lucas', 'Henry', 'Alexander', 'Charlotte', 'Amelia', 'Olivia', 'Emma', 'Ava', 'Sophia', 'Isabella', 'Mia', 'Evelyn', 'Harper', // More English/International
-        'Mateo', 'Santiago', 'Valentina', 'Leonardo', 'Gabriela', 'Sebastián', 'Camila', 'Fernando', 'Catalina', 'Diego', 'Daniela', 'Emilio', 'Julieta', 'Ricardo', 'Luciana', 'Pedro', 'Bianca', 'Francisco', 'Mariana', // Spanish/Latin American
-        'Alessia', 'Leonardo', 'Sofia', 'Alessandro', 'Aurora', 'Andrea', 'Emma', 'Lorenzo', 'Giorgia', 'Riccardo', // Italian
-        'Frederik', 'Emma', 'Oscar', 'Clara', 'William', 'Ella', 'Lucas', 'Ida', 'Victor', 'Sofie', // Danish
-        'Niko', 'Sofia', 'Elias', 'Emilia', 'Leo', 'Olivia', 'Onni', 'Aino', 'Eino', 'Helmi', // Finnish
-        'Mikael', 'Ella', 'Oliver', 'Sofia', 'Alexander', 'Olivia', 'Elias', 'Aada', 'Daniel', 'Helmi', // Swedish
-        'Seung', 'Min', 'Ji', 'Yeon', 'Hyun', 'Soo', 'Eun', 'Jae', 'Ha', 'Kyung', // Korean (Korean names are often monosyllabic, these are simplified examples)
-        'Kenzo', 'Yumi', 'Ren', 'Sakura', 'Haruki', 'Hina', 'Akira', 'Mei', 'Kazuki', 'Aoi', // More Japanese
-        'Rajesh', 'Lakshmi', 'Vikram', 'Deepika', 'Arjun', 'Priyanka', 'Kiran', 'Anika', 'Dev', 'Shanti', // More Indian
-        'Chen', 'Lin', 'Jie', 'Yue', 'Tao', 'Xin', 'Lei', 'Hua', 'Bo', 'Ning', // More Chinese
-        'Karim', 'Nadia', 'Samir', 'Leila', 'Yasin', 'Amina', 'Faris', 'Salma', 'Hamza', 'Khadija', // More Arabic
-        'Adrien', 'Manon', 'Hugo', 'Léa', 'Théo', 'Chloé', 'Louis', 'Camille', 'Antoine', 'Juliette', // More French
-        'Maximilian', 'Sophie', 'Paul', 'Marie', 'Felix', 'Lena', 'Jakob', 'Hannah', 'Leon', 'Lina', // More German
-        'Giovanni', 'Chiara', 'Matteo', 'Francesca', 'Simone', 'Alice', 'Federico', 'Beatrice', 'Gabriele', 'Vittoria', // More Italian
-        'Bjorn', 'Astrid', 'Magnus', 'Ingrid', 'Lars', 'Solveig', 'Erik', 'Sigrid', 'Anders', 'Liv' // More Scandinavian (Mix of Norwegian/Swedish)
+        'Wei', 'Jing', 'Li', 'Hao', 'Mei', 'Xiao', 'Jun', 'Fang', 'Ying', 'Tian',
+        'Amit', 'Priya', 'Ravi', 'Anjali', 'Vijay', 'Deepa', 'Rahul', 'Pooja', 'Sanjay', 'Neha',
+        'Ivan', 'Olga', 'Dmitry', 'Natalia', 'Sergey', 'Ekaterina', 'Alexei', 'Tatiana', 'Mikhail', 'Anastasia',
+        'Ahmed', 'Fatima', 'Mohamed', 'Aisha', 'Omar', 'Layla', 'Youssef', 'Huda', 'Hassan', 'Mariam',
+        'Jean', 'Marie', 'Pierre', 'Sophie', 'Michel', 'Isabelle', 'Alain', 'Claire', 'Laurent', 'Céline',
+        'Hans', 'Anna', 'Karl', 'Emma', 'Fritz', 'Lena', 'Heinz', 'Mia', 'Günther', 'Lea',
+        'Hiroshi', 'Yuki', 'Kenji', 'Aiko', 'Takashi', 'Miyu', 'Daiki', 'Sakura', 'Yuto', 'Hana',
+        'Liam', 'Noah', 'Oliver', 'Elijah', 'Benjamin', 'Lucas', 'Henry', 'Alexander', 'Charlotte', 'Amelia', 'Olivia', 'Emma', 'Ava', 'Sophia', 'Isabella', 'Mia', 'Evelyn', 'Harper',
+        'Mateo', 'Santiago', 'Valentina', 'Leonardo', 'Gabriela', 'Sebastián', 'Camila', 'Fernando', 'Catalina', 'Diego', 'Daniela', 'Emilio', 'Julieta', 'Ricardo', 'Luciana', 'Pedro', 'Bianca', 'Francisco', 'Mariana',
+        'Alessia', 'Leonardo', 'Sofia', 'Alessandro', 'Aurora', 'Andrea', 'Emma', 'Lorenzo', 'Giorgia', 'Riccardo',
+        'Frederik', 'Emma', 'Oscar', 'Clara', 'William', 'Ella', 'Lucas', 'Ida', 'Victor', 'Sofie',
+        'Niko', 'Sofia', 'Elias', 'Emilia', 'Leo', 'Olivia', 'Onni', 'Aino', 'Eino', 'Helmi',
+        'Mikael', 'Ella', 'Oliver', 'Sofia', 'Alexander', 'Olivia', 'Elias', 'Aada', 'Daniel', 'Helmi',
+        'Seung', 'Min', 'Ji', 'Yeon', 'Hyun', 'Soo', 'Eun', 'Jae', 'Ha', 'Kyung',
+        'Kenzo', 'Yumi', 'Ren', 'Sakura', 'Haruki', 'Hina', 'Akira', 'Mei', 'Kazuki', 'Aoi',
+        'Rajesh', 'Lakshmi', 'Vikram', 'Deepika', 'Arjun', 'Priyanka', 'Kiran', 'Anika', 'Dev', 'Shanti',
+        'Chen', 'Lin', 'Jie', 'Yue', 'Tao', 'Xin', 'Lei', 'Hua', 'Bo', 'Ning',
+        'Karim', 'Nadia', 'Samir', 'Leila', 'Yasin', 'Amina', 'Faris', 'Salma', 'Hamza', 'Khadija',
+        'Adrien', 'Manon', 'Hugo', 'Léa', 'Théo', 'Chloé', 'Louis', 'Camille', 'Antoine', 'Juliette',
+        'Maximilian', 'Sophie', 'Paul', 'Marie', 'Felix', 'Lena', 'Jakob', 'Hannah', 'Leon', 'Lina',
+        'Giovanni', 'Chiara', 'Matteo', 'Francesca', 'Simone', 'Alice', 'Federico', 'Beatrice', 'Gabriele', 'Vittoria',
+        'Bjorn', 'Astrid', 'Magnus', 'Ingrid', 'Lars', 'Solveig', 'Erik', 'Sigrid', 'Anders', 'Liv'
   ];
 
   const lastNames = [
-        // ... (previous names - you can keep them or replace entirely) ...
-        'Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Wu', 'Zhou', // Chinese
-        'Patel', 'Singh', 'Sharma', 'Kumar', 'Gupta', 'Verma', 'Reddy', 'Mehta', 'Jain', 'Shah', // Indian
-        'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasiliev', 'Sokolov', 'Mikhailov', 'Fedorov', // Russian
-        'Mohamed', 'Ali', 'Hassan', 'Hussein', 'Ahmed', 'Abdullah', 'Khan', 'Rahman', 'Saleh', 'Amin', // Arabic
-        'Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand', 'Leroy', 'Moreau', // French
-        'Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schulz', // German
-        'Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', // Japanese
-        'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', // More English/International
-        'García', 'Martínez', 'Rodríguez', 'López', 'Hernández', 'Sánchez', 'Pérez', 'Gómez', 'Martín', 'Jiménez', // Spanish
-        'Rossi', 'Ferrari', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', // Italian
-        'Jensen', 'Nielsen', 'Hansen', 'Andersen', 'Pedersen', 'Larsen', 'Sørensen', 'Rasmussen', 'Jørgensen', 'Petersen', // Danish
-        'Korhonen', 'Virtanen', 'Mäkinen', 'Nieminen', 'Mäkelä', 'Hämäläinen', 'Laine', 'Heikkinen', 'Koskinen', 'Järvinen', // Finnish
-        'Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Svensson', 'Persson', 'Gustafsson', // Swedish
-        'Kim', 'Lee', 'Park', 'Choi', 'Jung', 'Kang', 'Jo', 'Yoon', 'Jang', 'Lim', // Korean (Korean last names are less diverse, these are common ones)
-        'Tanaka', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', 'Yoshida', 'Yamaguchi', 'Sasaki', 'Saito', 'Matsumoto', // More Japanese
-        'Reddy', 'Naidu', 'Rao', 'Chowdhury', 'Rana', 'Das', 'Gupta', 'Joshi', 'Nair', 'Bhattacharya', // More Indian
-        'Chen', 'Lin', 'Huang', 'Zheng', 'Cai', 'Ye', 'Feng', 'He', 'Wu', 'Xu', // More Chinese
-        'Al-Fayed', 'Al-Maktoum', 'Al-Nahyan', 'Al-Thani', 'Bin Laden', 'El-Erian', 'Hariri', 'Khouri', 'Malouf', 'Sawiris', // More Arabic (These are more family/clan names, but fit the diverse list)
-        'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schulz', 'Richter', 'Klein', // More German
-        'Esposito', 'Russo', 'Conte', 'Galli', 'Fontana', 'Mancini', 'Lombardi', 'Moretti', 'Costa', 'Barbieri', // More Italian
-        'Viklund', 'Ekström', 'Nyberg', 'Lindberg', 'Bergström', 'Holm', 'Lundqvist', 'Sjöberg', 'Sandström', 'Danielsson' // More Scandinavian (Mix of Swedish/Finnish)
+        'Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Wu', 'Zhou',
+        'Patel', 'Singh', 'Sharma', 'Kumar', 'Gupta', 'Verma', 'Reddy', 'Mehta', 'Jain', 'Shah',
+        'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasiliev', 'Sokolov', 'Mikhailov', 'Fedorov',
+        'Mohamed', 'Ali', 'Hassan', 'Hussein', 'Ahmed', 'Abdullah', 'Khan', 'Rahman', 'Saleh', 'Amin',
+        'Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand', 'Leroy', 'Moreau',
+        'Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schulz',
+        'Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato',
+        'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+        'García', 'Martínez', 'Rodríguez', 'López', 'Hernández', 'Sánchez', 'Pérez', 'Gómez', 'Martín', 'Jiménez',
+        'Rossi', 'Ferrari', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo',
+        'Jensen', 'Nielsen', 'Hansen', 'Andersen', 'Pedersen', 'Larsen', 'Sørensen', 'Rasmussen', 'Jørgensen', 'Petersen',
+        'Korhonen', 'Virtanen', 'Mäkinen', 'Nieminen', 'Mäkelä', 'Hämäläinen', 'Laine', 'Heikkinen', 'Koskinen', 'Järvinen',
+        'Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Svensson', 'Persson', 'Gustafsson',
+        'Kim', 'Lee', 'Park', 'Choi', 'Jung', 'Kang', 'Jo', 'Yoon', 'Jang', 'Lim',
+        'Tanaka', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', 'Yoshida', 'Yamaguchi', 'Sasaki', 'Saito', 'Matsumoto',
+        'Reddy', 'Naidu', 'Rao', 'Chowdhury', 'Rana', 'Das', 'Gupta', 'Joshi', 'Nair', 'Bhattacharya',
+        'Chen', 'Lin', 'Huang', 'Zheng', 'Cai', 'Ye', 'Feng', 'He', 'Wu', 'Xu',
+        'Al-Fayed', 'Al-Maktoum', 'Al-Nahyan', 'Al-Thani', 'Bin Laden', 'El-Erian', 'Hariri', 'Khouri', 'Malouf', 'Sawiris',
+        'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schulz', 'Richter', 'Klein',
+        'Esposito', 'Russo', 'Conte', 'Galli', 'Fontana', 'Mancini', 'Lombardi', 'Moretti', 'Costa', 'Barbieri',
+        'Viklund', 'Ekström', 'Nyberg', 'Lindberg', 'Bergström', 'Holm', 'Lundqvist', 'Sjöberg', 'Sandström', 'Danielsson'
   ];
 
   const naturalEvents = [
@@ -141,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let gameOver = false;
   let currentWeather = 'Clear';
   let environment = { weather: 'Clear', terrain: 'Open Field', effects: [] };
-  let currentArena = 'default'; // Default arena
+  let currentArena = 'default';
 
   let simulationSettings = {
     baseHealth: 20,
@@ -155,6 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const arenaListContainer = document.getElementById('arena-list');
   const randomArenaButton = document.getElementById('random-arena-button');
   const arenaBackgroundBody = document.getElementById('arena-background');
+  const alliancesButton = document.getElementById('alliances-button'); // Alliances button
+  const alliancesModal = document.getElementById('alliances-modal'); // Alliances modal
+  const alliancesClose = document.getElementById('alliances-close'); // Close button for alliances modal
+  const alliancesListContainer = document.getElementById('alliances-list');
+  const resetSettingsButton = document.getElementById('reset-settings');
+  const resetAllButton = document.getElementById('reset-all');
+
 
   const arenaTypes = [
       {
@@ -269,6 +274,25 @@ document.addEventListener('DOMContentLoaded', () => {
     arenaModal.style.display = "none";
   }
 
+  alliancesButton.onclick = function() {
+    openAlliancesModal();
+  }
+
+  alliancesClose.onclick = function() {
+    alliancesModal.style.display = "none";
+  }
+
+  resetSettingsButton.onclick = function() {
+    resetSettings();
+  }
+
+  resetAllButton.onclick = function() {
+    if(confirm("Are you sure you want to reset EVERYTHING? This will clear all victors and reset settings to default.")) {
+      resetEverything();
+    }
+  }
+
+
   window.onclick = function(event) {
     if (event.target == settingsModal) {
       settingsModal.style.display = "none";
@@ -284,6 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (event.target == arenaModal) {
       arenaModal.style.display = "none";
+    }
+    if (event.target == alliancesModal) {
+      alliancesModal.style.display = "none";
     }
   }
 
@@ -516,10 +543,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('most-kills').textContent = mostKills > 0 ? mostKills : '0';
     document.getElementById('most-kills-name').textContent = tributeWithMostKills ? tributeWithMostKills.name : 'N/A';
 
-    const mostActions = Math.max(...tributes.map(t => t.actions));
-    const tributeWithMostActions = tributes.find(t => t.actions === mostActions);
-    document.getElementById('fan-favorite').textContent = tributeWithMostActions ? tributeWithMostActions.name : 'N/A';
+    updateFanFavoritesDisplay();
+
   };
+
+  const updateFanFavoritesDisplay = () => {
+    // Sort tributes by actions in descending order and get top 3
+    const sortedTributes = [...tributes].sort((a, b) => b.actions - a.actions).slice(0, 3);
+    for (let i = 0; i < 3; i++) {
+      const tribute = sortedTributes[i];
+      const name = tribute ? tribute.name : 'N/A';
+      document.getElementById(`fan-favorite-${i + 1}`).textContent = name;
+    }
+  };
+
 
   const getVictorsFromStorage = () => {
     return JSON.parse(localStorage.getItem('victors')) || [];
@@ -543,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
       victorsListElement.innerHTML = '<p>No victors yet.</p>';
     } else {
       victorsListElement.innerHTML = victorsList.map((victor, index) =>
-        `<div class="victor-item">${index + 1} - ${victor}</div>`
+        `<div class="victor-item">${index + 1}. ${victor}</div>`
       ).join('');
     }
   };
@@ -999,11 +1036,58 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('log-container').innerHTML = '';
   };
 
+  const resetSettings = () => {
+    simulationSettings = { // Reset to default settings
+      baseHealth: 20,
+      baseHunger: 100,
+      eventFrequencyIndex: 0
+    };
+    saveSettingsToLocalStorage(); // Save defaults to local storage
+    loadSettings(); // Update UI to reflect defaults
+    addEvent('Simulation settings reset to default.', 'settings_update');
+  };
+
+  const resetEverything = () => {
+    clearVictorsFromStorage();
+    resetSettings();
+    restartSimulation();
+    setArenaBackground('default');
+    addEvent('Everything reset: victors cleared, settings default, new tributes.', 'settings_update');
+  };
+
+  const openAlliancesModal = () => {
+    const activeAlliances = {};
+    tributes.forEach(tribute => {
+      if (tribute.alliances.length > 0) {
+        const allianceList = tribute.alliances.map(allyId => tributes.find(t => t.id === allyId).name).join(', ');
+        activeAlliances[tribute.name] = allianceList;
+      }
+    });
+
+    alliancesListContainer.innerHTML = ''; // Clear previous list
+    if (Object.keys(activeAlliances).length === 0) {
+      alliancesListContainer.innerHTML = '<p>No active alliances.</p>';
+    } else {
+      for (const tributeName in activeAlliances) {
+        const allianceItem = document.createElement('div');
+        allianceItem.className = 'alliance-item';
+        allianceItem.textContent = `${tributeName} & Allies: ${activeAlliances[tributeName]}`;
+        alliancesListContainer.appendChild(allianceItem);
+      }
+    }
+    alliancesModal.style.display = 'block';
+  };
+
+
   document.getElementById('start-button').addEventListener('click', startSimulation);
   document.getElementById('pause-button').addEventListener('click', pauseSimulation);
   document.getElementById('resume-button').addEventListener('click', resumeSimulation);
   document.getElementById('restart-button').addEventListener('click', restartSimulation);
   document.getElementById('clear-victors-button').addEventListener('click', clearVictorsFromStorage);
+  document.getElementById('alliances-button').addEventListener('click', openAlliancesModal);
+  document.getElementById('reset-settings').addEventListener('click', resetSettings);
+  document.getElementById('reset-all').addEventListener('click', resetAllButton);
+
 
   const settingsModal = document.getElementById('settings-modal');
   const settingsButton = document.getElementById('settings-button');
