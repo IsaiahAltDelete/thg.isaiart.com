@@ -185,16 +185,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const arenaBackgroundBody = document.getElementById('arena-background');
 
   const arenaTypes = [
-      { name: 'Dystopia', backgrounds: ['dystopia01.jpg', 'dystopia02.jpg', 'dystopia03.jpg', 'dystopia04.jpg'] },
-      { name: 'Forest', backgrounds: ['forest01.jpg', 'forest02.jpg', 'forest03.jpg', 'forest04.jpg'] },
-      { name: 'Futuristic', backgrounds: ['futuristic01.jpg', 'futuristic02.jpg', 'futuristic03.jpg', 'futuristic04.jpg'] },
-      { name: 'Grasslands', backgrounds: ['grasslands01.jpg', 'grasslands02.jpg', 'grasslands03.jpg', 'grasslands04.jpg'] },
-      { name: 'Haunted House', backgrounds: ['hauntedhouse01.jpg', 'hauntedhouse02.jpg', 'hauntedhouse03.jpg', 'hauntedhouse04.jpg'] },
-      { name: 'Island', backgrounds: ['island01.jpg', 'island02.jpg', 'island03.jpg', 'island04.jpg'] },
-      { name: 'Ocean', backgrounds: ['ocean01.jpg', 'ocean02.jpg', 'ocean03.jpg', 'ocean04.jpg'] },
-      { name: 'School', backgrounds: ['school01.jpg', 'school02.jpg', 'school03.jpg', 'school04.jpg'] },
-      { name: 'Wastelands', backgrounds: ['wastelands01.jpg', 'wastelands02.jpg', 'wastelands03.jpg', 'wastelands04.jpg'] },
-      { name: 'White Room', backgrounds: ['whiteroom01.jpg', 'whiteroom02.jpg', 'whiteroom03.jpg', 'whiteroom04.jpg'] },
+      {
+        name: 'Dystopia',
+        backgrounds: ['dystopia01.jpg', 'dystopia02.jpg', 'dystopia03.jpg', 'dystopia04.jpg'],
+        description: 'Polluted urban wasteland. Resources are scarce, and the environment itself is hazardous.'
+      },
+      {
+        name: 'Forest',
+        backgrounds: ['forest01.jpg', 'forest02.jpg', 'forest03.jpg', 'forest04.jpg'],
+        description: 'Dense forest with abundant natural resources but dangerous wildlife.'
+      },
+      {
+        name: 'Futuristic',
+        backgrounds: ['futuristic01.jpg', 'futuristic02.jpg', 'futuristic03.jpg', 'futuristic04.jpg'],
+        description: 'Brightly lit technological city with advanced resources and hazards.'
+      },
+      {
+        name: 'Grasslands',
+        backgrounds: ['grasslands01.jpg', 'grasslands02.jpg', 'grasslands03.jpg', 'grasslands04.jpg'],
+        description: 'Open grasslands with limited cover, grazing wildlife, and weather-dependent conditions.'
+      },
+      {
+        name: 'Haunted House',
+        backgrounds: ['hauntedhouse01.jpg', 'hauntedhouse02.jpg', 'hauntedhouse03.jpg', 'hauntedhouse04.jpg'],
+        description: 'Dark, trap-filled house with curses and supernatural psychological effects.'
+      },
+      {
+        name: 'Island',
+        backgrounds: ['island01.jpg', 'island02.jpg', 'island03.jpg', 'island04.jpg'],
+        description: 'Island environment with drowning risks, oceanic resources, and limited land.'
+      },
+      {
+        name: 'Ocean',
+        backgrounds: ['ocean01.jpg', 'ocean02.jpg', 'ocean03.jpg', 'ocean04.jpg'],
+        description: 'Vast ocean arena with constant drowning risk, aquatic wildlife, and extreme scarcity.'
+      },
+      {
+        name: 'School',
+        backgrounds: ['school01.jpg', 'school02.jpg', 'school03.jpg', 'school04.jpg'],
+        description: 'Abandoned school with close-quarters combat, hidden resources, and mob events.'
+      },
+      {
+        name: 'Wastelands',
+        backgrounds: ['wastelands01.jpg', 'wastelands02.jpg', 'wastelands03.jpg', 'wastelands04.jpg'],
+        description: 'Arid wastelands with radiation, lack of weather benefits, and mutated wildlife.'
+      },
+      {
+        name: 'White Room',
+        backgrounds: ['whiteroom01.jpg', 'whiteroom02.jpg', 'whiteroom03.jpg', 'whiteroom04.jpg'],
+        description: 'Featureless, brightly lit arena focused on direct combat with limited resources and no stealth.'
+      },
   ];
 
   const setArenaBackground = (arenaName) => {
@@ -203,10 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const randomBackground = arena.backgrounds[Math.floor(Math.random() * arena.backgrounds.length)];
       arenaBackgroundBody.style.backgroundImage = `url('./images/${randomBackground}')`;
       arenaBackgroundBody.className = `arena-background ${arenaName.toLowerCase().replace(/\s+/g, '')}`;
-      currentArena = arenaName.toLowerCase().replace(/\s+/g, ''); // Update currentArena
+      currentArena = arenaName.toLowerCase().replace(/\s+/g, '');
       addEvent(`Arena changed to ${arenaName}.`, 'arena_change');
     } else if (arenaName === 'default') {
-      arenaBackgroundBody.style.backgroundImage = ''; // Reset to default background
+      arenaBackgroundBody.style.backgroundImage = '';
       arenaBackgroundBody.className = `arena-background default`;
       currentArena = 'default';
       addEvent(`Arena changed to Default.`, 'arena_change');
@@ -218,6 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     arenaTypes.forEach(arena => {
       const arenaButtonElement = document.createElement('button');
       arenaButtonElement.className = 'arena-button';
+      arenaButtonElement.setAttribute('data-tooltip', arena.description); // Add tooltip here
       arenaButtonElement.innerHTML = `
           <img src="./images/${arena.backgrounds[0]}" alt="${arena.name} Thumbnail">
           <span>${arena.name}</span>
@@ -231,11 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
      // Add default arena button
      const defaultArenaButton = document.createElement('button');
      defaultArenaButton.className = 'arena-button';
+     defaultArenaButton.setAttribute('data-tooltip', 'Default arena with no special effects.'); // Tooltip for default
      defaultArenaButton.innerHTML = `
          <span>Default Arena</span>
      `;
      defaultArenaButton.addEventListener('click', () => {
-         setArenaBackground('default'); // Set to default arena
+         setArenaBackground('default');
          arenaModal.style.display = 'none';
      });
      arenaListContainer.appendChild(defaultArenaButton);
