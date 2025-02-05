@@ -38,87 +38,59 @@ document.addEventListener('DOMContentLoaded', () => {
   const genders = ['Male', 'Female'];
   const genderEmojis = {
     'Male': '👨',
-    'Female': '👩‍🦰'
+    'Female': '👩'
   };
   const districts = Array.from({ length: 12 }, (_, i) => i + 1);
 
   const firstNames = [
-    'Aria', 'Zephyr', 'Nova', 'Caspian', 'Luna', 'Orion', 'Sage', 'Phoenix', 'Lyra', 'Atlas',
-    'Kai', 'Jade', 'Ezra', 'Rowan', 'Skye', 'Ember', 'Ash', 'Finn', 'Quinn', 'Raven',
-    'Eden', 'Reed', 'Jett', 'Milo', 'Ivy', 'Faye', 'Blake', 'Coral', 'Dane', 'Wren',
-    'Leo', 'Mara', 'Avery', 'Asher', 'Harper', 'River', 'Storm', 'Indigo', 'Zara', 'Silas',
-    'Riley', 'Kendall', 'Jordan', 'Morgan', 'Casey', 'Taylor', 'Reese', 'Alex', 'Skyler', 'Blair',
-    'Remy', 'Peyton', 'Quincy', 'Sydney', 'Dylan', 'Logan', 'Parker', 'Rory', 'Sloan', 'Amara',
-    'Beau', 'Chance', 'Dahlia', 'Elliot', 'Freya', 'Gideon', 'Hazel', 'Isla', 'Jasper', 'Kira',
-    'Lachlan', 'Maeve', 'Nico', 'Opal', 'Piper', 'Rafael', 'Sierra', 'Teagan', 'Ulric',
-    'Vera', 'Wyatt', 'Xander', 'Yara', 'Zane', 'Hawk', 'Ayla', 'Elio', 'Seren', 'Alden',
-    'Tessa', 'Juno', 'Callum', 'Willa', 'Bran', 'Elara', 'Maven', 'Clover', 'Eris', 'Thorne',
-    'Galen', 'Vale', 'Rook', 'Kael', 'Maia', 'Elowen', 'Frost', 'Vesper', 'Raine', 'Cyrus',
-    'Dorian', 'Lyric', 'Winter', 'Arrow', 'Talon', 'Isolde', 'Sable', 'Aurelia', 'Sol', 'Finnian',
-    'Juniper', 'Soren', 'Echo', 'Rune', 'Drake', 'Elian', 'Lucian', 'Kalon', 'Sorrel',
-    'Niamh', 'Corwin', 'Xanthe', 'Liora', 'Selene',
-    'James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda',
-    'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
-    'Thomas', 'Sarah', 'Charles', 'Karen',
-    'José', 'María', 'Luis', 'Carmen', 'Carlos', 'Ana', 'Juan', 'Lucía',
-    'Miguel', 'Sofía',
-    'Wei', 'Jing', 'Li', 'Hao', 'Mei', 'Xiao', 'Jun', 'Fang',
-    'Ying', 'Tian',
-    'Amit', 'Priya', 'Ravi', 'Anjali', 'Vijay', 'Deepa', 'Rahul', 'Pooja',
-    'Sanjay', 'Neha',
-    'Ivan', 'Olga', 'Dmitry', 'Natalia', 'Sergey', 'Ekaterina', 'Alexei', 'Tatiana',
-    'Mikhail', 'Anastasia',
-    'Ahmed', 'Fatima', 'Mohamed', 'Aisha', 'Omar', 'Layla', 'Youssef', 'Huda',
-    'Hassan', 'Mariam',
-    'Jean', 'Marie', 'Pierre', 'Sophie', 'Michel', 'Isabelle', 'Alain', 'Claire',
-    'Laurent', 'Céline',
-    'Hans', 'Anna', 'Karl', 'Emma', 'Fritz', 'Lena', 'Heinz', 'Mia',
-    'Günther', 'Lea',
-    'Hiroshi', 'Yuki', 'Kenji', 'Aiko', 'Takashi', 'Miyu', 'Daiki', 'Sakura',
-    'Yuto', 'Hana',
-    'Liam', 'Noah', 'Oliver', 'Elijah', 'Benjamin', 'Lucas',
-    'Henry', 'Alexander', 'Charlotte', 'Amelia', 'Olivia', 'Emma',
-    'Ava', 'Sophia', 'Isabella', 'Mia', 'Evelyn', 'Harper',
-    'Mateo', 'Santiago', 'Valentina', 'Leonardo', 'Gabriela', 'Sebastián', 'Camila',
-    'Fernando', 'Catalina', 'Diego', 'Daniela', 'Emilio', 'Julieta', 'Ricardo', 'Luciana',
-    'Pedro', 'Bianca', 'Francisco', 'Mariana'
+        // ... (previous names - you can keep them or replace entirely) ...
+        'Wei', 'Jing', 'Li', 'Hao', 'Mei', 'Xiao', 'Jun', 'Fang', 'Ying', 'Tian', // Chinese
+        'Amit', 'Priya', 'Ravi', 'Anjali', 'Vijay', 'Deepa', 'Rahul', 'Pooja', 'Sanjay', 'Neha', // Indian
+        'Ivan', 'Olga', 'Dmitry', 'Natalia', 'Sergey', 'Ekaterina', 'Alexei', 'Tatiana', 'Mikhail', 'Anastasia', // Russian
+        'Ahmed', 'Fatima', 'Mohamed', 'Aisha', 'Omar', 'Layla', 'Youssef', 'Huda', 'Hassan', 'Mariam', // Arabic
+        'Jean', 'Marie', 'Pierre', 'Sophie', 'Michel', 'Isabelle', 'Alain', 'Claire', 'Laurent', 'Céline', // French
+        'Hans', 'Anna', 'Karl', 'Emma', 'Fritz', 'Lena', 'Heinz', 'Mia', 'Günther', 'Lea', // German
+        'Hiroshi', 'Yuki', 'Kenji', 'Aiko', 'Takashi', 'Miyu', 'Daiki', 'Sakura', 'Yuto', 'Hana', // Japanese
+        'Liam', 'Noah', 'Oliver', 'Elijah', 'Benjamin', 'Lucas', 'Henry', 'Alexander', 'Charlotte', 'Amelia', 'Olivia', 'Emma', 'Ava', 'Sophia', 'Isabella', 'Mia', 'Evelyn', 'Harper', // More English/International
+        'Mateo', 'Santiago', 'Valentina', 'Leonardo', 'Gabriela', 'Sebastián', 'Camila', 'Fernando', 'Catalina', 'Diego', 'Daniela', 'Emilio', 'Julieta', 'Ricardo', 'Luciana', 'Pedro', 'Bianca', 'Francisco', 'Mariana', // Spanish/Latin American
+        'Alessia', 'Leonardo', 'Sofia', 'Alessandro', 'Aurora', 'Andrea', 'Emma', 'Lorenzo', 'Giorgia', 'Riccardo', // Italian
+        'Frederik', 'Emma', 'Oscar', 'Clara', 'William', 'Ella', 'Lucas', 'Ida', 'Victor', 'Sofie', // Danish
+        'Niko', 'Sofia', 'Elias', 'Emilia', 'Leo', 'Olivia', 'Onni', 'Aino', 'Eino', 'Helmi', // Finnish
+        'Mikael', 'Ella', 'Oliver', 'Sofia', 'Alexander', 'Olivia', 'Elias', 'Aada', 'Daniel', 'Helmi', // Swedish
+        'Seung', 'Min', 'Ji', 'Yeon', 'Hyun', 'Soo', 'Eun', 'Jae', 'Ha', 'Kyung', // Korean (Korean names are often monosyllabic, these are simplified examples)
+        'Kenzo', 'Yumi', 'Ren', 'Sakura', 'Haruki', 'Hina', 'Akira', 'Mei', 'Kazuki', 'Aoi', // More Japanese
+        'Rajesh', 'Lakshmi', 'Vikram', 'Deepika', 'Arjun', 'Priyanka', 'Kiran', 'Anika', 'Dev', 'Shanti', // More Indian
+        'Chen', 'Lin', 'Jie', 'Yue', 'Tao', 'Xin', 'Lei', 'Hua', 'Bo', 'Ning', // More Chinese
+        'Karim', 'Nadia', 'Samir', 'Leila', 'Yasin', 'Amina', 'Faris', 'Salma', 'Hamza', 'Khadija', // More Arabic
+        'Adrien', 'Manon', 'Hugo', 'Léa', 'Théo', 'Chloé', 'Louis', 'Camille', 'Antoine', 'Juliette', // More French
+        'Maximilian', 'Sophie', 'Paul', 'Marie', 'Felix', 'Lena', 'Jakob', 'Hannah', 'Leon', 'Lina', // More German
+        'Giovanni', 'Chiara', 'Matteo', 'Francesca', 'Simone', 'Alice', 'Federico', 'Beatrice', 'Gabriele', 'Vittoria', // More Italian
+        'Bjorn', 'Astrid', 'Magnus', 'Ingrid', 'Lars', 'Solveig', 'Erik', 'Sigrid', 'Anders', 'Liv' // More Scandinavian (Mix of Norwegian/Swedish)
   ];
 
   const lastNames = [
-    'Frost', 'Storm', 'Wilde', 'Blackwood', 'Rivers', 'Sky', 'Stone', 'Moon', 'Flame', 'Star',
-    'Vale', 'Haven', 'Thorne', 'Winter', 'Ember', 'Blaze', 'Shadow', 'Lark', 'Fable', 'Noble',
-    'Brook', 'Shade', 'Finch', 'Knight', 'Gale', 'Hunter', 'Fox', 'Ash', 'Viper', 'Falcon',
-    'Moss', 'Reed', 'Bluff', 'Dune', 'Pine', 'Grove', 'Heath', 'Marsh', 'Glade', 'Field',
-    'Cliff', 'Meadow', 'Ridge', 'Holt', 'Cove', 'Dell', 'Fern', 'Leaf', 'Briar', 'Vale',
-    'Knightley', 'Black', 'Dusk', 'Hart', 'Whisper', 'Shade', 'Bright', 'Crest', 'Hollow', 'Dawn',
-    'Evergreen', 'Fable', 'Glimmer', 'Haze', 'Jewel', 'Kite', 'Loom', 'Mist', 'Night', 'Owl',
-    'Petal', 'Quest', 'Rune', 'Stone', 'Thyme', 'Underwood', 'Vine', 'Warden', 'Xane', 'Yew', 'Zenith',
-    'Alder', 'Bane', 'Crimson', 'Frostborn', 'Driftwood', 'Hawke', 'Ironwood', 'Lowell', 'Nightshade', 'Ravenwood',
-    'Silverwind', 'Stormrider', 'Thistle', 'Wildflower', 'Windrider', 'Winterfell', 'Whitestone', 'Wolfstone', 'Duskwalker', 'Ironheart',
-    'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
-    'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
-    'Taylor', 'Moore', 'Jackson', 'Martin',
-    'García', 'Martínez', 'Rodríguez', 'López', 'Hernández', 'Sánchez', 'Pérez', 'Gómez',
-    'Martín', 'Jiménez',
-    'Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao',
-    'Wu', 'Zhou',
-    'Patel', 'Singh', 'Sharma', 'Kumar', 'Gupta', 'Verma', 'Reddy', 'Mehta',
-    'Jain', 'Shah',
-    'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasiliev', 'Sokolov',
-    'Mikhailov', 'Fedorov',
-    'Mohamed', 'Ali', 'Hassan', 'Hussein', 'Ahmed', 'Abdullah', 'Khan', 'Rahman',
-    'Saleh', 'Amin',
-    'Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand',
-    'Leroy', 'Moreau',
-    'Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker',
-    'Hoffmann', 'Schulz',
-    'Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura',
-    'Kobayashi', 'Kato',
-    'Nguyen', 'Tran', 'Le', 'Pham', 'Hoang', 'Dang', 'Bui', 'Do',
-    'Vo', 'Dinh', 'Pham', 'Mai', 'Lai', 'Ngo', 'Lam', 'Ho',
-    'Chan', 'Lee', 'Kim', 'Park',
-    'Singh', 'Khan', 'Chowdhury', 'Rana', 'Das', 'Gupta', 'Joshi', 'Nair',
-    'Bhattacharya', 'Mitra'
+        // ... (previous names - you can keep them or replace entirely) ...
+        'Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Wu', 'Zhou', // Chinese
+        'Patel', 'Singh', 'Sharma', 'Kumar', 'Gupta', 'Verma', 'Reddy', 'Mehta', 'Jain', 'Shah', // Indian
+        'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasiliev', 'Sokolov', 'Mikhailov', 'Fedorov', // Russian
+        'Mohamed', 'Ali', 'Hassan', 'Hussein', 'Ahmed', 'Abdullah', 'Khan', 'Rahman', 'Saleh', 'Amin', // Arabic
+        'Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand', 'Leroy', 'Moreau', // French
+        'Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schulz', // German
+        'Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', // Japanese
+        'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', // More English/International
+        'García', 'Martínez', 'Rodríguez', 'López', 'Hernández', 'Sánchez', 'Pérez', 'Gómez', 'Martín', 'Jiménez', // Spanish
+        'Rossi', 'Ferrari', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', // Italian
+        'Jensen', 'Nielsen', 'Hansen', 'Andersen', 'Pedersen', 'Larsen', 'Sørensen', 'Rasmussen', 'Jørgensen', 'Petersen', // Danish
+        'Korhonen', 'Virtanen', 'Mäkinen', 'Nieminen', 'Mäkelä', 'Hämäläinen', 'Laine', 'Heikkinen', 'Koskinen', 'Järvinen', // Finnish
+        'Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Svensson', 'Persson', 'Gustafsson', // Swedish
+        'Kim', 'Lee', 'Park', 'Choi', 'Jung', 'Kang', 'Jo', 'Yoon', 'Jang', 'Lim', // Korean (Korean last names are less diverse, these are common ones)
+        'Tanaka', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', 'Yoshida', 'Yamaguchi', 'Sasaki', 'Saito', 'Matsumoto', // More Japanese
+        'Reddy', 'Naidu', 'Rao', 'Chowdhury', 'Rana', 'Das', 'Gupta', 'Joshi', 'Nair', 'Bhattacharya', // More Indian
+        'Chen', 'Lin', 'Huang', 'Zheng', 'Cai', 'Ye', 'Feng', 'He', 'Wu', 'Xu', // More Chinese
+        'Al-Fayed', 'Al-Maktoum', 'Al-Nahyan', 'Al-Thani', 'Bin Laden', 'El-Erian', 'Hariri', 'Khouri', 'Malouf', 'Sawiris', // More Arabic (These are more family/clan names, but fit the diverse list)
+        'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schulz', 'Richter', 'Klein', // More German
+        'Esposito', 'Russo', 'Conte', 'Galli', 'Fontana', 'Mancini', 'Lombardi', 'Moretti', 'Costa', 'Barbieri', // More Italian
+        'Viklund', 'Ekström', 'Nyberg', 'Lindberg', 'Bergström', 'Holm', 'Lundqvist', 'Sjöberg', 'Sandström', 'Danielsson' // More Scandinavian (Mix of Swedish/Finnish)
   ];
 
   const naturalEvents = [
@@ -258,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
     arenaTypes.forEach(arena => {
       const arenaButtonElement = document.createElement('button');
       arenaButtonElement.className = 'arena-button';
-      arenaButtonElement.setAttribute('data-tooltip', arena.description); // Add tooltip here
+      arenaButtonElement.setAttribute('data-tooltip', arena.description);
       arenaButtonElement.innerHTML = `
           <img src="./images/${arena.backgrounds[0]}" alt="${arena.name} Thumbnail">
           <span>${arena.name}</span>
@@ -272,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
      // Add default arena button
      const defaultArenaButton = document.createElement('button');
      defaultArenaButton.className = 'arena-button';
-     defaultArenaButton.setAttribute('data-tooltip', 'Default arena with no special effects.'); // Tooltip for default
+     defaultArenaButton.setAttribute('data-tooltip', 'Default arena with no special effects.');
      defaultArenaButton.innerHTML = `
          <span>Default Arena</span>
      `;
@@ -848,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (t.health <= 0) {
             t.isAlive = false;
             tribute.placement = placementCounter--;
-            addEvent(`${t.emoji} ${t.name} has fallen due to ${naturalEvent}.`, 'death');
+            addEvent(`${tribute.emoji} ${tribute.name} has fallen due to ${naturalEvent}.`, 'death');
           }
         });
         addEvent(`${naturalEvent}, causing minor damage to tributes!`, 'natural');
