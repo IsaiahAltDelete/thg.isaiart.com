@@ -16,41 +16,21 @@ body {
   display: flex;
   flex-direction: column;
   transition: background-image 0.5s ease-in-out; /* Smooth background transition */
-  background-size: cover; /* Cover the entire body */
-  background-position: center center; /* Center the background image */
+  background-size: cover;
+  background-position: center center;
 }
 
-/* Arena Background Styles - Add more as needed, or handle dynamically in JS */
-body#arena-background.forest {
-  background-image: url('./images/forest01.jpg'); /* Example, will be set dynamically */
-}
-body#arena-background.dystopia {
-  background-image: url('./images/dystopia01.jpg');
-}
-body#arena-background.futuristic {
-  background-image: url('./images/futuristic01.jpg');
-}
-body#arena-background.grasslands {
-  background-image: url('./images/grasslands01.jpg');
-}
-body#arena-background.hauntedhouse {
-  background-image: url('./images/hauntedhouse01.jpg');
-}
-body#arena-background.island {
-  background-image: url('./images/island01.jpg');
-}
-body#arena-background.ocean {
-  background-image: url('./images/ocean01.jpg');
-}
-body#arena-background.school {
-  background-image: url('./images/school01.jpg');
-}
-body#arena-background.wastelands {
-  background-image: url('./images/wastelands01.jpg');
-}
-body#arena-background.whiteroom {
-  background-image: url('./images/whiteroom01.jpg');
-}
+/* Arena Background Styles */
+body#arena-background.forest { background-image: url('./images/forest01.jpg'); }
+body#arena-background.dystopia { background-image: url('./images/dystopia01.jpg'); }
+body#arena-background.futuristic { background-image: url('./images/futuristic01.jpg'); }
+body#arena-background.grasslands { background-image: url('./images/grasslands01.jpg'); }
+body#arena-background.hauntedhouse { background-image: url('./images/hauntedhouse01.jpg'); }
+body#arena-background.island { background-image: url('./images/island01.jpg'); }
+body#arena-background.ocean { background-image: url('./images/ocean01.jpg'); }
+body#arena-background.school { background-image: url('./images/school01.jpg'); }
+body#arena-background.wastelands { background-image: url('./images/wastelands01.jpg'); }
+body#arena-background.whiteroom { background-image: url('./images/whiteroom01.jpg'); }
 
 
 /* Header Styles */
@@ -59,8 +39,8 @@ header {
   padding: 25px 20px;
   text-align: center;
   border-bottom: 2px solid #333;
-  z-index: 100; /* Ensure header is above background */
-  position: relative; /* Needed for z-index to work */
+  z-index: 100;
+  position: relative;
 }
 
 header h1 {
@@ -88,7 +68,7 @@ main {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  z-index: 100; /* Ensure main content is above background */
+  z-index: 100;
   position: relative;
 }
 
@@ -99,10 +79,10 @@ main {
   gap: 10px;
   align-items: center;
   justify-content: center;
-  width: 100%; /* Make controls section full width of main */
+  width: 100%;
 }
 
-#controls button, #controls .arena-button { /* Apply button styles to arena buttons */
+#controls button, #controls .arena-button {
   padding: 10px 20px;
   background-color: #444;
   border: none;
@@ -142,15 +122,7 @@ main {
   transition: background 0.3s;
 }
 
-#event-frequency::-webkit-slider-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #2196f3;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
+#event-frequency::-webkit-slider-thumb,
 #event-frequency::-moz-range-thumb {
   width: 20px;
   height: 20px;
@@ -164,11 +136,11 @@ main {
   background: #555;
 }
 
-#victors-button {
+#victors-button, #alliances-button {
   background-color: #555;
 }
 
-#victors-button:hover {
+#victors-button:hover, #alliances-button:hover {
   background-color: #777;
 }
 
@@ -201,6 +173,22 @@ main {
   font-size: 1rem;
 }
 
+#fan-favorites-list {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+#fan-favorites-list span {
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#fan-favorites-list span#fan-favorite-1 { background-color: gold; color: black; }
+#fan-favorites-list span#fan-favorite-2 { background-color: silver; color: black; }
+#fan-favorites-list span#fan-favorite-3 { background-color: #cd7f32; color: black; }
+
+
 /* Event Log Styling */
 #log-section {
   max-height: 300px;
@@ -230,8 +218,7 @@ main {
 .log-entry.fight { border-left: 4px solid #f44336; }
 .log-entry.death { border-left: 4px solid #e91e63; }
 .log-entry.resource { border-left: 4px solid #4caf50; }
-.log-entry.alliance,
-.log-entry.secret_alliance { border-left: 4px solid #2196f3; }
+.log-entry.alliance, .log-entry.secret_alliance { border-left: 4px solid #2196f3; }
 .log-entry.break_alliance { border-left: 4px solid #ff9800; }
 .log-entry.heal { border-left: 4px solid #8bc34a; }
 .log-entry.natural { border-left: 4px solid #9c27b0; }
@@ -240,15 +227,8 @@ main {
 .log-entry.stealth_mission { border-left: 4px solid #00bcd4; }
 .log-entry.environmental_hazard { border-left: 4px solid #795548; }
 .log-entry.wildlife_attack { border-left: 4px solid #3f51b5; }
-.log-entry.victory {
-  border-left: 4px solid gold;
-  background-color: #ffd700;
-  color: #000;
-}
-.log-entry.gameOver {
-  border-left: 4px solid #9e9e9e;
-  background-color: #616161;
-}
+.log-entry.victory { border-left: 4px solid gold; background-color: #ffd700; color: #000; }
+.log-entry.gameOver { border-left: 4px solid #9e9e9e; background-color: #616161; }
 
 /* Keyframes for log entry slide */
 @keyframes slideIn {
@@ -256,324 +236,50 @@ main {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Custom Scrollbar Styling for Webkit */
-#log-section::-webkit-scrollbar {
-  width: 8px;
-}
-
-#log-section::-webkit-scrollbar-track {
-  background: #222;
-  border-radius: 4px;
-}
-
-#log-section::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 4px;
-  border: 2px solid #222;
-}
-
-#log-section::-webkit-scrollbar-thumb:hover {
-  background-color: #777;
-}
-
-/* Firefox Scrollbar */
-#log-section {
-  scrollbar-width: thin;
-  scrollbar-color: #555 #222;
-}
+/* Custom Scrollbar Styling */
+#log-section::-webkit-scrollbar { width: 8px; }
+#log-section::-webkit-scrollbar-track { background: #222; border-radius: 4px; }
+#log-section::-webkit-scrollbar-thumb { background-color: #555; border-radius: 4px; border: 2px solid #222; }
+#log-section::-webkit-scrollbar-thumb:hover { background-color: #777; }
+#log-section { scrollbar-width: thin; scrollbar-color: #555 #222; }
 
 /* Modal Styling */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.7);
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
+.modal-content { background-color: #222; margin: 10% auto; padding: 20px; border: 1px solid #444; width: 80%; max-width: 700px; border-radius: 10px; position: relative; box-shadow: 0 8px 16px rgba(0,0,0,0.5); }
+.modal-content h2 { margin-bottom: 20px; text-align: center; color: #ffd700; }
+.modal-content div, .modal-content p, .modal-content ul, .modal-content label, .modal-content select, .modal-content input, .modal-content button { color: #e0e0e0; }
+.modal-content ul { list-style-type: disc; padding-left: 20px; }
+.modal-content .setting-item { margin-bottom: 15px; }
+.modal-content label { display: block; margin-bottom: 5px; }
+.modal-content input[type="number"], .modal-content select { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #555; background-color: #333; color: #e0e0e0; }
+.modal-content .close { color: #aaa; font-size: 28px; font-weight: 600; position: absolute; top: 10px; right: 20px; cursor: pointer; }
+.modal-content .close:hover, .modal-content .close:focus { color: #fff; text-decoration: none; }
+
+/* Settings Modal Buttons */
+.setting-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+.setting-buttons button { padding: 10px 15px; border-radius: 5px; border: none; background-color: #555; color: #e0e0e0; cursor: pointer; transition: background-color 0.3s; }
+.setting-buttons button:hover { background-color: #777; }
+
+/* Victors Modal Styling */
+#victors-modal .modal-content {
+    max-width: 600px;
 }
 
-.modal-content {
-  background-color: #222;
-  margin: 10% auto;
-  padding: 20px;
-  border: 1px solid #444;
-  width: 80%;
-  max-width: 700px;
-  border-radius: 10px;
-  position: relative;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+#victors-list {
+    margin-bottom: 20px;
 }
 
-.modal-content h2 {
-  margin-bottom: 20px;
-  text-align: center;
-  color: #ffd700;
-}
-
-.modal-content div, .modal-content p, .modal-content ul, .modal-content label, .modal-content select, .modal-content input {
-  color: #e0e0e0;
-}
-
-.modal-content ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-.modal-content .setting-item {
-  margin-bottom: 15px;
-}
-
-.modal-content label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.modal-content input[type="number"], .modal-content select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #555;
-  background-color: #333;
-  color: #e0e0e0;
-}
-
-
-.close {
-  color: #aaa;
-  font-size: 28px;
-  font-weight: 600;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-  color: #fff;
-  text-decoration: none;
-}
-
-/* Tribute Cards Styling */
-#tributes-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
-  justify-content: center;
-  width: 100%;
-}
-
-/* For larger screens, force 3 rows of 8 tributes */
-@media (min-width: 1200px) {
-  #tributes-container {
-    grid-template-columns: repeat(8, minmax(180px, 1fr));
-  }
-}
-
-
-.tribute {
-  background-color: #2a2a2a;
-  padding: 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
-  position: relative;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-.tribute:hover {
-  transform: translateY(-5px);
-  background-color: #3a3a3a;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-}
-
-.tribute.dead {
-  background-color: #555;
-  opacity: 0.75;
-  position: relative;
-}
-
-.tribute.dead::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 0, 0, 0.3);
-  border-radius: 10px;
-}
-
-.tribute.winner {
-  border: 2px solid gold;
-}
-
-.placement {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background-color: gold;
-  color: #000;
-  padding: 2px 5px;
-  border-radius: 3px;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.tribute div {
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-/* Health and Hunger Bars */
-.health-bar, .hunger-bar {
-  width: 100%;
-  height: 10px;
-  background-color: #444;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.health-bar-fill {
-  height: 100%;
-  background-color: #4caf50;
-  width: 100%;
-  transition: width 0.3s;
-}
-
-.hunger-bar-fill {
-  height: 100%;
-  background-color: #ff9800;
-  width: 100%;
-  transition: width 0.3s;
-}
-
-/* Card Animation Effects */
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-
-@keyframes glowRed {
-  from { box-shadow: 0 0 10px red; }
-  to { box-shadow: 0 0 0px red; }
-}
-
-@keyframes glowGreen {
-  from { box-shadow: 0 0 10px green; }
-  to { box-shadow: 0 0 0px green; }
-}
-
-@keyframes glowBlue {
-  from { box-shadow: 0 0 10px blue; }
-  to { box-shadow: 0 0 0px blue; }
-}
-
-.tribute.damage {
-  animation: shake 0.5s;
-  animation-fill-mode: forwards;
-  box-shadow: 0 0 10px red;
-}
-
-.tribute.heal {
-  animation: glowGreen 1s forwards;
-}
-
-.tribute.heal-blue {
-  animation: glowBlue 1s forwards;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 800px) {
-  .flex-container {
-    flex-direction: column;
-  }
-
-  #scoreboard, #log-section {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  header .info {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .modal-content {
-    width: 90%;
-    margin: 20% auto;
-  }
-}
-
-/* Tooltip Styling */
-[data-tooltip] {
-  position: relative;
-  cursor: help;
-}
-
-[data-tooltip]:hover::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: #e0e0e0;
-  padding: 5px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-  z-index: 10;
-  font-size: 0.85rem;
-}
-
-/* Tribute Modal Specific Styling */
-#tribute-modal .modal-content {
-  max-width: 700px;
-}
-
-#tribute-modal-stats {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 15px;
-}
-
-#tribute-modal-stats .modal-stat-group {
-  flex: 1;
-  min-width: 30%;
-  padding: 15px;
-  margin-bottom: 0;
-  border-radius: 8px;
-  background-color: #333;
-}
-
-#tribute-modal-stats .modal-stat-group div {
-  margin-bottom: 10px;
-  font-size: 1rem;
-}
-
-#tribute-modal-stats .modal-stat-group div:last-child {
-  margin-bottom: 0;
+.victor-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    background-color: #333;
 }
 
 
 /* Arena Modal Styling */
 #arena-modal .modal-content {
-  max-width: 90%; /* Wider modal for arena buttons */
+  max-width: 90%;
   width: auto;
   display: flex;
   flex-direction: column;
@@ -592,7 +298,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 150px; /* Adjust as needed */
+  width: 150px;
   padding: 10px;
   text-align: center;
   border: 1px solid #555;
@@ -616,4 +322,97 @@ main {
 
 .arena-button span {
   font-size: 0.9rem;
+}
+
+/* Alliances Modal Styling */
+#alliances-modal .modal-content {
+    max-width: 500px;
+}
+
+#alliances-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.alliance-item {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #333;
+}
+
+
+/* Tribute Cards Styling - unchanged */
+#tributes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  #tributes-container {
+    grid-template-columns: repeat(8, minmax(180px, 1fr));
+  }
+}
+
+
+.tribute {
+  background-color: #2a2a2a;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.tribute:hover, .tribute.dead, .tribute.winner { /* Added dead and winner for specificity */
+  transform: translateY(-5px);
+  background-color: #3a3a3a;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.tribute.dead { background-color: #555; opacity: 0.75; position: relative; }
+.tribute.dead::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 0, 0, 0.3); border-radius: 10px; }
+.tribute.winner { border: 2px solid gold; }
+
+.placement { position: absolute; top: 5px; left: 5px; background-color: gold; color: #000; padding: 2px 5px; border-radius: 3px; font-weight: 600; font-size: 0.9rem; }
+.tribute div { margin-bottom: 8px; text-align: center; }
+
+/* Health and Hunger Bars - unchanged */
+.health-bar, .hunger-bar { width: 100%; height: 10px; background-color: #444; border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
+.health-bar-fill { height: 100%; background-color: #4caf50; width: 100%; transition: width 0.3s; }
+.hunger-bar-fill { height: 100%; background-color: #ff9800; width: 100%; transition: width 0.3s; }
+
+/* Card Animation Effects - unchanged */
+@keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+@keyframes glowRed { from { box-shadow: 0 0 10px red; } to { box-shadow: 0 0 0px red; } }
+@keyframes glowGreen { from { box-shadow: 0 0 10px green; } to { box-shadow: 0 0 0px green; } }
+@keyframes glowBlue { from { box-shadow: 0 0 10px blue; } to { box-shadow: 0 0 0px blue; } }
+
+.tribute.damage { animation: shake 0.5s; animation-fill-mode: forwards; box-shadow: 0 0 10px red; }
+.tribute.heal { animation: glowGreen 1s forwards; }
+.tribute.heal-blue { animation: glowBlue 1s forwards; }
+
+/* Responsive Adjustments - unchanged */
+@media (max-width: 800px) { .flex-container { flex-direction: column; } #scoreboard, #log-section { max-width: 100%; } }
+@media (max-width: 600px) { header .info { flex-direction: column; gap: 10px; } .modal-content { width: 90%; margin: 20% auto; } }
+
+/* Tooltip Styling - unchanged */
+[data-tooltip] { position: relative; cursor: help; }
+[data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #333; color: #e0e0e0; padding: 5px 8px; border-radius: 4px; white-space: nowrap; z-index: 10; font-size: 0.85rem; }
+
+/* Tribute Modal Specific Styling - unchanged */
+#tribute-modal .modal-content { max-width: 700px; }
+#tribute-modal-stats { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 15px; }
+#tribute-modal-stats .modal-stat-group { flex: 1; min-width: 30%; padding: 15px; margin-bottom: 0; border-radius: 8px; background-color: #333; }
+#tribute-modal-stats .modal-stat-group div { margin-bottom: 10px; font-size: 1rem; }
+#tribute-modal-stats .modal-stat-group div:last-child { margin-bottom: 0; }
+
+
+@media (max-width: 768px) {
+  #tribute-modal-stats { flex-direction: column; }
+  #tribute-modal-stats .modal-stat-group { min-width: auto; margin-bottom: 15px; }
 }

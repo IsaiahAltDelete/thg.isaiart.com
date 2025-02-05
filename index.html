@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body id="arena-background"> <!-- Background will be applied to this body -->
+<body id="arena-background">
   <header>
     <h1>THE HUNGER GAMES SIMULATOR</h1>
     <div class="info">
@@ -23,11 +23,11 @@
       <button id="pause-button" aria-label="Pause Simulation">Pause</button>
       <button id="resume-button" aria-label="Resume Simulation">Resume</button>
       <button id="restart-button" aria-label="Restart Simulation">Restart</button>
-      <button id="clear-victors-button" aria-label="Clear Victors List">Clear Victors</button>
       <button id="settings-button" aria-label="Open Settings Modal">Settings</button>
       <button id="help-button" aria-label="Open Help Modal">Help</button>
-      <button id="arena-button" aria-label="Open Arena Selection Modal">Arenas</button> <!-- Arena Button -->
-      <button id="random-arena-button" aria-label="Random Arena">Random Arena</button> <!-- Random Arena Button -->
+      <button id="arena-button" aria-label="Open Arena Selection Modal">Arenas</button>
+      <button id="random-arena-button" aria-label="Random Arena">Random Arena</button>
+      <button id="alliances-button" aria-label="View Active Alliances">Alliances</button>
 
       <div class="slider-container">
         <label for="event-frequency" id="event-frequency-label">1 Second</label>
@@ -47,7 +47,11 @@
           <strong>Most Kills:</strong> <span id="most-kills">0</span> by <span id="most-kills-name">N/A</span>
         </div>
         <div class="score-item" data-tooltip="Tribute who has performed the most actions">
-          <strong>Fan Favorite:</strong> <span id="fan-favorite">N/A</span>
+          <strong>Fan Favorite:</strong> <div id="fan-favorites-list">
+            <span class="fan-favorite" id="fan-favorite-1">N/A</span>
+            <span class="fan-favorite" id="fan-favorite-2">N/A</span>
+            <span class="fan-favorite" id="fan-favorite-3">N/A</span>
+          </div>
         </div>
       </section>
 
@@ -71,6 +75,7 @@
         <div id="victors-list">
           <!-- List of victors will be dynamically inserted here -->
         </div>
+        <button id="clear-victors-button" aria-label="Clear Victors List">Clear Victors</button>
       </div>
     </div>
 
@@ -108,7 +113,11 @@
             <option value="4">1 Minute</option>
           </select>
         </div>
-        <button id="save-settings">Save Settings</button>
+        <div class="setting-buttons">
+          <button id="save-settings">Save Settings</button>
+          <button id="reset-settings">Reset Settings</button>
+          <button id="reset-all">Reset Everything</button>
+        </div>
       </div>
     </div>
 
@@ -144,6 +153,17 @@
         <h2>Arena Selection</h2>
         <div id="arena-list">
           <!-- Arena buttons will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Alliances Modal -->
+    <div id="alliances-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="alliances-close">×</span>
+        <h2>Active Alliances</h2>
+        <div id="alliances-list">
+          <!-- Active alliances will be dynamically inserted here -->
         </div>
       </div>
     </div>
