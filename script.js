@@ -1,27 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
   const weapons = [
-    { name: 'Short Sword', emoji: '🗡️', damage: '1d6' },
-    { name: 'Longbow', emoji: '🏹', damage: '1d8' },
-    { name: 'Battle Axe', emoji: '🪓', damage: '1d8' },
-    { name: 'Dagger', emoji: '🔪', damage: '1d4' },
-    { name: 'Warhammer', emoji: '🔨', damage: '1d8' },
-    { name: 'Greatsword', emoji: '⚔️', damage: '2d6' },
+    { name: 'Short Sword', emoji: '🗡️', damage: '1d6', type: 'sword' },
+    { name: 'Longbow', emoji: '🏹', damage: '1d8', type: 'ranged' },
+    { name: 'Battle Axe', emoji: '🪓', damage: '1d8', type: 'axe' },
+    { name: 'Dagger', emoji: '🔪', damage: '1d4', type: 'dagger' },
+    { name: 'Warhammer', emoji: '🔨', damage: '1d8', type: 'hammer' },
+    { name: 'Greatsword', emoji: '⚔️', damage: '2d6', type: 'sword' },
+    // More Sword Types
+    { name: 'Longsword', emoji: '🗡️', damage: '1d8', type: 'sword' },
+    { name: 'Scimitar', emoji: ' curved sword ️', damage: '1d6', type: 'sword' },
+    { name: 'Broadsword', emoji: '⚔️', damage: '1d8', type: 'sword' },
+    { name: 'Rapier', emoji: ' thin sword ️', damage: '1d6', type: 'sword', finesse: true },
+    // Polearms and Spears
+    { name: 'Spear', emoji: ' ️', damage: '1d6', type: 'polearm' },
+    { name: 'Pike', emoji: ' polearm ️', damage: '1d10', type: 'polearm', reach: true },
+    { name: 'Halberd', emoji: ' poleaxe ️', damage: '1d10', type: 'polearm', heavy: true },
+    { name: 'Quarterstaff', emoji: ' staff ️', damage: '1d6', type: 'staff', versatile: '1d8' },
+    // Blunt Weapons
+    { name: 'Mace', emoji: ' mace ️', damage: '1d6', type: 'mace' },
+    { name: 'Morningstar', emoji: ' morningstar ️', damage: '1d8', type: 'mace' },
+    { name: 'Club', emoji: ' club ️', damage: '1d4', type: 'club' },
+    { name: 'Flail', emoji: ' flail ️', damage: '1d8', type: 'flail' },
+    // Ranged Weapons - More Bows and Arrows
+    { name: 'Shortbow', emoji: '🏹', damage: '1d6', type: 'ranged' },
+    { name: 'Heavy Crossbow', emoji: ' crossbow ️', damage: '1d10', type: 'ranged', heavy: true, loading: true },
+    { name: 'Light Crossbow', emoji: ' crossbow ️', damage: '1d8', type: 'ranged', loading: true },
+    { name: 'Sling', emoji: ' sling ️', damage: '1d4', type: 'ranged' },
+
     // Legendary weapons
-    { name: 'Excalibur', emoji: '🗡️', damage: '3d8', legendary: true },
-    { name: 'Mjolnir', emoji: '🔨', damage: '4d6', legendary: true },
+    { name: 'Excalibur', emoji: '🗡️', damage: '3d8', legendary: true, type: 'sword' },
+    { name: 'Mjolnir', emoji: '🔨', damage: '4d6', legendary: true, type: 'hammer' },
+    { name: 'Gungnir', emoji: ' spear ️', damage: '3d10', legendary: true, type: 'polearm' },
+    { name: ' composite bow ️', emoji: '🏹', damage: '2d8', legendary: true, type: 'ranged' },
   ];
-  
+
   const skinTones = ['🏻', '🏼', '🏽', '🏾', '🏿'];
   const genders = ['Male', 'Female'];
   const genderEmojis = {
     'Male': '👨',
-    'Female': '👩‍🦰' // Using '👩‍🦰' to represent female with hair, can adjust as needed
+    'Female': '👩‍🦰'
   };
   const districts = Array.from({ length: 12 }, (_, i) => i + 1);
-  
-  // Merged firstNames array with original and additional diverse names
+
   const firstNames = [
-    // Original Names
     'Aria', 'Zephyr', 'Nova', 'Caspian', 'Luna', 'Orion', 'Sage', 'Phoenix', 'Lyra', 'Atlas',
     'Kai', 'Jade', 'Ezra', 'Rowan', 'Skye', 'Ember', 'Ash', 'Finn', 'Quinn', 'Raven',
     'Eden', 'Reed', 'Jett', 'Milo', 'Ivy', 'Faye', 'Blake', 'Coral', 'Dane', 'Wren',
@@ -36,37 +57,25 @@ document.addEventListener('DOMContentLoaded', () => {
     'Dorian', 'Lyric', 'Winter', 'Arrow', 'Talon', 'Isolde', 'Sable', 'Aurelia', 'Sol', 'Finnian',
     'Juniper', 'Soren', 'Echo', 'Rune', 'Drake', 'Elian', 'Lucian', 'Kalon', 'Sorrel',
     'Niamh', 'Corwin', 'Xanthe', 'Liora', 'Selene',
-    
-    // Additional Common Names from Various Countries
-    // English
     'James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda',
     'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
     'Thomas', 'Sarah', 'Charles', 'Karen',
-    // Spanish
     'José', 'María', 'Luis', 'Carmen', 'Carlos', 'Ana', 'Juan', 'Lucía',
     'Miguel', 'Sofía',
-    // Chinese
     'Wei', 'Jing', 'Li', 'Hao', 'Mei', 'Xiao', 'Jun', 'Fang',
     'Ying', 'Tian',
-    // Indian
     'Amit', 'Priya', 'Ravi', 'Anjali', 'Vijay', 'Deepa', 'Rahul', 'Pooja',
     'Sanjay', 'Neha',
-    // Russian
     'Ivan', 'Olga', 'Dmitry', 'Natalia', 'Sergey', 'Ekaterina', 'Alexei', 'Tatiana',
     'Mikhail', 'Anastasia',
-    // Arabic
     'Ahmed', 'Fatima', 'Mohamed', 'Aisha', 'Omar', 'Layla', 'Youssef', 'Huda',
     'Hassan', 'Mariam',
-    // French
     'Jean', 'Marie', 'Pierre', 'Sophie', 'Michel', 'Isabelle', 'Alain', 'Claire',
     'Laurent', 'Céline',
-    // German
     'Hans', 'Anna', 'Karl', 'Emma', 'Fritz', 'Lena', 'Heinz', 'Mia',
     'Günther', 'Lea',
-    // Japanese
     'Hiroshi', 'Yuki', 'Kenji', 'Aiko', 'Takashi', 'Miyu', 'Daiki', 'Sakura',
     'Yuto', 'Hana',
-    // Additional International Names
     'Liam', 'Noah', 'Oliver', 'Elijah', 'Benjamin', 'Lucas',
     'Henry', 'Alexander', 'Charlotte', 'Amelia', 'Olivia', 'Emma',
     'Ava', 'Sophia', 'Isabella', 'Mia', 'Evelyn', 'Harper',
@@ -75,9 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Pedro', 'Bianca', 'Francisco', 'Mariana'
   ];
 
-  // Merged lastNames array with original and additional diverse names
   const lastNames = [
-    // Original Last Names
     'Frost', 'Storm', 'Wilde', 'Blackwood', 'Rivers', 'Sky', 'Stone', 'Moon', 'Flame', 'Star',
     'Vale', 'Haven', 'Thorne', 'Winter', 'Ember', 'Blaze', 'Shadow', 'Lark', 'Fable', 'Noble',
     'Brook', 'Shade', 'Finch', 'Knight', 'Gale', 'Hunter', 'Fox', 'Ash', 'Viper', 'Falcon',
@@ -88,37 +95,25 @@ document.addEventListener('DOMContentLoaded', () => {
     'Petal', 'Quest', 'Rune', 'Stone', 'Thyme', 'Underwood', 'Vine', 'Warden', 'Xane', 'Yew', 'Zenith',
     'Alder', 'Bane', 'Crimson', 'Frostborn', 'Driftwood', 'Hawke', 'Ironwood', 'Lowell', 'Nightshade', 'Ravenwood',
     'Silverwind', 'Stormrider', 'Thistle', 'Wildflower', 'Windrider', 'Winterfell', 'Whitestone', 'Wolfstone', 'Duskwalker', 'Ironheart',
-    
-    // Additional Last Names from Various Countries
-    // English
     'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
     'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
     'Taylor', 'Moore', 'Jackson', 'Martin',
-    // Spanish
     'García', 'Martínez', 'Rodríguez', 'López', 'Hernández', 'Sánchez', 'Pérez', 'Gómez',
     'Martín', 'Jiménez',
-    // Chinese
     'Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao',
     'Wu', 'Zhou',
-    // Indian
     'Patel', 'Singh', 'Sharma', 'Kumar', 'Gupta', 'Verma', 'Reddy', 'Mehta',
     'Jain', 'Shah',
-    // Russian
     'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasiliev', 'Sokolov',
     'Mikhailov', 'Fedorov',
-    // Arabic
     'Mohamed', 'Ali', 'Hassan', 'Hussein', 'Ahmed', 'Abdullah', 'Khan', 'Rahman',
     'Saleh', 'Amin',
-    // French
     'Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand',
     'Leroy', 'Moreau',
-    // German
     'Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker',
     'Hoffmann', 'Schulz',
-    // Japanese
     'Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura',
     'Kobayashi', 'Kato',
-    // Additional International Last Names
     'Nguyen', 'Tran', 'Le', 'Pham', 'Hoang', 'Dang', 'Bui', 'Do',
     'Vo', 'Dinh', 'Pham', 'Mai', 'Lai', 'Ngo', 'Lam', 'Ho',
     'Chan', 'Lee', 'Kim', 'Park',
@@ -138,11 +133,33 @@ document.addEventListener('DOMContentLoaded', () => {
     'Lightning strikes the arena',
     'A landslide blocks a major area',
   ];
-  
+
   const weatherTypes = ['Clear', 'Rain', 'Storm', 'Fog', 'Heatwave', 'Snow', 'Volcano', 'Lightning', 'Landslide'];
   const eventIntervals = [1000, 5000, 15000, 30000, 60000];
   const eventIntervalLabels = ['1 Second', '5 Seconds', '15 Seconds', '30 Seconds', '1 Minute'];
-  
+
+  const resources = [
+    { name: 'Food Ration', emoji: '🍎', effect: 'hunger', value: 20, type: 'food' },
+    { name: 'Medkit', emoji: '🩹', effect: 'heal', value: 10, type: 'medicine' },
+    { name: 'Water Bottle', emoji: '💧', effect: 'hunger', value: 15, type: 'food' },
+    { name: 'Energy Drink', emoji: '⚡', effect: 'hunger', value: 25, type: 'food' },
+    { name: 'Healing Herbs', emoji: '🌿', effect: 'heal', value: 7, type: 'medicine' },
+    { name: 'Sturdy Armor', emoji: '🛡️', effect: 'armor', value: 1, duration: 5, type: 'buff' },
+    { name: 'Agility Boots', emoji: '🥾', effect: 'agility', value: 1, duration: 5, type: 'buff' }
+  ];
+
+  const resourceItemsForConsumption = ['Food Ration', 'Medkit', 'Water Bottle', 'Energy Drink', 'Healing Herbs'];
+
+  const additionalEvents = [
+    'trap',
+    'treasure',
+    'stealth_mission',
+    'environmental_hazard',
+    'secret_alliance',
+    'resource_cache',
+    'wildlife_attack'
+  ];
+
   let tributes = [];
   let events = [];
   let day = 1;
@@ -151,18 +168,29 @@ document.addEventListener('DOMContentLoaded', () => {
   let placementCounter = 24;
   let gameOver = false;
   let currentWeather = 'Clear';
+  let environment = { weather: 'Clear', terrain: 'Open Field', effects: [] };
 
-  // Define possible new events
-  const additionalEvents = [
-    'trap',
-    'treasure',
-    'stealth_mission',
-    'environmental_hazard',
-    // Removed 'sabotage' from here
-    'secret_alliance',
-    'resource_cache',
-    'wildlife_attack'
-  ];
+  let simulationSettings = {
+    baseHealth: 20,
+    baseHunger: 100,
+    eventFrequencyIndex: 0
+  };
+
+  const loadSettings = () => {
+    const savedSettings = localStorage.getItem('simulationSettings');
+    if (savedSettings) {
+      simulationSettings = JSON.parse(savedSettings);
+      document.getElementById('base-health').value = simulationSettings.baseHealth;
+      document.getElementById('base-hunger').value = simulationSettings.baseHunger;
+      document.getElementById('event-frequency-setting').value = simulationSettings.eventFrequencyIndex;
+      document.getElementById('event-frequency').value = simulationSettings.eventFrequencyIndex;
+      document.getElementById('event-frequency-label').textContent = eventIntervalLabels[simulationSettings.eventFrequencyIndex];
+    }
+  };
+
+  const saveSettingsToLocalStorage = () => {
+    localStorage.setItem('simulationSettings', JSON.stringify(simulationSettings));
+  };
 
   const generateUniqueName = (usedNames, usedFirstNames) => {
     let name;
@@ -181,7 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const generateAge = () => {
-    return Math.floor(Math.random() * 6) + 13; // Ages between 13 and 18
+    return Math.floor(Math.random() * 6) + 13;
+
   };
 
   const generateEmoji = (gender) => {
@@ -192,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const generateStats = () => {
     return {
-      strength: Math.floor(Math.random() * 6) + 8, // 8 to 13
+      strength: Math.floor(Math.random() * 6) + 8,
       agility: Math.floor(Math.random() * 6) + 8,
       intelligence: Math.floor(Math.random() * 6) + 8,
       stealth: Math.floor(Math.random() * 6) + 8,
@@ -204,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const usedFirstNames = new Set();
     let tributes = [];
     districts.forEach(district => {
-      // Ensure one Male and one Female per district
       genders.forEach(gender => {
         const name = generateUniqueName(usedNames, usedFirstNames);
         const age = generateAge();
@@ -213,8 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
           name: name,
           gender: gender,
           age: age,
-          health: 20,
-          hunger: 100,
+          health: simulationSettings.baseHealth,
+          hunger: simulationSettings.baseHunger,
           AC: 10,
           attackBonus: 2,
           isAlive: true,
@@ -226,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
           inventory: [],
           stats: generateStats(),
           district: district,
+          statusEffects: [],
         });
       });
     });
@@ -245,12 +274,46 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const attack = (attacker, defender) => {
-    const attackRoll = Math.floor(Math.random() * 20) + 1 + Math.floor((attacker.stats.strength - 10) / 2);
-    const attackTotal = attackRoll + attacker.attackBonus;
-    const hit = attackTotal >= defender.AC;
+    let attackRoll = Math.floor(Math.random() * 20) + 1 + Math.floor((attacker.stats.strength - 10) / 2);
+    let defenderAC = defender.AC;
+
+    if (environment.weather === 'Rain' || environment.weather === 'Storm') {
+      attackRoll = Math.max(1, attackRoll - 2);
+    }
+    if (environment.terrain === 'Dense Fog' && Math.random() < 0.3) {
+      attackRoll = Math.max(1, attackRoll - 3);
+    }
+
+    let agilityBuff = attacker.statusEffects.find(effect => effect.effect === 'agility');
+    if (agilityBuff) {
+      attackRoll += agilityBuff.value;
+    }
+
+    let attackTotal = attackRoll + attacker.attackBonus;
+
+    let armorBuff = defender.statusEffects.find(effect => effect.effect === 'armor');
+    if (armorBuff) {
+      defenderAC += armorBuff.value;
+    }
+
+    const hit = attackTotal >= defenderAC;
     let damage = 0;
     let damageRollResult = null;
-    if (hit) {
+
+    if (attackRoll === 20) { // Natural 20: Instant Kill
+      defender.health = 0;
+      damage = simulationSettings.baseHealth; // For log message clarity, set damage to max health
+      triggerAnimation(defender.id, 'damage');
+      return {
+        attackRoll,
+        attackTotal,
+        hit: true,
+        criticalHit: true, // Indicate critical hit
+        damage,
+        damageRollResult: { total: damage, rolls: ['Instant Kill'] }, // Mock damage roll result
+        defenderAC
+      };
+    } else if (hit) {
       if (attacker.weapon) {
         damageRollResult = rollDice(attacker.weapon.damage);
       } else {
@@ -258,9 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       damage = damageRollResult.total + Math.floor((attacker.stats.strength - 10) / 2);
       defender.health = Math.max(0, defender.health - damage);
-      
-      // Trigger damage animation
       triggerAnimation(defender.id, 'damage');
+      if (damage > 5 && defender.health > 0) {
+        defender.statusEffects.push({ name: 'Injured', type: 'debuff', duration: 3, effect: 'health', value: -1 });
+      }
     }
     return {
       attackRoll,
@@ -268,31 +332,31 @@ document.addEventListener('DOMContentLoaded', () => {
       hit,
       damage,
       damageRollResult,
+      defenderAC
     };
   };
 
   const updateTributesDisplay = () => {
     const tributesContainer = document.getElementById('tributes-container');
-    tributesContainer.innerHTML = tributes.map(tribute => `
-      <div class="tribute ${tribute.isAlive ? '' : 'dead'} ${tribute.isAlive && tribute.placement === 1 ? 'winner' : ''}" id="tribute-${tribute.id}" data-id="${tribute.id}">
-        ${!tribute.isAlive ? `<div class="placement">${tribute.placement}${getOrdinalSuffix(tribute.placement)} Place</div>` : ''}
+    tributesContainer.innerHTML = tributes.map(tribute =>
+      `<div class="tribute ${tribute.isAlive ? '' : 'dead'} ${tribute.isAlive && tribute.placement === 1 ? 'winner' : ''}" id="tribute-${tribute.id}" data-id="${tribute.id}">
+        ${tribute.placement ? `<div class="placement">${tribute.placement}${getOrdinalSuffix(tribute.placement)}</div>` : ''}
         <div>${tribute.emoji} ${tribute.name}</div>
         <div>District ${tribute.district}</div>
         <div>Age: ${tribute.age}</div>
-        <!-- Removed Gender Display from Tribute Preview -->
         <div>HP: ${tribute.health}</div>
         <div class="health-bar">
-          <div class="health-bar-fill" style="width: ${(tribute.health / 20) * 100}%"></div>
+          <div class="health-bar-fill" style="width: ${(tribute.health / simulationSettings.baseHealth) * 100}%"></div>
         </div>
         <div>Hunger: ${tribute.hunger}%</div>
         <div class="hunger-bar">
           <div class="hunger-bar-fill" style="width: ${tribute.hunger}%"></div>
         </div>
         <div>Weapon: ${tribute.weapon ? tribute.weapon.emoji + ' ' + tribute.weapon.name : 'None'}</div>
-      </div>
-    `).join('');
+        ${tribute.statusEffects.length > 0 ? `<div class="status-effects">Status: ${tribute.statusEffects.map(effect => effect.name).join(', ')}</div>` : ''}
+      </div>`
+    ).join('');
 
-    // Add event listeners to tribute cards
     const tributeElements = document.querySelectorAll('.tribute');
     tributeElements.forEach(el => {
       el.addEventListener('click', () => {
@@ -305,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const getOrdinalSuffix = (i) => {
     const j = i % 10,
-          k = i % 100;
+      k = i % 100;
     if (j === 1 && k !== 11) {
       return "st";
     }
@@ -323,14 +387,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const logEntry = document.createElement('div');
     logEntry.classList.add('log-entry', type);
     logEntry.textContent = message;
-    logContainer.insertBefore(logEntry, logContainer.firstChild); // Insert at the top
+    logContainer.insertBefore(logEntry, logContainer.firstChild);
 
-    // Remove older events if more than 25
     if (logContainer.children.length > 25) {
       logContainer.removeChild(logContainer.lastChild);
     }
-
-    // Auto-scroll to the top (newest message)
     logContainer.scrollTop = 0;
   };
 
@@ -369,23 +430,89 @@ document.addEventListener('DOMContentLoaded', () => {
     if (victorsList.length === 0) {
       victorsListElement.innerHTML = '<p>No victors yet.</p>';
     } else {
-      victorsListElement.innerHTML = victorsList.map((victor, index) => `
-        <div class="victor-item">${index + 1} - ${victor}</div>
-      `).join('');
+      victorsListElement.innerHTML = victorsList.map((victor, index) =>
+        `<div class="victor-item">${index + 1} - ${victor}</div>`
+      ).join('');
     }
   };
+
+  const applyStatusEffects = (tribute) => {
+    for (let i = tribute.statusEffects.length - 1; i >= 0; i--) {
+      const effect = tribute.statusEffects[i];
+      if (effect.effect === 'health') {
+        tribute.health = Math.max(0, tribute.health + effect.value);
+        if (effect.value < 0 && tribute.health > 0) {
+          triggerAnimation(tribute.id, 'damage');
+        }
+      } else if (effect.effect === 'hunger') {
+        tribute.hunger = Math.min(100, tribute.hunger + effect.value);
+      } else if (effect.effect === 'armor') {
+
+      } else if (effect.effect === 'agility') {
+
+      }
+      effect.duration--;
+      if (effect.duration <= 0) {
+        tribute.statusEffects.splice(i, 1);
+        addEvent(`${tribute.emoji} ${tribute.name}'s status effect '${effect.name}' has worn off.`, 'status_end');
+      }
+    }
+  };
+
+  const useResource = (tribute, resourceName) => {
+    const resourceIndex = tribute.inventory.findIndex(item => item.name === resourceName);
+    if (resourceIndex > -1) {
+      const resource = tribute.inventory.splice(resourceIndex, 1)[0];
+      if (resource.effect === 'hunger') {
+        const hungerBefore = tribute.hunger;
+        tribute.hunger = Math.min(100, tribute.hunger + resource.value);
+        addEvent(`${tribute.emoji} ${tribute.name} consumes a ${resource.emoji} ${resource.name} to restore ${tribute.hunger - hungerBefore} hunger.`, 'resource');
+      } else if (resource.effect === 'heal') {
+        const healthBefore = tribute.health;
+        tribute.health = Math.min(simulationSettings.baseHealth, tribute.health + resource.value);
+        addEvent(`${tribute.emoji} ${tribute.name} uses a ${resource.emoji} ${resource.name} to heal for ${tribute.health - healthBefore} HP.`, 'heal');
+        triggerAnimation(tribute.id, 'heal');
+      }
+    }
+  };
+
 
   const gameLoop = () => {
     tributes.forEach(tribute => {
       if (tribute.isAlive) {
+        applyStatusEffects(tribute);
+
+        // Resource Consumption Logic
+        const healthThreshold = simulationSettings.baseHealth * 0.5;
+        const hungerThreshold = 50;
+
+        if (tribute.health < healthThreshold) {
+          const medicineItem = tribute.inventory.find(item => item.type === 'medicine');
+          if (medicineItem) {
+            useResource(tribute, medicineItem.name);
+          }
+        }
+
+        if (tribute.hunger < hungerThreshold) {
+          const foodItem = tribute.inventory.find(item => item.type === 'food');
+          if (foodItem) {
+            useResource(tribute, foodItem.name);
+          }
+        }
+
+
         tribute.hunger = Math.max(0, tribute.hunger - 1);
         if (tribute.hunger === 0) {
           tribute.health = Math.max(0, tribute.health - 2);
           if (tribute.health > 0) {
             triggerAnimation(tribute.id, 'damage');
           }
-        }
-        if (tribute.health <= 0) {
+          if (tribute.health <= 0) {
+            tribute.isAlive = false;
+            tribute.placement = placementCounter--;
+            addEvent(`${tribute.emoji} ${tribute.name} has died of starvation.`, 'death');
+          }
+        } else if (tribute.health <= 0 && tribute.isAlive) {
           tribute.isAlive = false;
           tribute.placement = placementCounter--;
           addEvent(`${tribute.emoji} ${tribute.name} has fallen.`, 'death');
@@ -393,7 +520,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Automatically break all alliances if tributes <= 5
     const aliveTributes = tributes.filter(t => t.isAlive);
     if (aliveTributes.length <= 5 && aliveTributes.length > 1) {
       breakAllAlliances();
@@ -401,38 +527,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateTributesDisplay();
     updateScoreboard();
+
+    if (aliveTributes.length <= 1 && !gameOver) {
+      gameOver = true;
+      clearInterval(interval);
+      interval = null;
+      if (aliveTributes.length === 1) {
+        aliveTributes[0].placement = 1;
+        addEvent(`${aliveTributes[0].emoji} ${aliveTributes[0].name} is the victor of The Hunger Games!`, 'victory');
+        saveVictorToStorage(aliveTributes[0].name);
+      } else {
+        addEvent('The games are over, with no victor.', 'gameOver');
+      }
+    }
+  };
+
+  const getEventWeights = () => {
+    const aliveCount = tributes.filter(t => t.isAlive).length;
+    let weights = {
+      fight: 3,
+      resource: 2,
+      alliance: aliveCount > 5 ? 2 : 1,
+      break_alliance: aliveCount < 10 ? 3 : 1,
+      heal: 2,
+      natural: 1,
+      trap: 2,
+      treasure: 1,
+      stealth_mission: 2,
+      environmental_hazard: 1,
+      secret_alliance: aliveCount > 5 ? 1 : 0,
+      resource_cache: 1,
+      wildlife_attack: 2,
+    };
+
+    if (aliveCount <= 5) {
+      weights.fight += 3;
+      weights.heal = Math.max(weights.heal - 1, 1);
+    }
+    return weights;
+  };
+
+  const chooseDynamicEvent = () => {
+    const weights = getEventWeights();
+    const events = Object.keys(weights);
+    const weightedArray = events.reduce((acc, event) => {
+      const weight = weights[event];
+      for (let i = 0; i < weight; i++) {
+        acc.push(event);
+      }
+      return acc;
+    }, []);
+    return weightedArray[Math.floor(Math.random() * weightedArray.length)];
   };
 
   const generateEvent = () => {
     const aliveTributes = tributes.filter(t => t.isAlive);
     if (aliveTributes.length <= 1) return;
 
-    // Increase the frequency of 'fight' events
-    const eventTypes = [
-      'fight', 'fight', 'fight', // Increased weight for 'fight'
-      'resource', 'alliance', 'break_alliance', 'heal', 'natural',
-      'hunt', 'forage',
-      ...additionalEvents
-    ];
-
-    const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+    const eventType = chooseDynamicEvent();
 
     switch (eventType) {
       case 'fight':
         const attacker = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
         let potentialDefenders = aliveTributes.filter(t => t.id !== attacker.id && !attacker.alliances.includes(t.id));
         if (potentialDefenders.length === 0) {
-          // No valid defenders, break alliance if possible
           if (attacker.alliances.length > 0) {
             const allyId = attacker.alliances[Math.floor(Math.random() * attacker.alliances.length)];
             const ally = tributes.find(t => t.id === allyId);
-            // Break alliance
             attacker.alliances = attacker.alliances.filter(id => id !== allyId);
             ally.alliances = ally.alliances.filter(id => id !== attacker.id);
             addEvent(`${attacker.emoji} ${attacker.name} breaks the alliance with ${ally.emoji} ${ally.name}.`, 'break_alliance');
             potentialDefenders = [ally];
           } else {
-            // Only one tribute left, nothing to do
             return;
           }
         }
@@ -440,32 +606,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const attackResult = attack(attacker, defender);
         attacker.actions++;
         if (attackResult.hit) {
-          if (defender.health === 0) {
+          if (attackResult.criticalHit) { // Check for critical hit
             defender.isAlive = false;
             defender.placement = placementCounter--;
             attacker.kills++;
-            addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and hits! (${attackResult.attackRoll} vs AC ${defender.AC}). Damage: ${attackResult.damageRollResult.rolls.join('+')} = ${attackResult.damage}. ${defender.name} has died.`, 'death');
+            addEvent(`${attacker.emoji} ${attacker.name} scores a CRITICAL HIT on ${defender.emoji} ${defender.name} with a natural 20! It's an instant kill!`, 'death');
+          } else if (defender.health <= 0) {
+            defender.isAlive = false;
+            defender.placement = placementCounter--;
+            attacker.kills++;
+            addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and hits! (${attackResult.attackRoll} vs AC ${attackResult.defenderAC}). Damage: ${attackResult.damageRollResult.rolls.join('+')} = ${attackResult.damage}. ${defender.name} has died.`, 'death');
           } else {
-            addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and hits! (${attackResult.attackRoll} vs AC ${defender.AC}). Damage: ${attackResult.damageRollResult.rolls.join('+')} = ${attackResult.damage}. ${defender.name} has ${defender.health} HP left.`, 'fight');
+            addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and hits! (${attackResult.attackRoll} vs AC ${attackResult.defenderAC}). Damage: ${attackResult.damageRollResult.rolls.join('+')} = ${attackResult.damage}. ${defender.name} has ${defender.health} HP left.`, 'fight');
           }
         } else {
-          addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and misses. (${attackResult.attackRoll} vs AC ${defender.AC})`, 'fight');
+          addEvent(`${attacker.emoji} ${attacker.name} attacks ${defender.emoji} ${defender.name} and misses. (${attackResult.attackRoll} vs AC ${attackResult.defenderAC})`, 'fight');
         }
         break;
       case 'resource':
         const resourceTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        if (!resourceTribute.weapon) {
-          resourceTribute.weapon = weapons[Math.floor(Math.random() * weapons.length)];
-          resourceTribute.inventory.push(resourceTribute.weapon);
-          addEvent(`${resourceTribute.emoji} ${resourceTribute.name} finds a ${resourceTribute.weapon.legendary ? 'legendary ' : ''}${resourceTribute.weapon.name}!`, 'resource');
+        const weaponResourceChance = 0.3;
+        if (Math.random() < weaponResourceChance && !resourceTribute.weapon) {
+          const weapon = weapons[Math.floor(Math.random() * weapons.length)];
+          resourceTribute.weapon = weapon;
+          resourceTribute.inventory.push(weapon);
+          addEvent(`${resourceTribute.emoji} ${resourceTribute.name} finds a ${weapon.emoji} ${weapon.name}.`, 'resource');
         } else {
-          const itemFound = { name: 'Food Ration', effect: 'hunger', value: 20 };
-          resourceTribute.inventory.push(itemFound);
-          addEvent(`${resourceTribute.emoji} ${resourceTribute.name} finds a ${itemFound.name}.`, 'resource');
+          const foodOrMedResource = resources.filter(r => r.type === 'food' || r.type === 'medicine');
+          const resourceItem = foodOrMedResource[Math.floor(Math.random() * foodOrMedResource.length)];
+          resourceTribute.inventory.push(resourceItem);
+          addEvent(`${resourceTribute.emoji} ${resourceTribute.name} finds a ${resourceItem.emoji} ${resourceItem.name}.`, 'resource');
         }
         break;
       case 'alliance':
-        if (aliveTributes.length > 5) { // Only allow alliances if tributes > 5
+        if (aliveTributes.length > 5) {
           const allianceTribute1 = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
           let allianceTribute2;
           do {
@@ -479,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         break;
       case 'break_alliance':
-        const breaker = aliveTributes.find(t => t.alliances.length > 0);
+        const breaker = tributes.find(t => t.isAlive && t.alliances.length > 0);
         if (breaker) {
           const allyId = breaker.alliances[Math.floor(Math.random() * breaker.alliances.length)];
           const ally = tributes.find(t => t.id === allyId);
@@ -491,24 +665,34 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'heal':
         const healer = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
         const healAmount = Math.floor(Math.random() * 5) + 5;
-        healer.health = Math.min(20, healer.health + healAmount);
+        healer.health = Math.min(simulationSettings.baseHealth, healer.health + healAmount);
         healer.actions++;
-        addEvent(`${healer.emoji} ${healer.name} finds a healing herb and restores ${healAmount} HP.`, 'heal');
-        
-        // Trigger heal animation
+        addEvent(`${healer.emoji} ${healer.name} finds healing herbs and restores ${healAmount} HP.`, 'heal');
         triggerAnimation(healer.id, 'heal');
         break;
       case 'natural':
         const naturalEvent = naturalEvents[Math.floor(Math.random() * naturalEvents.length)];
         currentWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
+        environment.weather = currentWeather;
+        environment.terrain = 'Open Field';
         document.getElementById('weather').textContent = currentWeather;
+
+        if (currentWeather === 'Fog') {
+          environment.terrain = 'Dense Fog';
+        } else {
+          environment.terrain = 'Open Field';
+        }
+
         aliveTributes.forEach(t => {
-          const damage = Math.floor(Math.random() * 2) + 1; // Reduced damage
+          let damage = Math.floor(Math.random() * 2) + 1;
+          if (currentWeather === 'Storm') {
+            damage += Math.floor(Math.random() * 2);
+          }
           t.health = Math.max(0, t.health - damage);
-          if (damage > 0 && t.isAlive) {
+          if (t.health > 0 && damage > 0) {
             triggerAnimation(t.id, 'damage');
           }
-          if (t.health === 0) {
+          if (t.health <= 0) {
             t.isAlive = false;
             t.placement = placementCounter--;
             addEvent(`${t.emoji} ${t.name} has fallen due to ${naturalEvent}.`, 'death');
@@ -516,15 +700,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         addEvent(`${naturalEvent}, causing minor damage to tributes!`, 'natural');
         break;
-      // New Event Types
       case 'trap':
         const trapTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
         const trapDamage = Math.floor(Math.random() * 5) + 1;
         trapTribute.health = Math.max(0, trapTribute.health - trapDamage);
         trapTribute.actions++;
-        if (trapTribute.health === 0) {
+        if (trapTribute.health <= 0) {
           trapTribute.isAlive = false;
-          trapTribute.placement = placementCounter--;
+          tribute.placement = placementCounter--;
           addEvent(`${trapTribute.emoji} ${trapTribute.name} triggered a trap and took ${trapDamage} damage, resulting in death.`, 'trap');
         } else {
           addEvent(`${trapTribute.emoji} ${trapTribute.name} triggered a trap and took ${trapDamage} damage.`, 'trap');
@@ -543,14 +726,17 @@ document.addEventListener('DOMContentLoaded', () => {
             addEvent(`${treasureTribute.emoji} ${treasureTribute.name} discovers a legendary ${weapon.name}!`, 'treasure');
           }
         } else {
-          const rareItems = [
-            { name: 'Advanced Healing Kit', effect: 'heal', value: 10 },
-            { name: 'Sturdy Armor', effect: 'AC', value: 2 },
-            { name: 'Energy Booster', effect: 'hunger', value: 30 }
-          ];
-          const item = rareItems[Math.floor(Math.random() * rareItems.length)];
-          treasureTribute.inventory.push(item);
-          addEvent(`${treasureTribute.emoji} ${treasureTribute.name} finds a ${item.name}, which can ${item.effect === 'heal' ? 'heal' : item.effect === 'AC' ? 'increase AC' : 'boost hunger'} by ${item.value}.`, 'treasure');
+          const rareItem = resources.filter(r => r.effect === 'armor' || r.effect === 'agility')[Math.floor(Math.random() * resources.filter(r => r.effect === 'armor' || r.effect === 'agility').length)];
+          if (rareItem) {
+            treasureTribute.inventory.push(rareItem);
+            rareItem.duration = rareItem.duration || 5;
+            treasureTribute.statusEffects.push({ ...rareItem, duration: rareItem.duration, value: rareItem.value, name: rareItem.name });
+            addEvent(`${treasureTribute.emoji} ${treasureTribute.name} finds a ${rareItem.emoji} ${rareItem.name}, granting ${rareItem.effect} buff for ${rareItem.duration} turns.`, 'treasure');
+          } else {
+            const foodItem = resources.filter(r => r.type === 'food')[Math.floor(Math.random() * resources.filter(r => r.type === 'food').length)];
+            treasureTribute.inventory.push(foodItem);
+            addEvent(`${treasureTribute.emoji} ${treasureTribute.name} finds a ${foodItem.emoji} ${foodItem.name}.`, 'treasure');
+          }
         }
         break;
       case 'stealth_mission':
@@ -579,11 +765,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const hazardDamage = Math.floor(Math.random() * 4) + 2;
         aliveTributes.forEach(t => {
           t.health = Math.max(0, t.health - hazardDamage);
-          if (t.health === 0) {
+          if (t.health <= 0) {
             t.isAlive = false;
-            t.placement = placementCounter--;
+            tribute.placement = placementCounter--;
             addEvent(`${t.emoji} ${t.name} has fallen due to ${selectedHazard}.`, 'environmental_hazard');
-          } else if (hazardDamage > 0) {
+          } else if (t.health > 0 && hazardDamage > 0) {
             triggerAnimation(t.id, 'damage');
           }
         });
@@ -603,18 +789,18 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'resource_cache':
         const cacheTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
-        const cacheItem = { name: 'Energy Drink', effect: 'hunger', value: 25 };
+        const cacheItem = resources.filter(r => r.type === 'food')[Math.floor(Math.random() * resources.filter(r => r.type === 'food').length)];
         cacheTribute.inventory.push(cacheItem);
-        addEvent(`${cacheTribute.emoji} ${cacheTribute.name} discovers a hidden resource cache containing an ${cacheItem.name}.`, 'resource_cache');
+        addEvent(`${cacheTribute.emoji} ${cacheTribute.name} discovers a hidden resource cache containing a ${cacheItem.emoji} ${cacheItem.name}.`, 'resource_cache');
         break;
       case 'wildlife_attack':
         const wildlifeTribute = aliveTributes[Math.floor(Math.random() * aliveTributes.length)];
         const wildlifeDamage = Math.floor(Math.random() * 4) + 1;
         wildlifeTribute.health = Math.max(0, wildlifeTribute.health - wildlifeDamage);
         wildlifeTribute.actions++;
-        if (wildlifeTribute.health === 0) {
+        if (wildlifeTribute.health <= 0) {
           wildlifeTribute.isAlive = false;
-          wildlifeTribute.placement = placementCounter--;
+          tribute.placement = placementCounter--;
           addEvent(`${wildlifeTribute.emoji} ${wildlifeTribute.name} was attacked by wildlife and died from ${wildlifeDamage} damage.`, 'wildlife_attack');
         } else {
           addEvent(`${wildlifeTribute.emoji} ${wildlifeTribute.name} was attacked by wildlife and took ${wildlifeDamage} damage.`, 'wildlife_attack');
@@ -645,28 +831,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!gameOver) {
         generateEvent();
         gameLoop();
-        const aliveTributes = tributes.filter(t => t.isAlive);
-        if (aliveTributes.length <= 1) {
-          gameOver = true;
-          clearInterval(interval);
-          interval = null;
-          if (aliveTributes.length === 1) {
-            aliveTributes[0].placement = 1;
-            addEvent(`${aliveTributes[0].emoji} ${aliveTributes[0].name} is the victor of The Hunger Games!`, 'victory');
-            saveVictorToStorage(`${aliveTributes[0].emoji} ${aliveTributes[0].name}`);
-            updateVictorsList();
-          } else {
-            addEvent('No survivors. The arena is silent.', 'gameOver');
-          }
-          updateTributesDisplay();
-        }
-        hour += 1;
-        if (hour >= 24) {
-          hour = 0;
-          day += 1;
-        }
-        document.getElementById('day').textContent = day;
-        document.getElementById('time').textContent = hour < 10 ? `0${hour}:00` : `${hour}:00`;
       }
     }, intervalValue);
   };
@@ -700,6 +864,8 @@ document.addEventListener('DOMContentLoaded', () => {
     day = 1;
     hour = 6;
     currentWeather = 'Clear';
+    environment.weather = currentWeather;
+    environment.terrain = 'Open Field';
     document.getElementById('weather').textContent = currentWeather;
     gameOver = false;
     placementCounter = 24;
@@ -714,29 +880,52 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('restart-button').addEventListener('click', restartSimulation);
   document.getElementById('clear-victors-button').addEventListener('click', clearVictorsFromStorage);
 
-  // Victors' Village Modal
-  const victorsModal = document.getElementById('victors-modal');
-  const victorsButton = document.getElementById('victors-button');
-  const victorsClose = document.getElementById('victors-close');
+  const settingsModal = document.getElementById('settings-modal');
+  const settingsButton = document.getElementById('settings-button');
+  const settingsClose = document.getElementById('settings-close');
+  const saveSettingsButton = document.getElementById('save-settings');
 
-  victorsButton.onclick = function() {
-    victorsModal.style.display = "block";
-    updateVictorsList();
+  settingsButton.onclick = function() {
+    settingsModal.style.display = "block";
+  }
+  settingsClose.onclick = function() {
+    settingsModal.style.display = "none";
+  }
+  const closeSettingsModal = function() {
+    settingsModal.style.display = "none";
   }
 
-  victorsClose.onclick = function() {
-    victorsModal.style.display = "none";
+  saveSettingsButton.addEventListener('click', () => {
+    simulationSettings.baseHealth = parseInt(document.getElementById('base-health').value);
+    simulationSettings.baseHunger = parseInt(document.getElementById('base-hunger').value);
+    simulationSettings.eventFrequencyIndex = parseInt(document.getElementById('event-frequency-setting').value);
+
+    saveSettingsToLocalStorage();
+    clearInterval(interval);
+    startInterval();
+    closeSettingsModal();
+    restartSimulation();
+    addEvent('Simulation settings updated and restarted.', 'settings_update');
+  });
+
+
+  const helpModal = document.getElementById('help-modal');
+  const helpButton = document.getElementById('help-button');
+  const helpClose = document.getElementById('help-close');
+
+  helpButton.onclick = function() {
+    helpModal.style.display = "block";
   }
-
-  // Tribute Modal
-  const tributeModal = document.getElementById('tribute-modal');
-  const tributeModalClose = document.getElementById('tribute-modal-close');
-
-  tributeModalClose.onclick = function() {
-    tributeModal.style.display = "none";
+  helpClose.onclick = function() {
+    helpModal.style.display = "none";
   }
-
   window.onclick = function(event) {
+    if (event.target == settingsModal) {
+      settingsModal.style.display = "none";
+    }
+    if (event.target == helpModal) {
+      helpModal.style.display = "none";
+    }
     if (event.target == victorsModal) {
       victorsModal.style.display = "none";
     }
@@ -745,45 +934,84 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
+  const victorsModal = document.getElementById('victors-modal');
+  const victorsButton = document.getElementById('victors-button');
+  const victorsClose = document.getElementById('victors-close');
+
+  victorsButton.onclick = function() {
+    victorsModal.style.display = "block";
+    updateVictorsList();
+  }
+  victorsClose.onclick = function() {
+    victorsModal.style.display = "none";
+  }
+
+  const tributeModal = document.getElementById('tribute-modal');
+  const tributeModalClose = document.getElementById('tribute-modal-close');
+
+  tributeModalClose.onclick = function() {
+    tributeModal.style.display = "none";
+  }
+
   const openTributeModal = (tribute) => {
     const tributeModalName = document.getElementById('tribute-modal-name');
     const tributeModalStats = document.getElementById('tribute-modal-stats');
     tributeModalName.textContent = `${tribute.emoji} ${tribute.name}`;
     tributeModalStats.innerHTML = `
-      <div><strong>District:</strong> ${tribute.district}</div>
-      <div><strong>Age:</strong> ${tribute.age}</div>
-      <div><strong>Gender:</strong> ${tribute.gender}</div>
-      <div><strong>Health:</strong> ${tribute.health}</div>
-      <div><strong>Hunger:</strong> ${tribute.hunger}%</div>
-      <div><strong>Weapon:</strong> ${tribute.weapon ? tribute.weapon.emoji + ' ' + tribute.weapon.name : 'None'}</div>
-      <div><strong>Kills:</strong> ${tribute.kills}</div>
-      <div><strong>Alliances:</strong> ${tribute.alliances.length > 0 ? tribute.alliances.map(id => tributes.find(t => t.id === id).name).join(', ') : 'None'}</div>
-      <div><strong>Stats:</strong></div>
-      <div>Strength: ${tribute.stats.strength}</div>
-      <div>Agility: ${tribute.stats.agility}</div>
-      <div>Intelligence: ${tribute.stats.intelligence}</div>
-      <div>Stealth: ${tribute.stats.stealth}</div>
-      <div><strong>Inventory:</strong> ${tribute.inventory.length > 0 ? tribute.inventory.map(item => item.name).join(', ') : 'Empty'}</div>
-    `;
+      <div class="modal-stat-group">
+        <div><strong>District:</strong> ${tribute.district}</div>
+        <div><strong>Age:</strong> ${tribute.age}</div>
+        <div><strong>Gender:</strong> ${tribute.gender}</div>
+      </div>
+      <div class="modal-stat-group">
+        <div><strong>Health:</strong> ${tribute.health}</div>
+        <div><strong>Hunger:</strong> ${tribute.hunger}%</div>
+        <div><strong>AC:</strong> ${tribute.AC}</div>
+      </div>
+      <div class="modal-stat-group">
+        <div><strong>Weapon:</strong> ${tribute.weapon ? tribute.weapon.emoji + ' ' + tribute.weapon.name : 'None'}</div>
+        <div><strong>Kills:</strong> ${tribute.kills}</div>
+        <div><strong>Alliances:</strong> ${tribute.alliances.length > 0 ? tribute.alliances.map(id => tributes.find(t => t.id === id).name).join(', ') : 'None'}</div>
+      </div>
+      <div class="modal-stat-group">
+        <div><strong>Stats:</strong></div>
+        <div>Strength: ${tribute.stats.strength}</div>
+        <div>Agility: ${tribute.stats.agility}</div>
+        <div>Intelligence: ${tribute.stats.intelligence}</div>
+        <div>Stealth: ${tribute.stats.stealth}</div>
+      </div>
+      <div class="modal-stat-group">
+        <div><strong>Inventory:</strong> ${tribute.inventory.length > 0 ? tribute.inventory.map(item => `${item.emoji || ''} ${item.name}`).join(', ') : 'Empty'}</div>
+        ${tribute.statusEffects.length > 0 ? `<div><strong>Status Effects:</strong> ${tribute.statusEffects.map(effect => effect.name).join(', ')}</div>` : ''}
+      </div>
+      `;
     tributeModal.style.display = 'block';
   };
 
-  // Event Frequency Slider
   document.getElementById('event-frequency').addEventListener('input', function() {
     const index = parseInt(this.value);
     document.getElementById('event-frequency-label').textContent = eventIntervalLabels[index];
+    simulationSettings.eventFrequencyIndex = index;
+    saveSettingsToLocalStorage();
+    if (interval) {
+      clearInterval(interval);
+      startInterval();
+    }
+  });
+  document.getElementById('event-frequency-setting').addEventListener('change', function() {
+    const index = parseInt(this.value);
+    document.getElementById('event-frequency').value = index;
+    document.getElementById('event-frequency-label').textContent = eventIntervalLabels[index];
+    simulationSettings.eventFrequencyIndex = index;
+    saveSettingsToLocalStorage();
     if (interval) {
       clearInterval(interval);
       startInterval();
     }
   });
 
-  // Initialize the simulation
-  tributes = generateTributes();
-  updateTributesDisplay();
-  updateScoreboard();
 
-  /* Animation Trigger Function */
   function triggerAnimation(tributeId, type) {
     const tributeCard = document.getElementById(`tribute-${tributeId}`);
     if (!tributeCard) return;
@@ -794,7 +1022,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tributeCard.classList.remove('damage');
       }, 500);
     } else if (type === 'heal') {
-      // Randomly decide between green or blue glow
       const glowType = Math.random() < 0.5 ? 'heal' : 'heal-blue';
       tributeCard.classList.add(glowType);
       setTimeout(() => {
@@ -802,4 +1029,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000);
     }
   }
+
+  loadSettings();
+  tributes = generateTributes();
+  updateTributesDisplay();
+  updateScoreboard();
 });

@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>THE HUNGER GAMES</title>
+  <title>THE HUNGER GAMES SIMULATOR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>THE HUNGER GAMES</h1>
+    <h1>THE HUNGER GAMES SIMULATOR</h1>
     <div class="info">
       <div>Day: <span id="day">1</span></div>
       <div>Time: <span id="time">06:00</span></div>
@@ -18,30 +19,32 @@
 
   <main>
     <section id="controls">
-      <button id="start-button">Start</button>
-      <button id="pause-button">Pause</button>
-      <button id="resume-button">Resume</button>
-      <button id="restart-button">Restart</button>
-      <button id="clear-victors-button">Clear Victors</button>
-      
+      <button id="start-button" aria-label="Start Simulation">Start</button>
+      <button id="pause-button" aria-label="Pause Simulation">Pause</button>
+      <button id="resume-button" aria-label="Resume Simulation">Resume</button>
+      <button id="restart-button" aria-label="Restart Simulation">Restart</button>
+      <button id="clear-victors-button" aria-label="Clear Victors List">Clear Victors</button>
+      <button id="settings-button" aria-label="Open Settings Modal">Settings</button>
+      <button id="help-button" aria-label="Open Help Modal">Help</button>
+
       <div class="slider-container">
         <label for="event-frequency" id="event-frequency-label">1 Second</label>
-        <input type="range" id="event-frequency" min="0" max="4" value="0">
+        <input type="range" id="event-frequency" min="0" max="4" value="0" aria-label="Event Frequency Slider">
       </div>
-      
-      <button id="victors-button">View Victors</button>
+
+      <button id="victors-button" aria-label="View Victors Village">View Victors</button>
     </section>
 
     <div class="flex-container">
       <section id="scoreboard">
         <h2>Scoreboard</h2>
-        <div class="score-item">
+        <div class="score-item" data-tooltip="Number of tributes currently alive">
           <strong>Tributes Left:</strong> <span id="tributes-left">24</span>
         </div>
-        <div class="score-item">
+        <div class="score-item" data-tooltip="Tribute with the highest kill count">
           <strong>Most Kills:</strong> <span id="most-kills">0</span> by <span id="most-kills-name">N/A</span>
         </div>
-        <div class="score-item">
+        <div class="score-item" data-tooltip="Tribute who has performed the most actions">
           <strong>Fan Favorite:</strong> <span id="fan-favorite">N/A</span>
         </div>
       </section>
@@ -57,30 +60,82 @@
     <section id="tributes-container">
       <!-- Tribute cards will be dynamically inserted here -->
     </section>
+
+    <!-- Victors' Village Modal -->
+    <div id="victors-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="victors-close">×</span>
+        <h2>Victors' Village</h2>
+        <div id="victors-list">
+          <!-- List of victors will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Tribute Details Modal -->
+    <div id="tribute-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="tribute-modal-close">×</span>
+        <h2 id="tribute-modal-name">Tribute Name</h2>
+        <div id="tribute-modal-stats">
+          <!-- Tribute details will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="settings-close">×</span>
+        <h2>Simulation Settings</h2>
+        <div class="setting-item">
+          <label for="base-health">Base Health:</label>
+          <input type="number" id="base-health" value="20" min="10" max="50">
+        </div>
+        <div class="setting-item">
+          <label for="base-hunger">Base Hunger:</label>
+          <input type="number" id="base-hunger" value="100" min="50" max="200">
+        </div>
+        <div class="setting-item">
+          <label for="event-frequency-setting">Event Frequency:</label>
+          <select id="event-frequency-setting">
+            <option value="0">1 Second</option>
+            <option value="1">5 Seconds</option>
+            <option value="2">15 Seconds</option>
+            <option value="3">30 Seconds</option>
+            <option value="4">1 Minute</option>
+          </select>
+        </div>
+        <button id="save-settings">Save Settings</button>
+      </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="help-close">×</span>
+        <h2>Help</h2>
+        <p><strong>Welcome to The Hunger Games Simulator!</strong></p>
+        <p>This simulator runs a game where 24 tributes from 12 districts fight for survival. Here's a quick guide:</p>
+        <ul>
+          <li><strong>Start:</strong> Begins the simulation.</li>
+          <li><strong>Pause/Resume:</strong> Controls the simulation flow.</li>
+          <li><strong>Restart:</strong> Resets the game with new tributes.</li>
+          <li><strong>Clear Victors:</strong> Clears the list of past victors.</li>
+          <li><strong>Event Frequency:</strong> Adjusts how often events occur.</li>
+          <li><strong>View Victors:</strong> Shows the list of past winners.</li>
+          <li><strong>Scoreboard:</strong> Displays game stats like tributes left and most kills.</li>
+          <li><strong>Event Log:</strong> Shows a history of events in the game.</li>
+          <li><strong>Tribute Cards:</strong> Click on a tribute card to see detailed stats.</li>
+        </ul>
+        <p><strong>Settings:</strong> Customize base health, hunger, and event frequency.</p>
+        <p>Enjoy the games, and may the odds be ever in your favor!</p>
+      </div>
+    </div>
+
+
+    <script src="script.js"></script>
+
   </main>
-
-  <!-- Victors' Village Modal -->
-  <div id="victors-modal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="victors-close">&times;</span>
-      <h2>Victors' Village</h2>
-      <div id="victors-list">
-        <!-- List of victors will be dynamically inserted here -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Tribute Details Modal -->
-  <div id="tribute-modal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="tribute-modal-close">&times;</span>
-      <h2 id="tribute-modal-name">Tribute Name</h2>
-      <div id="tribute-modal-stats">
-        <!-- Tribute details will be dynamically inserted here -->
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
