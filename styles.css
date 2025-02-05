@@ -1,4 +1,7 @@
-/* Reset some default styles */
+/* Import a modern sans-serif font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+/* Reset and global styles */
 * {
   margin: 0;
   padding: 0;
@@ -6,60 +9,77 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #1e1e1e;
-  color: #f0f0f0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #121212, #1e1e1e);
+  color: #e0e0e0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* Header Styles */
 header {
-  background-color: #2c2c2c;
-  padding: 20px;
+  background: #222;
+  padding: 25px 20px;
   text-align: center;
+  border-bottom: 2px solid #333;
 }
 
 header h1 {
   margin-bottom: 10px;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  font-size: 2rem;
+  color: #ffd700;
 }
 
 header .info {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  font-size: 1.1em;
+  gap: 30px;
+  font-size: 1.1rem;
+  color: #ccc;
 }
 
+/* Main Content Layout */
 main {
   flex: 1;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
+  align-items: center; /* Center items horizontally in main container */
+  max-width: 1200px; /* Added max-width for better readability on large screens */
+  margin: 0 auto; /* Center the main container itself */
 }
 
+/* Controls Section */
 #controls {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   justify-content: center;
+  width: 100%; /* Make controls section full width of main */
 }
 
 #controls button {
   padding: 10px 20px;
   background-color: #444;
   border: none;
-  color: #f0f0f0;
+  color: #e0e0e0;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 #controls button:hover {
   background-color: #666;
+  transform: translateY(-2px);
+}
+
+#controls button:focus {
+  outline: 2px solid #ffd700;
 }
 
 .slider-container {
@@ -75,8 +95,6 @@ main {
 
 #event-frequency {
   width: 150px;
-  -webkit-appearance: none;
-  appearance: none;
   height: 8px;
   border-radius: 5px;
   background: #444;
@@ -85,12 +103,10 @@ main {
 }
 
 #event-frequency::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #2196f3; /* Changed to match theme */
+  background: #2196f3;
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -99,7 +115,7 @@ main {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #2196f3; /* Changed to match theme */
+  background: #2196f3;
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -121,24 +137,28 @@ main {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
+  justify-content: center; /* Center scoreboard and log when wrapping */
+  width: 100%; /* Make flex container full width of main */
 }
 
 #scoreboard, #log-section {
-  background-color: #2c2c2c;
-  padding: 15px;
-  border-radius: 8px;
-  flex: 1 1 300px; /* Ensures responsiveness */
-  max-width: 600px; /* Optional max-width */
+  background-color: #222;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1 1 300px;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
 #scoreboard h2, #log-section h2 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   text-align: center;
+  color: #ffd700;
 }
 
 .score-item {
-  margin-bottom: 8px;
-  font-size: 1em;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 /* Event Log Styling */
@@ -150,156 +170,141 @@ main {
 
 #log-container {
   display: flex;
-  flex-direction: column; /* Changed from column-reverse to column */
-  gap: 5px;
+  flex-direction: column;
+  gap: 7px;
   padding-bottom: 10px;
 }
 
 .log-entry {
-  padding: 8px;
+  padding: 10px;
   border-radius: 5px;
-  background-color: #444;
-  font-size: 0.95em;
-  color: #f0f0f0;
+  background-color: #333;
+  font-size: 0.95rem;
+  color: #e0e0e0;
   opacity: 0;
   transform: translateY(20px);
   animation: slideIn 0.5s forwards;
 }
 
-.log-entry.fight {
-  border-left: 4px solid #f44336;
-}
-
-.log-entry.death {
-  border-left: 4px solid #e91e63;
-}
-
-.log-entry.resource {
-  border-left: 4px solid #4caf50;
-}
-
-.log-entry.alliance, .log-entry.secret_alliance {
-  border-left: 4px solid #2196f3;
-}
-
-.log-entry.break_alliance {
-  border-left: 4px solid #ff9800;
-}
-
-.log-entry.heal {
-  border-left: 4px solid #8bc34a;
-}
-
-.log-entry.natural {
-  border-left: 4px solid #9c27b0;
-}
-
-.log-entry.trap {
-  border-left: 4px solid #ff5722;
-}
-
-.log-entry.treasure {
-  border-left: 4px solid #ffc107;
-}
-
-.log-entry.stealth_mission {
-  border-left: 4px solid #00bcd4;
-}
-
-.log-entry.environmental_hazard {
-  border-left: 4px solid #795548;
-}
-
-.log-entry.wildlife_attack {
-  border-left: 4px solid #3f51b5;
-}
-
+/* Colored borders for different log types */
+.log-entry.fight { border-left: 4px solid #f44336; }
+.log-entry.death { border-left: 4px solid #e91e63; }
+.log-entry.resource { border-left: 4px solid #4caf50; }
+.log-entry.alliance,
+.log-entry.secret_alliance { border-left: 4px solid #2196f3; }
+.log-entry.break_alliance { border-left: 4px solid #ff9800; }
+.log-entry.heal { border-left: 4px solid #8bc34a; }
+.log-entry.natural { border-left: 4px solid #9c27b0; }
+.log-entry.trap { border-left: 4px solid #ff5722; }
+.log-entry.treasure { border-left: 4px solid #ffc107; }
+.log-entry.stealth_mission { border-left: 4px solid #00bcd4; }
+.log-entry.environmental_hazard { border-left: 4px solid #795548; }
+.log-entry.wildlife_attack { border-left: 4px solid #3f51b5; }
 .log-entry.victory {
   border-left: 4px solid gold;
   background-color: #ffd700;
   color: #000;
 }
-
 .log-entry.gameOver {
   border-left: 4px solid #9e9e9e;
   background-color: #616161;
 }
 
+/* Keyframes for log entry slide */
 @keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Custom Scrollbar Styling */
+/* Custom Scrollbar Styling for Webkit */
 #log-section::-webkit-scrollbar {
   width: 8px;
 }
 
 #log-section::-webkit-scrollbar-track {
-  background: #2c2c2c;
+  background: #222;
   border-radius: 4px;
 }
 
 #log-section::-webkit-scrollbar-thumb {
   background-color: #555;
   border-radius: 4px;
-  border: 2px solid #2c2c2c;
+  border: 2px solid #222;
 }
 
 #log-section::-webkit-scrollbar-thumb:hover {
   background-color: #777;
 }
 
-/* For Firefox */
+/* Firefox Scrollbar */
 #log-section {
   scrollbar-width: thin;
-  scrollbar-color: #555 #2c2c2c;
+  scrollbar-color: #555 #222;
 }
 
 /* Modal Styling */
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1000; /* Sit on top */
+  display: none;
+  position: fixed;
+  z-index: 1000;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
 }
 
 .modal-content {
-  background-color: #2c2c2c;
-  margin: 10% auto; /* 10% from the top and centered */
+  background-color: #222;
+  margin: 10% auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid #444;
   width: 80%;
-  max-width: 500px; /* Could be more or less, depending on screen size */
-  border-radius: 8px;
+  max-width: 700px; /* Increased max-width for better layout */
+  border-radius: 10px;
   position: relative;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
 }
 
 .modal-content h2 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-align: center;
+  color: #ffd700;
 }
 
-.modal-content div {
-  margin-bottom: 10px;
+.modal-content div, .modal-content p, .modal-content ul, .modal-content label, .modal-content select, .modal-content input {
+  color: #e0e0e0;
 }
+
+.modal-content ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.modal-content .setting-item {
+  margin-bottom: 15px;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modal-content input[type="number"], .modal-content select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: #333;
+  color: #e0e0e0;
+}
+
 
 .close {
   color: #aaa;
-  float: right;
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 600;
   position: absolute;
   top: 10px;
   right: 20px;
@@ -310,7 +315,6 @@ main {
 .close:focus {
   color: #fff;
   text-decoration: none;
-  cursor: pointer;
 }
 
 /* Tribute Cards Styling */
@@ -318,25 +322,37 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 15px;
+  justify-content: center; /* Center tribute cards grid */
+  width: 100%; /* Make tribute container full width of main */
 }
 
+/* For larger screens, force 3 rows of 8 tributes */
+@media (min-width: 1200px) {
+  #tributes-container {
+    grid-template-columns: repeat(8, minmax(180px, 1fr)); /* 8 columns */
+  }
+}
+
+
 .tribute {
-  background-color: #3c3c3c;
+  background-color: #2a2a2a;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  position: relative;
   transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
 .tribute:hover {
   transform: translateY(-5px);
-  background-color: #4c4c4c;
+  background-color: #3a3a3a;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
 }
 
 .tribute.dead {
   background-color: #555;
-  opacity: 0.7;
+  opacity: 0.75;
   position: relative;
 }
 
@@ -347,8 +363,8 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 0, 0, 0.5); /* Red overlay */
-  border-radius: 8px;
+  background-color: rgba(255, 0, 0, 0.3);
+  border-radius: 10px;
 }
 
 .tribute.winner {
@@ -363,8 +379,8 @@ main {
   color: #000;
   padding: 2px 5px;
   border-radius: 3px;
-  font-weight: bold;
-  font-size: 0.9em;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .tribute div {
@@ -372,10 +388,11 @@ main {
   text-align: center;
 }
 
+/* Health and Hunger Bars */
 .health-bar, .hunger-bar {
   width: 100%;
   height: 10px;
-  background-color: #555;
+  background-color: #444;
   border-radius: 5px;
   overflow: hidden;
   margin-bottom: 8px;
@@ -439,7 +456,7 @@ main {
   animation: glowBlue 1s forwards;
 }
 
-/* Responsive Design */
+/* Responsive Adjustments */
 @media (max-width: 800px) {
   .flex-container {
     flex-direction: column;
@@ -459,5 +476,67 @@ main {
   .modal-content {
     width: 90%;
     margin: 20% auto;
+  }
+}
+
+/* Tooltip Styling */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #e0e0e0;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  font-size: 0.85rem;
+}
+
+/* Tribute Modal Specific Styling */
+#tribute-modal .modal-content {
+  max-width: 700px;
+}
+
+#tribute-modal-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Changed to space-between for better distribution */
+  gap: 15px; /* Added gap between stat groups */
+}
+
+#tribute-modal-stats .modal-stat-group {
+  flex: 1; /* Let each group take equal available space */
+  min-width: 30%; /* Minimum width for each group to prevent too narrow columns */
+  padding: 15px; /* Slightly increased padding */
+  margin-bottom: 0; /* Removed margin-bottom to rely on gap for spacing */
+  border-radius: 8px;
+  background-color: #333;
+}
+
+#tribute-modal-stats .modal-stat-group div {
+  margin-bottom: 10px; /* Increased spacing within stat groups */
+  font-size: 1rem; /* Slightly increased font size for readability */
+}
+
+#tribute-modal-stats .modal-stat-group div:last-child {
+  margin-bottom: 0;
+}
+
+
+@media (max-width: 768px) { /* Example breakpoint for smaller screens */
+  #tribute-modal-stats {
+    flex-direction: column; /* Stack stat groups on smaller screens */
+  }
+  #tribute-modal-stats .modal-stat-group {
+    min-width: auto; /* Allow full width on smaller screens */
+    margin-bottom: 15px; /* Add margin between stacked groups */
   }
 }
