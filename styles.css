@@ -10,12 +10,48 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(135deg, #121212, #1e1e1e);
+  background-color: #1e1e1e; /* Default black background */
   color: #e0e0e0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: background-image 0.5s ease-in-out; /* Smooth background transition */
+  background-size: cover; /* Cover the entire body */
+  background-position: center center; /* Center the background image */
 }
+
+/* Arena Background Styles - Add more as needed, or handle dynamically in JS */
+body#arena-background.forest {
+  background-image: url('./images/forest01.jpg'); /* Example, will be set dynamically */
+}
+body#arena-background.dystopia {
+  background-image: url('./images/dystopia01.jpg');
+}
+body#arena-background.futuristic {
+  background-image: url('./images/futuristic01.jpg');
+}
+body#arena-background.grasslands {
+  background-image: url('./images/grasslands01.jpg');
+}
+body#arena-background.hauntedhouse {
+  background-image: url('./images/hauntedhouse01.jpg');
+}
+body#arena-background.island {
+  background-image: url('./images/island01.jpg');
+}
+body#arena-background.ocean {
+  background-image: url('./images/ocean01.jpg');
+}
+body#arena-background.school {
+  background-image: url('./images/school01.jpg');
+}
+body#arena-background.wastelands {
+  background-image: url('./images/wastelands01.jpg');
+}
+body#arena-background.whiteroom {
+  background-image: url('./images/whiteroom01.jpg');
+}
+
 
 /* Header Styles */
 header {
@@ -23,6 +59,8 @@ header {
   padding: 25px 20px;
   text-align: center;
   border-bottom: 2px solid #333;
+  z-index: 100; /* Ensure header is above background */
+  position: relative; /* Needed for z-index to work */
 }
 
 header h1 {
@@ -47,9 +85,11 @@ main {
   display: flex;
   flex-direction: column;
   gap: 25px;
-  align-items: center; /* Center items horizontally in main container */
-  max-width: 1200px; /* Added max-width for better readability on large screens */
-  margin: 0 auto; /* Center the main container itself */
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  z-index: 100; /* Ensure main content is above background */
+  position: relative;
 }
 
 /* Controls Section */
@@ -62,7 +102,7 @@ main {
   width: 100%; /* Make controls section full width of main */
 }
 
-#controls button {
+#controls button, #controls .arena-button { /* Apply button styles to arena buttons */
   padding: 10px 20px;
   background-color: #444;
   border: none;
@@ -73,12 +113,12 @@ main {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-#controls button:hover {
+#controls button:hover, #controls .arena-button:hover {
   background-color: #666;
   transform: translateY(-2px);
 }
 
-#controls button:focus {
+#controls button:focus, #controls .arena-button:focus {
   outline: 2px solid #ffd700;
 }
 
@@ -137,8 +177,8 @@ main {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  justify-content: center; /* Center scoreboard and log when wrapping */
-  width: 100%; /* Make flex container full width of main */
+  justify-content: center;
+  width: 100%;
 }
 
 #scoreboard, #log-section {
@@ -261,7 +301,7 @@ main {
   padding: 20px;
   border: 1px solid #444;
   width: 80%;
-  max-width: 700px; /* Increased max-width for better layout */
+  max-width: 700px;
   border-radius: 10px;
   position: relative;
   box-shadow: 0 8px 16px rgba(0,0,0,0.5);
@@ -322,14 +362,14 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 15px;
-  justify-content: center; /* Center tribute cards grid */
-  width: 100%; /* Make tribute container full width of main */
+  justify-content: center;
+  width: 100%;
 }
 
 /* For larger screens, force 3 rows of 8 tributes */
 @media (min-width: 1200px) {
   #tributes-container {
-    grid-template-columns: repeat(8, minmax(180px, 1fr)); /* 8 columns */
+    grid-template-columns: repeat(8, minmax(180px, 1fr));
   }
 }
 
@@ -508,22 +548,22 @@ main {
 #tribute-modal-stats {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; /* Changed to space-between for better distribution */
-  gap: 15px; /* Added gap between stat groups */
+  justify-content: space-between;
+  gap: 15px;
 }
 
 #tribute-modal-stats .modal-stat-group {
-  flex: 1; /* Let each group take equal available space */
-  min-width: 30%; /* Minimum width for each group to prevent too narrow columns */
-  padding: 15px; /* Slightly increased padding */
-  margin-bottom: 0; /* Removed margin-bottom to rely on gap for spacing */
+  flex: 1;
+  min-width: 30%;
+  padding: 15px;
+  margin-bottom: 0;
   border-radius: 8px;
   background-color: #333;
 }
 
 #tribute-modal-stats .modal-stat-group div {
-  margin-bottom: 10px; /* Increased spacing within stat groups */
-  font-size: 1rem; /* Slightly increased font size for readability */
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 #tribute-modal-stats .modal-stat-group div:last-child {
@@ -531,12 +571,49 @@ main {
 }
 
 
-@media (max-width: 768px) { /* Example breakpoint for smaller screens */
-  #tribute-modal-stats {
-    flex-direction: column; /* Stack stat groups on smaller screens */
-  }
-  #tribute-modal-stats .modal-stat-group {
-    min-width: auto; /* Allow full width on smaller screens */
-    margin-bottom: 15px; /* Add margin between stacked groups */
-  }
+/* Arena Modal Styling */
+#arena-modal .modal-content {
+  max-width: 90%; /* Wider modal for arena buttons */
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#arena-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 10px;
+}
+
+.arena-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px; /* Adjust as needed */
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background-color: #333;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.arena-button:hover {
+  transform: scale(1.05);
+  background-color: #444;
+}
+
+.arena-button img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.arena-button span {
+  font-size: 0.9rem;
 }

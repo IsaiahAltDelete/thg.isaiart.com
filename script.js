@@ -169,12 +169,110 @@ document.addEventListener('DOMContentLoaded', () => {
   let gameOver = false;
   let currentWeather = 'Clear';
   let environment = { weather: 'Clear', terrain: 'Open Field', effects: [] };
+  let currentArena = 'default'; // Default arena
 
   let simulationSettings = {
     baseHealth: 20,
     baseHunger: 100,
     eventFrequencyIndex: 0
   };
+
+  const arenaButton = document.getElementById('arena-button');
+  const arenaModal = document.getElementById('arena-modal');
+  const arenaClose = document.getElementById('arena-close');
+  const arenaListContainer = document.getElementById('arena-list');
+  const randomArenaButton = document.getElementById('random-arena-button');
+  const arenaBackgroundBody = document.getElementById('arena-background');
+
+  const arenaTypes = [
+      { name: 'Dystopia', backgrounds: ['dystopia01.jpg', 'dystopia02.jpg', 'dystopia03.jpg', 'dystopia04.jpg'] },
+      { name: 'Forest', backgrounds: ['forest01.jpg', 'forest02.jpg', 'forest03.jpg', 'forest04.jpg'] },
+      { name: 'Futuristic', backgrounds: ['futuristic01.jpg', 'futuristic02.jpg', 'futuristic03.jpg', 'futuristic04.jpg'] },
+      { name: 'Grasslands', backgrounds: ['grasslands01.jpg', 'grasslands02.jpg', 'grasslands03.jpg', 'grasslands04.jpg'] },
+      { name: 'Haunted House', backgrounds: ['hauntedhouse01.jpg', 'hauntedhouse02.jpg', 'hauntedhouse03.jpg', 'hauntedhouse04.jpg'] },
+      { name: 'Island', backgrounds: ['island01.jpg', 'island02.jpg', 'island03.jpg', 'island04.jpg'] },
+      { name: 'Ocean', backgrounds: ['ocean01.jpg', 'ocean02.jpg', 'ocean03.jpg', 'ocean04.jpg'] },
+      { name: 'School', backgrounds: ['school01.jpg', 'school02.jpg', 'school03.jpg', 'school04.jpg'] },
+      { name: 'Wastelands', backgrounds: ['wastelands01.jpg', 'wastelands02.jpg', 'wastelands03.jpg', 'wastelands04.jpg'] },
+      { name: 'White Room', backgrounds: ['whiteroom01.jpg', 'whiteroom02.jpg', 'whiteroom03.jpg', 'whiteroom04.jpg'] },
+  ];
+
+  const setArenaBackground = (arenaName) => {
+    const arena = arenaTypes.find(a => a.name === arenaName);
+    if (arena) {
+      const randomBackground = arena.backgrounds[Math.floor(Math.random() * arena.backgrounds.length)];
+      arenaBackgroundBody.style.backgroundImage = `url('./images/${randomBackground}')`;
+      arenaBackgroundBody.className = `arena-background ${arenaName.toLowerCase().replace(/\s+/g, '')}`;
+      currentArena = arenaName.toLowerCase().replace(/\s+/g, ''); // Update currentArena
+      addEvent(`Arena changed to ${arenaName}.`, 'arena_change');
+    } else if (arenaName === 'default') {
+      arenaBackgroundBody.style.backgroundImage = ''; // Reset to default background
+      arenaBackgroundBody.className = `arena-background default`;
+      currentArena = 'default';
+      addEvent(`Arena changed to Default.`, 'arena_change');
+    }
+  };
+
+
+  const populateArenaModal = () => {
+    arenaTypes.forEach(arena => {
+      const arenaButtonElement = document.createElement('button');
+      arenaButtonElement.className = 'arena-button';
+      arenaButtonElement.innerHTML = `
+          <img src="./images/${arena.backgrounds[0]}" alt="${arena.name} Thumbnail">
+          <span>${arena.name}</span>
+      `;
+      arenaButtonElement.addEventListener('click', () => {
+        setArenaBackground(arena.name);
+        arenaModal.style.display = 'none';
+      });
+      arenaListContainer.appendChild(arenaButtonElement);
+    });
+     // Add default arena button
+     const defaultArenaButton = document.createElement('button');
+     defaultArenaButton.className = 'arena-button';
+     defaultArenaButton.innerHTML = `
+         <span>Default Arena</span>
+     `;
+     defaultArenaButton.addEventListener('click', () => {
+         setArenaBackground('default'); // Set to default arena
+         arenaModal.style.display = 'none';
+     });
+     arenaListContainer.appendChild(defaultArenaButton);
+  };
+
+
+  randomArenaButton.addEventListener('click', () => {
+    const randomArena = arenaTypes[Math.floor(Math.random() * arenaTypes.length)];
+    setArenaBackground(randomArena.name);
+  });
+
+
+  arenaButton.onclick = function() {
+    arenaModal.style.display = "block";
+  }
+  arenaClose.onclick = function() {
+    arenaModal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target == settingsModal) {
+      settingsModal.style.display = "none";
+    }
+    if (event.target == helpModal) {
+      helpModal.style.display = "none";
+    }
+    if (event.target == victorsModal) {
+      victorsModal.style.display = "none";
+    }
+    if (event.target == tributeModal) {
+      tributeModal.style.display = "none";
+    }
+    if (event.target == arenaModal) {
+      arenaModal.style.display = "none";
+    }
+  }
+
 
   const loadSettings = () => {
     const savedSettings = localStorage.getItem('simulationSettings');
@@ -489,7 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const gameLoop = () => {
-    updateClock(); // Progress time at the start of each game loop
+    updateClock();
 
     tributes.forEach(tribute => {
       if (tribute.isAlive) {
@@ -932,20 +1030,6 @@ document.addEventListener('DOMContentLoaded', () => {
   helpClose.onclick = function() {
     helpModal.style.display = "none";
   }
-  window.onclick = function(event) {
-    if (event.target == settingsModal) {
-      settingsModal.style.display = "none";
-    }
-    if (event.target == helpModal) {
-      helpModal.style.display = "none";
-    }
-    if (event.target == victorsModal) {
-      victorsModal.style.display = "none";
-    }
-    if (event.target == tributeModal) {
-      tributeModal.style.display = "none";
-    }
-  }
 
 
   const victorsModal = document.getElementById('victors-modal');
@@ -1043,10 +1127,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  populateArenaModal();
   loadSettings();
   tributes = generateTributes();
   updateTributesDisplay();
   updateScoreboard();
-  // Initial clock update
   updateClock();
 });

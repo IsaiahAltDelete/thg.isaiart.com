@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body id="arena-background"> <!-- Background will be applied to this body -->
   <header>
     <h1>THE HUNGER GAMES SIMULATOR</h1>
     <div class="info">
@@ -26,6 +26,8 @@
       <button id="clear-victors-button" aria-label="Clear Victors List">Clear Victors</button>
       <button id="settings-button" aria-label="Open Settings Modal">Settings</button>
       <button id="help-button" aria-label="Open Help Modal">Help</button>
+      <button id="arena-button" aria-label="Open Arena Selection Modal">Arenas</button> <!-- Arena Button -->
+      <button id="random-arena-button" aria-label="Random Arena">Random Arena</button> <!-- Random Arena Button -->
 
       <div class="slider-container">
         <label for="event-frequency" id="event-frequency-label">1 Second</label>
@@ -122,14 +124,27 @@
           <li><strong>Pause/Resume:</strong> Controls the simulation flow.</li>
           <li><strong>Restart:</strong> Resets the game with new tributes.</li>
           <li><strong>Clear Victors:</strong> Clears the list of past victors.</li>
+          <li><strong>Settings:</strong> Customize base health, hunger, and event frequency.</li>
+          <li><strong>Arenas:</strong> Choose different arena environments for the games.</li>
+          <li><strong>Random Arena:</strong> Selects a random arena for the simulation.</li>
           <li><strong>Event Frequency:</strong> Adjusts how often events occur.</li>
           <li><strong>View Victors:</strong> Shows the list of past winners.</li>
           <li><strong>Scoreboard:</strong> Displays game stats like tributes left and most kills.</li>
           <li><strong>Event Log:</strong> Shows a history of events in the game.</li>
           <li><strong>Tribute Cards:</strong> Click on a tribute card to see detailed stats.</li>
         </ul>
-        <p><strong>Settings:</strong> Customize base health, hunger, and event frequency.</p>
         <p>Enjoy the games, and may the odds be ever in your favor!</p>
+      </div>
+    </div>
+
+    <!-- Arena Selection Modal -->
+    <div id="arena-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="arena-close">×</span>
+        <h2>Arena Selection</h2>
+        <div id="arena-list">
+          <!-- Arena buttons will be dynamically inserted here -->
+        </div>
       </div>
     </div>
 
