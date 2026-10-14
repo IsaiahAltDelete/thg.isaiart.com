@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Hunger Games Simulator</title>
+<meta name="description" content="A cinematic Hunger Games simulator — 24 tributes, real-time events, alliances, arenas and victors.">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body id="arena-background">
+  <header class="site-header">
+    <div class="broadcast-bar wrap">
+      <div class="network-lockup">
+        <span class="network-seal" aria-hidden="true">✦</span>
+        <span>Panem Network</span>
+      </div>
+      <div class="broadcast-status"><span class="signal-dot" aria-hidden="true"></span><span>Live field feed</span><span class="feed-code">FEED 01</span></div>
+    </div>
+
+    <div class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">The 74th edition <span aria-hidden="true">·</span> survival simulator</p>
+        <h1 id="game-title">The Hunger Games</h1>
+        <p class="hero-deck">Twenty-four tributes enter. One victor leaves.</p>
+      </div>
+      <div class="hero-seal" aria-hidden="true">
+        <div class="hero-seal-ring"></div>
+        <span>✦</span>
+        <small>Panem</small>
+      </div>
+    </div>
+
+    <div class="statbar wrap" aria-label="Arena telemetry">
+      <div class="chip"><span class="chip-icon">01</span><span class="lbl">Day</span><b id="day">1</b></div>
+      <div class="chip"><span class="chip-icon">◷</span><span class="lbl">Time</span><b id="time">06:00</b></div>
+      <div class="chip"><span class="chip-icon">◌</span><span class="lbl">Weather</span><b id="weather">Clear</b></div>
+      <div class="chip chip-arena"><span class="chip-icon">⌖</span><span class="lbl">Arena</span><b id="arena-name">—</b></div>
+    </div>
+  </header>
+
+  <main class="wrap main-content">
+    <section id="controls" class="controls-panel" aria-label="Simulation controls">
+      <div class="controls-intro">
+        <span class="section-kicker">Control deck</span>
+        <strong>Run the simulation</strong>
+      </div>
+      <div class="controls-actions">
+        <button class="btn primary" id="start-button"><span class="button-symbol">▶</span> Start</button>
+        <button class="btn" id="pause-button"><span class="button-symbol">Ⅱ</span> Pause</button>
+        <button class="btn" id="resume-button"><span class="button-symbol">▶</span> Resume</button>
+        <button class="btn" id="restart-button"><span class="button-symbol">↻</span> Restart</button>
+        <div class="speed">
+          <label for="event-frequency">Pace</label>
+          <input type="range" id="event-frequency" min="0" max="4" value="0" aria-label="Simulation pace">
+          <span id="event-frequency-label">1 sec</span>
+        </div>
+        <button class="btn" data-open="arena-modal"><span class="button-symbol">⌖</span> Arenas</button>
+        <button class="btn" id="random-arena-button"><span class="button-symbol">⤨</span> Random</button>
+        <button class="btn" data-open="alliances-modal"><span class="button-symbol">◈</span> Alliances</button>
+        <button class="btn gold" data-open="victors-modal"><span class="button-symbol">✦</span> Victors</button>
+        <button class="btn" data-open="settings-modal"><span class="button-symbol">⚙</span> Settings</button>
+        <button class="btn" data-open="help-modal"><span class="button-symbol">?</span> Help</button>
+      </div>
+    </section>
+
+    <section class="dashboard-grid" aria-label="Simulation overview">
+      <section class="panel scoreboard-panel" id="scoreboard">
+        <div class="panel-topline"><span class="section-kicker">Live count</span><span class="panel-code">01 / 04</span></div>
+        <div class="score-hero"><strong id="count-left">24</strong><span>tributes<br>remaining</span></div>
+        <div class="score-rows">
+          <div class="score-row"><span class="k">Most kills</span><span class="v"><b id="most-kills">0</b><span class="divider">/</span><span id="most-kills-name">—</span></span></div>
+          <div class="score-row"><span class="k">Fan favorites</span><span class="v fan-wrap" id="fan-favorites"></span></div>
+        </div>
+        <div class="odds-note"><span class="odds-mark">✦</span><span>May the odds be ever in your favor.</span></div>
+      </section>
+
+      <section class="panel log-panel" id="log-section">
+        <div class="panel-heading">
+          <div><span class="section-kicker">Broadcast transcript</span><h2>Event Log</h2></div>
+          <span class="live-pill"><span class="signal-dot" aria-hidden="true"></span>Live</span>
+        </div>
+        <div id="log-container" aria-live="polite"></div>
+      </section>
+    </section>
+
+    <section class="roster-section" aria-labelledby="roster-title">
+      <div class="roster-heading">
+        <div><span class="section-kicker">Field roster</span><h2 id="roster-title">The Tributes</h2></div>
+        <div class="roster-legend"><span><i class="legend-bar health"></i>Health</span><span><i class="legend-bar hunger"></i>Hunger</span><span class="legend-hint">Select a card for details</span></div>
+      </div>
+      <section id="combatants" aria-label="Tribute roster"></section>
+    </section>
+  </main>
+
+  <!-- Detail modal -->
+  <div class="modal" id="detail-modal"><div class="modal-content">
+    <button class="close" type="button" aria-label="Close tribute details">×</button>
+    <div class="modal-kicker">Tribute dossier</div>
+    <h2 id="detail-name">Tribute</h2>
+    <div id="detail-body"></div>
+  </div></div>
+
+  <!-- Victors -->
+  <div class="modal" id="victors-modal"><div class="modal-content">
+    <button class="close" type="button" aria-label="Close victors">×</button>
+    <div class="modal-kicker">Victors' village</div>
+    <h2>Victors' Village</h2>
+    <div id="victors-list"></div>
+    <div class="setting-buttons"><button class="btn" id="clear-victors-button">Clear Victors</button></div>
+  </div></div>
+
+  <!-- Settings -->
+  <div class="modal" id="settings-modal"><div class="modal-content">
+    <button class="close" type="button" aria-label="Close settings">×</button>
+    <div class="modal-kicker">Capitol controls</div>
+    <h2>Simulation Settings</h2>
+    <div class="setting-item"><label for="base-health">Base Health</label><input type="number" id="base-health" value="20" min="10" max="60"></div>
+    <div class="setting-item"><label for="base-hunger">Base Hunger</label><input type="number" id="base-hunger" value="100" min="50" max="200"></div>
+    <div class="setting-item"><label for="event-frequency-setting">Event Frequency</label>
+      <select id="event-frequency-setting">
+        <option value="0">1 Second</option><option value="1">5 Seconds</option>
+        <option value="2">15 Seconds</option><option value="3">30 Seconds</option><option value="4">1 Minute</option>
+      </select></div>
+    <div class="setting-buttons">
+      <button class="btn primary" id="save-settings">Save</button>
+      <button class="btn" id="reset-settings">Reset</button>
+      <button class="btn" id="reset-all">Reset Everything</button>
+    </div>
+  </div></div>
+
+  <!-- Help -->
+  <div class="modal" id="help-modal"><div class="modal-content">
+    <button class="close" type="button" aria-label="Close help">×</button>
+    <div class="modal-kicker">Capitol broadcast guide</div>
+    <h2>How to Play</h2>
+    <p>24 tributes from 12 districts fight until one remains. The simulation runs itself — sit back and watch the carnage.</p>
+    <ul>
+      <li><strong>Start / Pause / Resume / Restart</strong> — control the simulation.</li>
+      <li><strong>Speed</strong> — how often events fire (1 second to 1 minute).</li>
+      <li><strong>Arenas / Random</strong> — change the battlefield and its backdrop.</li>
+      <li><strong>Alliances</strong> — see who's teamed up (they betray each other near the end).</li>
+      <li><strong>Victors</strong> — past winners, saved on your device.</li>
+      <li><strong>Settings</strong> — tweak base health, hunger and pace.</li>
+      <li>Click any tribute card for detailed stats.</li>
+    </ul>
+    <p>May the odds be ever in your favor.</p>
+  </div></div>
+
+  <!-- Arena selection -->
+  <div class="modal" id="arena-modal"><div class="modal-content">
+    <button class="close" type="button" aria-label="Close arena selection">×</button>
+    <div class="modal-kicker">Arena archive</div>
+    <h2>Choose an Arena</h2>
+    <div id="arena-list"></div>
+  </div></div>
+
+  <!-- Alliances -->
+  <div class="modal" id="alliances-modal"><div class="modal-content">
+    <button class="close" type="button" aria-label="Close alliances">×</button>
+    <div class="modal-kicker">Field intelligence</div>
+    <h2>Active Alliances</h2>
+    <div id="alliances-list"></div>
+  </div></div>
+
+  <script src="data/thg-data.js"></script>
+  <script src="engine.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const D = window.THG_DATA;
+      const SKIN = ['🏻','🏼','🏽','🏾','🏿'];
+      const GENDER_EMOJI = { Male:'👨', Female:'👩' };
+
+      const mode = {
+        key: 'thg',
+        data: D,
+        arenaMode: 'image',
+        genders: ['Male','Female'],
+        beasts: ['wolf pack','grizzly bear','mutant hound','swarm of tracker jackers','wild boar','venomous serpent'],
+        terms: { heading: 'The Hunger Games', title: 'Hunger Games', combatant: 'Tribute', combatants: 'Tributes' },
+
+        createCombatant(base, ctx) {
+          const { rand, pick } = ctx;
+          base.age = rand(13, 18);
+          base.emoji = GENDER_EMOJI[base.gender] + pick(SKIN);
+          base.stats = {
+            strength: rand(8, 14), agility: rand(8, 14),
+            intelligence: rand(8, 14), stealth: rand(8, 14)
+          };
+          base.ac = 10 + Math.floor((base.stats.agility - 10) / 2);
+          base.attackBonus = 2 + Math.floor((base.stats.strength - 10) / 2);
+          base.dmgBonus = Math.max(0, Math.floor((base.stats.strength - 10) / 2));
+          return base;
+        },
+
+        cardMeta(c) {
+          return `District ${c.district} · ${c.gender === 'Male' ? '♂' : '♀'} · age ${c.age}`;
+        },
+
+        detailHTML(c, { esc, statusList }) {
+          const w = c.weapon ? `${c.weapon.emoji} ${esc(c.weapon.name)} (${c.weapon.damage})` : '✊ Unarmed';
+          return `
+            <div class="stat-group"><h3>Vitals</h3>
+              <div class="row"><span class="k">Health</span><span>${c.health}/${c.maxHealth}</span></div>
+              <div class="row"><span class="k">Hunger</span><span>${c.hunger}/${c.maxHunger}</span></div>
+              <div class="row"><span class="k">Armor Class</span><span>${c.ac}</span></div>
+              <div class="row"><span class="k">Attack Bonus</span><span>+${c.attackBonus}</span></div>
+            </div>
+            <div class="stat-group"><h3>Combat</h3>
+              <div class="row"><span class="k">Weapon</span><span>${w}</span></div>
+              <div class="row"><span class="k">Kills</span><span>${c.kills}</span></div>
+              <div class="row"><span class="k">Status</span><span>${c.isAlive ? (c.isWinner ? '👑 Victor' : 'Alive') : '💀 Eliminated #' + (c.placement || '')}</span></div>
+              <div class="row"><span class="k">Allies</span><span>${c.alliances.length}</span></div>
+            </div>
+            <div class="stat-group"><h3>Profile</h3>
+              <div class="row"><span class="k">District</span><span>${c.district}</span></div>
+              <div class="row"><span class="k">Gender</span><span>${esc(c.gender)}</span></div>
+              <div class="row"><span class="k">Age</span><span>${c.age}</span></div>
+            </div>
+            <div class="stat-group"><h3>Attributes</h3>
+              <div class="row"><span class="k">Strength</span><span>${c.stats.strength}</span></div>
+              <div class="row"><span class="k">Agility</span><span>${c.stats.agility}</span></div>
+              <div class="row"><span class="k">Intelligence</span><span>${c.stats.intelligence}</span></div>
+              <div class="row"><span class="k">Stealth</span><span>${c.stats.stealth}</span></div>
+            </div>
+            <div class="stat-group" style="grid-column:1/-1"><h3>Active Effects</h3>
+              <div class="row"><span>${statusList(c)}</span></div>
+            </div>`;
+        }
+      };
+
+      HungerSim.create(mode).init();
+    });
+  </script>
+</body>
+</html>
