@@ -31,6 +31,29 @@ window.THG_DATA = {
     'Giovanni','Chiara','Matteo','Francesca','Simone','Alice','Federico','Beatrice','Gabriele','Vittoria',
     'Bjorn','Astrid','Magnus','Ingrid','Lars','Solveig','Erik','Sigrid','Anders','Liv'
   ],
+  // ---- The same pool split by gender, so a district's boy and girl get fitting names ----
+  firstNamesByGender: {
+    Male: [
+      'Wei','Hao','Jun','Tian','Amit','Ravi','Vijay','Rahul','Sanjay','Ivan','Dmitry','Sergey','Alexei','Mikhail',
+      'Ahmed','Mohamed','Omar','Youssef','Hassan','Jean','Pierre','Michel','Alain','Laurent','Hans','Karl','Fritz',
+      'Heinz','Günther','Hiroshi','Kenji','Takashi','Daiki','Yuto','Liam','Noah','Oliver','Elijah','Benjamin','Lucas',
+      'Henry','Alexander','Mateo','Santiago','Leonardo','Sebastián','Fernando','Diego','Emilio','Ricardo','Pedro',
+      'Francisco','Alessandro','Lorenzo','Riccardo','Frederik','Oscar','William','Victor','Niko','Elias','Leo','Onni',
+      'Eino','Mikael','Daniel','Seung','Hyun','Jae','Kenzo','Haruki','Akira','Kazuki','Rajesh','Vikram','Arjun','Dev',
+      'Tao','Lei','Karim','Samir','Yasin','Faris','Hamza','Adrien','Hugo','Théo','Louis','Antoine','Maximilian','Paul',
+      'Felix','Jakob','Leon','Giovanni','Matteo','Federico','Gabriele','Bjorn','Magnus','Lars','Erik','Anders'
+    ],
+    Female: [
+      'Jing','Mei','Fang','Ying','Priya','Anjali','Deepa','Pooja','Neha','Olga','Natalia','Ekaterina','Tatiana',
+      'Anastasia','Fatima','Aisha','Layla','Huda','Mariam','Marie','Sophie','Isabelle','Claire','Céline','Anna','Emma',
+      'Lena','Mia','Lea','Yuki','Aiko','Miyu','Sakura','Hana','Charlotte','Amelia','Olivia','Ava','Sophia','Isabella',
+      'Evelyn','Harper','Valentina','Gabriela','Camila','Catalina','Daniela','Julieta','Luciana','Bianca','Mariana',
+      'Alessia','Sofia','Aurora','Giorgia','Clara','Ella','Ida','Sofie','Emilia','Aino','Helmi','Aada','Eun','Yeon',
+      'Yumi','Hina','Lakshmi','Deepika','Priyanka','Anika','Shanti','Yue','Xin','Ning','Nadia','Leila','Amina','Salma',
+      'Khadija','Manon','Léa','Chloé','Camille','Juliette','Hannah','Lina','Chiara','Francesca','Alice','Beatrice',
+      'Vittoria','Astrid','Ingrid','Solveig','Sigrid','Liv'
+    ]
+  },
   lastNames: [
     'Wang','Li','Zhang','Liu','Chen','Yang','Huang','Zhao','Wu','Zhou',
     'Patel','Singh','Sharma','Kumar','Gupta','Verma','Reddy','Mehta','Jain','Shah',

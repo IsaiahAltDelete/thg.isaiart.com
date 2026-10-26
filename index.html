@@ -4,187 +4,351 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Hunger Games Simulator</title>
-<meta name="description" content="A cinematic Hunger Games simulator — 24 tributes, real-time events, alliances, arenas and victors.">
+<meta name="description" content="A Hunger Games simulator: 24 tributes from 12 districts, a live Capitol feed, alliances, arenas and victors.">
+<meta name="theme-color" content="#0c0b0a">
 <link rel="icon" href="favicon.ico">
-<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="thg.css?v=4">
 </head>
-<body id="arena-background">
-  <header>
-    <h1 id="game-title">The Hunger Games</h1>
-    <div class="statbar">
-      <div class="chip"><span class="lbl">Day</span> <b id="day">1</b></div>
-      <div class="chip"><span class="lbl">Time</span> <b id="time">06:00</b></div>
-      <div class="chip"><span class="lbl">Weather</span> <b id="weather">Clear</b></div>
-      <div class="chip"><span class="lbl">Arena</span> <b id="arena-name">—</b></div>
-    </div>
-  </header>
+<body class="thg" data-state="idle">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-emblem" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="16" r="10.4" fill="none" stroke="currentColor" stroke-width=".7" opacity=".55"/><path d="M6.5 25.5 24.6 7.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M25.8 6.2 19.6 8l4.4 4.4z" fill="currentColor"/><path d="M6.5 25.5 5 21.6M6.5 25.5l3.9 1.5M8.4 23.6 6.9 19.7M8.4 23.6l3.9 1.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7.5 5.5h3v13h-3zM13.5 5.5h3v13h-3z" fill="currentColor"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4.5v4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="9" r="1.4" fill="currentColor"/><circle cx="15" cy="15" r="1.4" fill="currentColor"/><circle cx="15" cy="9" r="1.4" fill="currentColor"/><circle cx="9" cy="15" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M3.5 6.5 9 4.5l6 2 5.5-2v13l-5.5 2-6-2-5.5 2zM9 4.5v13M15 6.5v13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><circle cx="9" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="15" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-laurel" viewBox="0 0 24 24"><path d="M12 20c-4.6-.4-8-4-8-9.5M12 20c4.6-.4 8-4 8-9.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M5 14.5c1.6-.2 2.6.6 3 2M4.2 10.8c1.5.2 2.3 1.2 2.4 2.6M5.4 7.2c1.2.6 1.7 1.8 1.4 3.1M19 14.5c-1.6-.2-2.6.6-3 2M19.8 10.8c-1.5.2-2.3 1.2-2.4 2.6M18.6 7.2c-1.2.6-1.7 1.8-1.4 3.1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 4.2l1.1 2.3 2.5.3-1.8 1.7.5 2.5-2.3-1.2-2.3 1.2.5-2.5-1.8-1.7 2.5-.3z" fill="currentColor"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="15" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="16.6" r="1.1" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  </svg>
 
-  <main class="wrap">
-    <section id="controls">
-      <button class="btn primary" id="start-button">▶ Start</button>
-      <button class="btn" id="pause-button">⏸ Pause</button>
-      <button class="btn" id="resume-button">⏵ Resume</button>
-      <button class="btn" id="restart-button">↻ Restart</button>
-      <div class="speed">
-        <label>Speed</label>
-        <input type="range" id="event-frequency" min="0" max="4" value="0">
-        <span id="event-frequency-label">1 sec</span>
+  <div class="arena-bg" id="arena-bg" aria-hidden="true"></div>
+
+  <div class="shell">
+    <header class="top">
+      <div class="brand">
+        <svg class="emblem" aria-hidden="true"><use href="#i-emblem"/></svg>
+        <div>
+          <h1 id="game-title">The Hunger Games</h1>
+          <small>Tribute simulator</small>
+        </div>
       </div>
-      <button class="btn" data-open="arena-modal">🗺️ Arenas</button>
-      <button class="btn" id="random-arena-button">🎲 Random</button>
-      <button class="btn" data-open="alliances-modal">🤝 Alliances</button>
-      <button class="btn gold" data-open="victors-modal">👑 Victors</button>
-      <button class="btn" data-open="settings-modal">⚙️ Settings</button>
-      <button class="btn" data-open="help-modal">❔ Help</button>
+
+      <div class="ticker" aria-live="off">
+        <span class="live"><i></i><span id="live-label">Reaping</span></span>
+        <span class="tk">Day <b id="day">1</b></span>
+        <span class="tk"><b id="time">06:00</b></span>
+        <span class="tk"><b id="weather">Clear</b></span>
+      </div>
+
+      <nav class="tools" aria-label="Game menus">
+        <button class="icon-btn" data-open="arena-modal" title="Arenas"><svg><use href="#i-map"/></svg><span>Arenas</span></button>
+        <button class="icon-btn" data-open="alliances-modal" title="Alliances"><svg><use href="#i-link"/></svg><span>Alliances</span></button>
+        <button class="icon-btn" data-open="victors-modal" title="Victors"><svg><use href="#i-laurel"/></svg><span>Victors</span></button>
+        <button class="icon-btn" data-open="settings-modal" title="Settings"><svg><use href="#i-sliders"/></svg><span>Settings</span></button>
+        <button class="icon-btn" data-open="help-modal" title="How it works"><svg><use href="#i-help"/></svg><span>Help</span></button>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="arena">
+        <div class="arena-head">
+          <span class="eyebrow">The arena</span>
+          <button class="shuffle" id="random-arena-button" title="Pick a random arena"><svg><use href="#i-dice"/></svg>Shuffle</button>
+        </div>
+        <h2 id="arena-name">—</h2>
+        <p id="arena-desc"></p>
+        <div class="victor-slate" id="victor-slate" aria-live="polite">
+          <span class="eyebrow">Victor of the Games</span>
+          <h2 id="victor-name">—</h2>
+          <p id="victor-line"></p>
+        </div>
+        <div class="controls" id="controls">
+          <button class="btn btn-go" id="toggle-button" data-state="idle">
+            <svg class="i-go"><use href="#i-play"/></svg><svg class="i-stop"><use href="#i-pause"/></svg>
+            <span class="toggle-label">Begin the Games</span>
+          </button>
+          <button class="btn" id="restart-button"><svg><use href="#i-restart"/></svg>Restart</button>
+          <div class="seg" id="speed-seg" role="group" aria-label="Time between events">
+            <button type="button" data-f="0">1s</button><button type="button" data-f="1">5s</button><button type="button" data-f="2">15s</button><button type="button" data-f="3">30s</button><button type="button" data-f="4">1m</button>
+          </div>
+          <input type="range" id="event-frequency" min="0" max="4" value="0" hidden>
+          <span id="event-frequency-label" hidden>1 sec</span>
+        </div>
+      </div>
+
+      <div class="tally" id="scoreboard">
+        <div class="stat stat-left">
+          <span class="lbl">Remaining</span>
+          <span class="big"><b id="count-left">24</b><small>/ 24</small></span>
+          <span class="pips" id="pips" aria-hidden="true"></span>
+        </div>
+        <div class="stat">
+          <span class="lbl">Most kills</span>
+          <span class="mid"><b id="most-kills">0</b></span>
+          <span class="sub" id="most-kills-name">—</span>
+        </div>
+        <div class="stat stat-fans">
+          <span class="lbl">Sponsors' favourites</span>
+          <span class="fans" id="fan-favorites"></span>
+        </div>
+      </div>
     </section>
 
-    <div class="panels">
-      <section class="panel" id="scoreboard">
-        <h2>Scoreboard</h2>
-        <div class="score-row"><span class="k">Tributes Left</span><span class="v" id="count-left">24</span></div>
-        <div class="score-row"><span class="k">Most Kills</span><span class="v"><b id="most-kills">0</b> · <span id="most-kills-name">—</span></span></div>
-        <div class="score-row"><span class="k">Fan Favorites</span><span class="v" id="fan-favorites"></span></div>
+    <main class="board">
+      <section class="roster" aria-labelledby="roster-h">
+        <div class="sec-h"><h3 id="roster-h">Tributes</h3><span>12 districts · one boy and one girl from each</span><span class="legend"><i class="t-score">9</i> training score</span></div>
+        <div class="districts" id="combatants"></div>
       </section>
-      <section class="panel" id="log-section">
-        <h2>Event Log</h2>
-        <div id="log-container"></div>
-      </section>
-    </div>
 
-    <section id="combatants"></section>
-  </main>
+      <aside class="panel feed" id="log-section" aria-labelledby="feed-h">
+        <div class="panel-h"><h3 id="feed-h">Capitol feed</h3><span class="feed-note" id="feed-note">Waiting for the gong</span></div>
+        <div id="log-container" class="log"></div>
+      </aside>
+    </main>
+  </div>
 
-  <!-- Detail modal -->
-  <div class="modal" id="detail-modal"><div class="modal-content">
-    <span class="close">&times;</span>
+  <!-- Tribute dossier -->
+  <div class="modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-name"><div class="modal-content">
+    <button class="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    <span class="eyebrow" id="detail-eyebrow">Tribute</span>
     <h2 id="detail-name">Tribute</h2>
     <div id="detail-body"></div>
   </div></div>
 
   <!-- Victors -->
-  <div class="modal" id="victors-modal"><div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Victors' Village</h2>
+  <div class="modal" id="victors-modal" role="dialog" aria-modal="true" aria-labelledby="victors-h"><div class="modal-content">
+    <button class="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    <span class="eyebrow">Saved on this device</span>
+    <h2 id="victors-h">Victors' Village</h2>
     <div id="victors-list"></div>
-    <div class="setting-buttons"><button class="btn" id="clear-victors-button">Clear Victors</button></div>
+    <div class="setting-buttons"><button class="btn btn-quiet" id="clear-victors-button">Clear victors</button></div>
   </div></div>
 
   <!-- Settings -->
-  <div class="modal" id="settings-modal"><div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Simulation Settings</h2>
-    <div class="setting-item"><label for="base-health">Base Health</label><input type="number" id="base-health" value="20" min="10" max="60"></div>
-    <div class="setting-item"><label for="base-hunger">Base Hunger</label><input type="number" id="base-hunger" value="100" min="50" max="200"></div>
-    <div class="setting-item"><label for="event-frequency-setting">Event Frequency</label>
-      <select id="event-frequency-setting">
-        <option value="0">1 Second</option><option value="1">5 Seconds</option>
-        <option value="2">15 Seconds</option><option value="3">30 Seconds</option><option value="4">1 Minute</option>
-      </select></div>
+  <div class="modal" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-h"><div class="modal-content">
+    <button class="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    <span class="eyebrow">Gamemaker controls</span>
+    <h2 id="settings-h">Settings</h2>
+    <div class="setting-grid">
+      <div class="setting-item"><label for="base-health">Base health</label><input type="number" id="base-health" value="20" min="10" max="60"><small>10 to 60</small></div>
+      <div class="setting-item"><label for="base-hunger">Base hunger</label><input type="number" id="base-hunger" value="100" min="50" max="200"><small>50 to 200</small></div>
+    </div>
+    <p class="fine">Health and hunger apply from the next reaping.</p>
     <div class="setting-buttons">
-      <button class="btn primary" id="save-settings">Save</button>
-      <button class="btn" id="reset-settings">Reset</button>
-      <button class="btn" id="reset-all">Reset Everything</button>
+      <button class="btn btn-quiet" id="reset-all">Reset everything</button>
+      <span class="spacer"></span>
+      <button class="btn" id="reset-settings">Defaults</button>
+      <button class="btn btn-go" id="save-settings">Save</button>
     </div>
   </div></div>
 
   <!-- Help -->
-  <div class="modal" id="help-modal"><div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>How to Play</h2>
-    <p>24 tributes from 12 districts fight until one remains. The simulation runs itself — sit back and watch the carnage.</p>
-    <ul>
-      <li><strong>Start / Pause / Resume / Restart</strong> — control the simulation.</li>
-      <li><strong>Speed</strong> — how often events fire (1 second to 1 minute).</li>
-      <li><strong>Arenas / Random</strong> — change the battlefield and its backdrop.</li>
-      <li><strong>Alliances</strong> — see who's teamed up (they betray each other near the end).</li>
-      <li><strong>Victors</strong> — past winners, saved on your device.</li>
-      <li><strong>Settings</strong> — tweak base health, hunger and pace.</li>
-      <li>Click any tribute card for detailed stats.</li>
-    </ul>
-    <p>May the odds be ever in your favor.</p>
+  <div class="modal" id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-h"><div class="modal-content">
+    <button class="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    <span class="eyebrow">How it works</span>
+    <h2 id="help-h">Twenty-four enter</h2>
+    <p>One boy and one girl from each of the twelve districts are reaped. The Games run on their own; you watch the feed until one tribute is left.</p>
+    <dl class="how">
+      <dt>Training score</dt><dd>The number on each tribute, 1 to 12, from their strength, agility, wits and stealth.</dd>
+      <dt>Bars</dt><dd>The light bar is health, the bronze one hunger. Health turns ember when it runs low.</dd>
+      <dt>Cannons</dt><dd>Each death fires a cannon in the feed. At nightfall the anthem plays and the sky shows that day's fallen.</dd>
+      <dt>Alliances</dt><dd>Tributes team up, and betray each other. When five remain, every alliance breaks.</dd>
+      <dt>Arenas</dt><dd>Pick one from Arenas, or press Shuffle beside the arena name.</dd>
+    </dl>
+    <p class="fine">Click a tribute for their full dossier. Victors are saved on this device.</p>
   </div></div>
 
   <!-- Arena selection -->
-  <div class="modal" id="arena-modal"><div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Choose an Arena</h2>
+  <div class="modal modal-wide" id="arena-modal" role="dialog" aria-modal="true" aria-labelledby="arena-h"><div class="modal-content">
+    <button class="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    <span class="eyebrow">Gamemaker's choice</span>
+    <h2 id="arena-h">Choose an arena</h2>
     <div id="arena-list"></div>
   </div></div>
 
   <!-- Alliances -->
-  <div class="modal" id="alliances-modal"><div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Active Alliances</h2>
+  <div class="modal" id="alliances-modal" role="dialog" aria-modal="true" aria-labelledby="alliances-h"><div class="modal-content">
+    <button class="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    <span class="eyebrow">Still standing together</span>
+    <h2 id="alliances-h">Alliances</h2>
     <div id="alliances-list"></div>
   </div></div>
 
-  <script src="data/thg-data.js"></script>
-  <script src="engine.js"></script>
+  <script src="data/thg-data.js?v=2"></script>
+  <script src="engine.js?v=3"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const D = window.THG_DATA;
-      const SKIN = ['🏻','🏼','🏽','🏾','🏿'];
-      const GENDER_EMOJI = { Male:'👨', Female:'👩' };
+      const TRADES = ['Luxury','Masonry','Technology','Fishing','Power','Transport','Lumber','Textiles','Grain','Livestock','Agriculture','Mining'];
+      const EMOJI = /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{FE0F}\u{200D}]/gu;
+      const ordinal = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th'));
+      const pad = n => String(n).padStart(2, '0');
+      const pct = (v, m) => Math.max(0, Math.min(100, Math.round(v / m * 100)));
 
       const mode = {
         key: 'thg',
         data: D,
         arenaMode: 'image',
+        randomArenaOnLoad: true,
+        dayBreaks: true,
+        nightRecap: true,
         genders: ['Male','Female'],
-        beasts: ['wolf pack','grizzly bear','mutant hound','swarm of tracker jackers','wild boar','venomous serpent'],
-        terms: { heading: 'The Hunger Games', title: 'Hunger Games', combatant: 'Tribute', combatants: 'Tributes' },
+        beasts: ['pack of wolf mutts','grizzly bear','mutt hound','swarm of tracker jackers','wild boar','venomous serpent'],
+        terms: {
+          heading: 'The Hunger Games', title: 'Hunger Games', combatant: 'Tribute', combatants: 'Tributes',
+          noVictors: 'The Village stands empty. Its first house goes to the next victor.'
+        },
+        toggleLabels: { idle: 'Begin the Games', running: 'Pause', paused: 'Resume', over: 'Reap again' },
+        victoryText(w, esc) {
+          return `<strong>${esc(w.name)}</strong> of District ${w.district} is the victor of the Games.`;
+        },
 
         createCombatant(base, ctx) {
-          const { rand, pick } = ctx;
-          base.age = rand(13, 18);
-          base.emoji = GENDER_EMOJI[base.gender] + pick(SKIN);
+          const { rand } = ctx;
+          base.age = rand(12, 18);
+          base.emoji = '';
           base.stats = {
             strength: rand(8, 14), agility: rand(8, 14),
             intelligence: rand(8, 14), stealth: rand(8, 14)
           };
+          const sum = base.stats.strength + base.stats.agility + base.stats.intelligence + base.stats.stealth;
+          base.score = Math.max(1, Math.min(12, Math.round((sum - 32) / 24 * 11) + 1));
+          base.odds = 3 + (12 - base.score) * 4;
           base.ac = 10 + Math.floor((base.stats.agility - 10) / 2);
           base.attackBonus = 2 + Math.floor((base.stats.strength - 10) / 2);
           base.dmgBonus = Math.max(0, Math.floor((base.stats.strength - 10) / 2));
           return base;
         },
 
-        cardMeta(c) {
-          return `District ${c.district} · ${c.gender === 'Male' ? '♂' : '♀'} · age ${c.age}`;
+        cardMeta(c) { return `District ${c.district} · ${c.gender === 'Male' ? 'M' : 'F'} · ${c.age}`; },
+
+        // the feed stays text-only; what kind of event it was shows in its tag
+        formatLog(text, type) {
+          let t = text.replace(EMOJI, '').replace(/\s{2,}/g, ' ').replace(/^\s+/, '')
+            .replace('</strong> (CRIT!).', '</strong>, a critical hit.').replace(/!(\s|$)/g, '.$1');
+          // sponsor gifts arrive by parachute rather than being found
+          if (type === 'treasure') t = t.replace(/^(.+?) discovers (.+)\.$/, 'A silver parachute brings $2 to $1.');
+          return t;
+        },
+        logStamp(day, hour) { return pad(hour) + ':00'; },
+
+        victorItem(name, i, n, esc) {
+          return `<div class="victor-item"><span class="v-num">${n - i}</span><span>${esc(name)}</span></div>`;
+        },
+
+        render(container, list, { esc, openDetail }) {
+          const frag = document.createDocumentFragment();
+          for (let d = 1; d <= 12; d++) {
+            const pair = list.filter(c => c.district === d);
+            const art = document.createElement('article');
+            art.className = 'district' + (pair.length && pair.every(c => !c.isAlive) ? ' out' : '');
+            art.innerHTML = `<header><span class="d-num">${pad(d)}</span><span class="d-name">District ${d}</span><span class="d-trade">${TRADES[d - 1]}</span></header>`;
+            pair.forEach(c => {
+              const b = document.createElement('button');
+              b.type = 'button';
+              b.dataset.id = c.id;
+              const hp = pct(c.health, c.maxHealth), hg = pct(c.hunger, c.maxHunger);
+              b.className = 'trib' + (c.isAlive ? '' : ' dead') + (c.isWinner ? ' winner' : '') + (c.isAlive && hp <= 35 ? ' low' : '');
+              const kit = c.weapon ? esc(c.weapon.name) : 'Unarmed';
+              const kills = c.kills ? ` · <b>${c.kills} kill${c.kills > 1 ? 's' : ''}</b>` : '';
+              b.innerHTML = c.isAlive ? `
+                <span class="t-row"><span class="t-name">${esc(c.name)}</span>${c.isWinner ? '<span class="t-badge">Victor</span>' : `<span class="t-score" title="Training score">${c.score}</span>`}</span>
+                <span class="t-meta">${c.gender === 'Male' ? 'M' : 'F'} · ${c.age} · ${kit}${kills}</span>
+                <span class="t-bars"><i class="hp" style="--v:${hp}%"></i><i class="hg" style="--v:${hg}%"></i></span>`
+              : `
+                <span class="t-row"><span class="t-name">${esc(c.name)}</span><span class="t-place">${ordinal(c.placement)}</span></span>
+                <span class="t-meta">Fell on day ${c.fellDay}${c.killer ? ` · ${esc(c.killer)}` : ''}</span>
+                <span class="t-bars"></span>`;
+              b.setAttribute('aria-label', `${c.name}, District ${d}, ${c.isAlive ? (c.isWinner ? 'victor' : `health ${hp} percent`) : `fell ${ordinal(c.placement)}`}`);
+              b.addEventListener('click', () => openDetail(c));
+              art.appendChild(b);
+            });
+            frag.appendChild(art);
+          }
+          container.replaceChildren(frag);
         },
 
         detailHTML(c, { esc, statusList }) {
-          const w = c.weapon ? `${c.weapon.emoji} ${esc(c.weapon.name)} (${c.weapon.damage})` : '✊ Unarmed';
+          document.getElementById('detail-eyebrow').textContent = `District ${c.district} · ${TRADES[c.district - 1]}`;
+          const w = c.weapon ? `${esc(c.weapon.name)} <span class="muted">${c.weapon.damage}</span>` : 'Unarmed';
+          const state = c.isAlive ? (c.isWinner ? 'Victor' : 'In the arena') : `Fell ${ordinal(c.placement)} on day ${c.fellDay}`;
+          const row = (k, v) => `<div class="row"><span class="k">${k}</span><span>${v}</span></div>`;
           return `
+            <div class="dossier-top">
+              <div><span class="lbl">Training score</span><b class="score">${c.score}</b></div>
+              <div><span class="lbl">Odds</span><b class="odds">${c.odds} <small>to 1</small></b></div>
+              <div><span class="lbl">Status</span><b class="${c.isAlive ? '' : 'fell'}">${state}</b></div>
+            </div>
             <div class="stat-group"><h3>Vitals</h3>
-              <div class="row"><span class="k">Health</span><span>${c.health}/${c.maxHealth}</span></div>
-              <div class="row"><span class="k">Hunger</span><span>${c.hunger}/${c.maxHunger}</span></div>
-              <div class="row"><span class="k">Armor Class</span><span>${c.ac}</span></div>
-              <div class="row"><span class="k">Attack Bonus</span><span>+${c.attackBonus}</span></div>
+              ${row('Health', `<span class="${c.isAlive && pct(c.health, c.maxHealth) <= 35 ? 'low' : ''}">${c.health} / ${c.maxHealth}</span>`)}
+              ${row('Hunger', `${c.hunger} / ${c.maxHunger}`)}
+              ${row('Armour class', c.ac)}
+              ${row('Attack bonus', '+' + c.attackBonus)}
             </div>
-            <div class="stat-group"><h3>Combat</h3>
-              <div class="row"><span class="k">Weapon</span><span>${w}</span></div>
-              <div class="row"><span class="k">Kills</span><span>${c.kills}</span></div>
-              <div class="row"><span class="k">Status</span><span>${c.isAlive ? (c.isWinner ? '👑 Victor' : 'Alive') : '💀 Eliminated #' + (c.placement || '')}</span></div>
-              <div class="row"><span class="k">Allies</span><span>${c.alliances.length}</span></div>
+            <div class="stat-group"><h3>In the arena</h3>
+              ${row('Weapon', w)}
+              ${row('Kills', c.kills)}
+              ${row('Allies', c.alliances.length)}
+              ${c.killer ? row('Killed by', esc(c.killer)) : row('Age', c.age)}
             </div>
-            <div class="stat-group"><h3>Profile</h3>
-              <div class="row"><span class="k">District</span><span>${c.district}</span></div>
-              <div class="row"><span class="k">Gender</span><span>${esc(c.gender)}</span></div>
-              <div class="row"><span class="k">Age</span><span>${c.age}</span></div>
+            <div class="stat-group"><h3>Training</h3>
+              ${row('Strength', c.stats.strength)}
+              ${row('Agility', c.stats.agility)}
+              ${row('Wits', c.stats.intelligence)}
+              ${row('Stealth', c.stats.stealth)}
             </div>
-            <div class="stat-group"><h3>Attributes</h3>
-              <div class="row"><span class="k">Strength</span><span>${c.stats.strength}</span></div>
-              <div class="row"><span class="k">Agility</span><span>${c.stats.agility}</span></div>
-              <div class="row"><span class="k">Intelligence</span><span>${c.stats.intelligence}</span></div>
-              <div class="row"><span class="k">Stealth</span><span>${c.stats.stealth}</span></div>
-            </div>
-            <div class="stat-group" style="grid-column:1/-1"><h3>Active Effects</h3>
+            <div class="stat-group"><h3>Effects</h3>
               <div class="row"><span>${statusList(c)}</span></div>
             </div>`;
         }
       };
 
-      HungerSim.create(mode).init();
+      const sim = HungerSim.create(mode);
+      sim.init();
+
+      /* ---- page chrome the engine doesn't own: speed segments, live label, pips, victor slate ---- */
+      const range = document.getElementById('event-frequency');
+      const seg = document.getElementById('speed-seg');
+      const paintSeg = () => seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.f === String(range.value)));
+      seg.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        range.value = b.dataset.f;
+        range.dispatchEvent(new Event('input', { bubbles: true }));
+        paintSeg();
+      });
+      document.getElementById('reset-all').addEventListener('click', paintSeg);
+      paintSeg();
+
+      const pips = document.getElementById('pips');
+      pips.innerHTML = '<i></i>'.repeat(24);
+      const LIVE = { idle: 'Reaping', running: 'Live', paused: 'Paused', over: 'Final' };
+      const NOTE = { idle: 'Waiting for the gong', running: 'Live from the arena', paused: 'Feed paused', over: 'The Games are over' };
+      const live = document.getElementById('live-label'), note = document.getElementById('feed-note');
+      const syncState = () => {
+        const s = document.body.dataset.state || 'idle';
+        live.textContent = LIVE[s]; note.textContent = NOTE[s];
+        const w = s === 'over' && sim.engineApi.combatants.find(c => c.isWinner);
+        if (w) {
+          document.getElementById('victor-name').textContent = w.name;
+          document.getElementById('victor-line').textContent =
+            `District ${w.district} · ${TRADES[w.district - 1]} · ${w.kills} kill${w.kills === 1 ? '' : 's'} · ${document.getElementById('arena-name').textContent}, day ${document.getElementById('day').textContent}`;
+        }
+        document.body.classList.toggle('has-victor', !!w);
+      };
+      new MutationObserver(syncState).observe(document.body, { attributes: true, attributeFilter: ['data-state'] });
+      syncState();
+      document.addEventListener('sim:update', e => {
+        const { alive, total } = e.detail;
+        pips.querySelectorAll('i').forEach((p, i) => p.classList.toggle('gone', i >= alive));
+        pips.title = `${total - alive} fallen`;
+      });
+      document.dispatchEvent(new CustomEvent('sim:update', { detail: { alive: 24, total: 24 } }));
     });
   </script>
 </body>
