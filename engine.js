@@ -44,6 +44,8 @@ window.HungerSim = (function () {
     let weather = 'Clear';
     let currentArena = null;
     let freqSyncing = false;
+    let fallenSinceRecap = [];
+    const pendingFx = new Map();
 
     let settings = loadSettings();
 
@@ -58,7 +60,10 @@ window.HungerSim = (function () {
       freq: $('event-frequency'), freqLabel: $('event-frequency-label'),
       freqSelect: $('event-frequency-setting'),
       startBtn: $('start-button'), pauseBtn: $('pause-button'), resumeBtn: $('resume-button'),
-      restartBtn: $('restart-button')
+      restartBtn: $('restart-button'),
+      // optional: one button that starts, pauses and resumes; a backdrop layer; arena blurb
+      toggleBtn: $('toggle-button'),
+      arenaBg: $('arena-bg'), arenaDesc: $('arena-desc')
     };
 
     /* ---------- settings ---------- */
@@ -82,7 +87,8 @@ window.HungerSim = (function () {
       if (!el.log) return;
       const d = document.createElement('div');
       d.className = 'log-entry ' + type;
-      d.innerHTML = `<span class="log-day">D${day}</span> ${text}`;
+      const stamp = mode.logStamp ? mode.logStamp(day, hour) : `D${day}`;
+      d.innerHTML = `<span class="log-day">${stamp}</span> <span class="log-text">${mode.formatLog ? mode.formatLog(text, type) : text}</span>`;
       el.log.prepend(d);
       while (el.log.children.length > 60) el.log.removeChild(el.log.lastChild);
     }
@@ -95,8 +101,8 @@ window.HungerSim = (function () {
       return pool.length ? pick(pool) : null;
     }
 
-    function uniqueName(usedFirst, usedFull) {
-      const first = D.firstNames, last = D.lastNames;
+    function uniqueName(pool, usedFull) {
+      const first = pool && pool.length ? pool : D.firstNames, last = D.lastNames;
       for (let i = 0; i < 200; i++) {
         const f = pick(first), l = pick(last), full = `${f} ${l}`;
         if (!usedFull.has(full)) {
@@ -118,7 +124,7 @@ window.HungerSim = (function () {
       for (let district = 1; district <= 12; district++) {
         for (let g = 0; g < 2; g++) {
           id++;
-          const name = uniqueName(null, usedFull);
+          const name = uniqueName(D.firstNamesByGender && D.firstNamesByGender[genders[g]], usedFull);
           const base = {
             id, name: name.full, district,
             gender: genders[g],
@@ -171,6 +177,9 @@ window.HungerSim = (function () {
       victim.isAlive = false;
       victim.health = 0;
       victim.placement = placement--;
+      victim.fellDay = day;
+      victim.killer = killer && killer !== victim ? killer.name : null;
+      fallenSinceRecap.push(victim);
       // break this victim out of everyone's alliances
       combatants.forEach(c => { c.alliances = c.alliances.filter(x => x !== victim.id); });
       victim.alliances = [];
@@ -190,7 +199,7 @@ window.HungerSim = (function () {
           w.isWinner = true;
           w.placement = 1;
           addVictor(w.name);
-          log(`👑 <strong>${esc(w.name)}</strong> is the victor! ${esc(mode.terms.title)} over.`, 'victory');
+          log(mode.victoryText ? mode.victoryText(w, esc) : `👑 <strong>${esc(w.name)}</strong> is the victor! ${esc(mode.terms.title)} over.`, 'victory');
         } else {
           log('Everyone has fallen. There is no victor.', 'gameover');
         }
@@ -383,12 +392,23 @@ window.HungerSim = (function () {
     function tick() {
       if (gameOver) return;
       // advance clock
-      hour++; if (hour > 23) { hour = 0; day++; }
+      hour++; if (hour > 23) { hour = 0; day++; if (mode.dayBreaks) log(`Day ${day} begins`, 'dayline'); }
+      if (mode.nightRecap && hour === 21) nightRecap();
       // run one event (retry a couple of times if it no-ops)
       for (let i = 0; i < 4; i++) { if (chooseEvent()() !== false) break; }
       upkeep();
       if (aliveCount() <= 5) breakRemainingAlliances();
       render(); updateClock(); updateScoreboard();
+    }
+
+    // nightfall: the anthem plays and the sky shows everyone who fell since the last one
+    function nightRecap() {
+      const fallen = fallenSinceRecap;
+      fallenSinceRecap = [];
+      const names = fallen.map(c => `${esc(c.name)} <span class="muted">D${c.district}</span>`);
+      log(fallen.length
+        ? `The anthem plays. The sky shows the fallen: ${names.join(' · ')}.`
+        : 'The anthem plays. No faces in the sky tonight.', 'recap');
     }
 
     function breakRemainingAlliances() {
@@ -398,16 +418,32 @@ window.HungerSim = (function () {
     }
 
     /* ============================ RENDERING ============================ */
+    // a tick re-renders the cards after its event, so remember each flash and
+    // re-apply it to the fresh card instead of losing it with the old one
     function pulse(id, cls) {
+      pendingFx.set(id, cls === 'heal' ? 'fx-heal' : 'fx-damage');
+      flash(id, pendingFx.get(id));
+    }
+    function flash(id, fx) {
       const card = el.container && el.container.querySelector(`[data-id="${id}"]`);
       if (!card) return;
       card.classList.remove('fx-damage', 'fx-heal');
       void card.offsetWidth;
-      card.classList.add(cls === 'heal' ? 'fx-heal' : 'fx-damage');
+      card.classList.add(fx);
     }
 
     function render() {
       if (!el.container) return;
+      if (mode.render) {
+        mode.render(el.container, combatants, { esc, openDetail });
+      } else {
+        renderCards();
+      }
+      pendingFx.forEach((fx, id) => flash(id, fx));
+      pendingFx.clear();
+    }
+
+    function renderCards() {
       const frag = document.createDocumentFragment();
       combatants.forEach(c => {
         const card = document.createElement('div');
@@ -443,7 +479,8 @@ window.HungerSim = (function () {
 
     function updateScoreboard() {
       if (el.countLeft) el.countLeft.textContent = aliveCount();
-      const top = combatants.slice().sort((a, b) => b.kills - a.kills)[0];
+      // ties go to whoever is still standing, so the board never crowns a dead tribute over the victor
+      const top = combatants.slice().sort((a, b) => (b.kills - a.kills) || (b.isAlive - a.isAlive))[0];
       if (el.mostKills) el.mostKills.textContent = top ? top.kills : 0;
       if (el.mostKillsName) el.mostKillsName.textContent = top && top.kills ? top.name : '—';
       if (el.fanList) {
@@ -451,6 +488,9 @@ window.HungerSim = (function () {
         el.fanList.innerHTML = fans.map((f, i) =>
           `<span class="fan fan-${i + 1}">${esc(f.name)}</span>`).join('');
       }
+      document.dispatchEvent(new CustomEvent('sim:update', {
+        detail: { alive: aliveCount(), total: combatants.length, day, hour, weather }
+      }));
     }
 
     /* ---------- detail modal ---------- */
@@ -467,24 +507,28 @@ window.HungerSim = (function () {
     }
 
     /* ============================ ARENAS ============================ */
-    function setArena(arena) {
+    function setArena(arena, quiet) {
       currentArena = arena;
       const body = document.body;
+      const backdrop = el.arenaBg || body;
       body.className = body.className.replace(/\barena-[\w-]+\b/g, '').trim();
       if (!arena) {
-        body.style.backgroundImage = '';
+        backdrop.style.backgroundImage = '';
         if (el.arenaName) el.arenaName.textContent = '—';
+        if (el.arenaDesc) el.arenaDesc.textContent = '';
         return;
       }
       if (mode.arenaMode === 'image') {
         const bg = pick(arena.backgrounds);
-        body.style.backgroundImage = `url('./images/${bg}')`;
+        backdrop.style.backgroundImage = `url('./images/${bg}')`;
       } else {
-        body.style.backgroundImage = '';
+        backdrop.style.backgroundImage = '';
       }
       body.classList.add('arena-' + arena.slug);
       if (el.arenaName) el.arenaName.textContent = arena.name;
-      log(`📍 Arena set to <strong>${esc(arena.name)}</strong>.`, 'natural');
+      if (el.arenaDesc) el.arenaDesc.textContent = arena.description || '';
+      document.querySelectorAll('.arena-card').forEach(b => b.classList.toggle('current', b.dataset.slug === arena.slug));
+      if (!quiet) log(`📍 Arena set to <strong>${esc(arena.name)}</strong>.`, 'natural');
     }
 
     function buildArenaModal() {
@@ -493,7 +537,8 @@ window.HungerSim = (function () {
       list.innerHTML = '';
       D.arenas.forEach(arena => {
         const b = document.createElement('button');
-        b.className = 'arena-card';
+        b.className = 'arena-card' + (currentArena === arena ? ' current' : '');
+        b.dataset.slug = arena.slug;
         b.title = arena.description;
         if (mode.arenaMode === 'image') {
           b.innerHTML = `<img src="./images/${arena.backgrounds[0]}" alt="${esc(arena.name)}" loading="lazy"><span>${esc(arena.name)}</span>`;
@@ -530,8 +575,8 @@ window.HungerSim = (function () {
       const list = $('victors-list'); if (!list) return;
       const v = getVictors();
       list.innerHTML = v.length
-        ? v.map((n, i) => `<div class="victor-item">👑 ${esc(n)}</div>`).join('')
-        : '<p class="muted">No victors yet. Run a simulation!</p>';
+        ? v.map((n, i) => mode.victorItem ? mode.victorItem(n, i, v.length, esc) : `<div class="victor-item">👑 ${esc(n)}</div>`).join('')
+        : `<p class="muted">${mode.terms.noVictors || 'No victors yet. Run a simulation!'}</p>`;
     }
     function renderAlliances() {
       const list = $('alliances-list'); if (!list) return;
@@ -552,6 +597,20 @@ window.HungerSim = (function () {
       if (stateName === 'running') { set(el.startBtn, 0); set(el.pauseBtn, 1); set(el.resumeBtn, 0); set(el.restartBtn, 1); }
       if (stateName === 'paused') { set(el.startBtn, 0); set(el.pauseBtn, 0); set(el.resumeBtn, 1); set(el.restartBtn, 1); }
       if (stateName === 'over') { set(el.startBtn, 0); set(el.pauseBtn, 0); set(el.resumeBtn, 0); set(el.restartBtn, 1); }
+      document.body.dataset.state = stateName;
+      if (el.toggleBtn) {
+        const labels = Object.assign({ idle: 'Start', running: 'Pause', paused: 'Resume', over: 'New game' }, mode.toggleLabels);
+        const label = el.toggleBtn.querySelector('.toggle-label') || el.toggleBtn;
+        label.textContent = labels[stateName];
+        el.toggleBtn.dataset.state = stateName;
+      }
+    }
+    function toggle() {
+      const s = el.toggleBtn && el.toggleBtn.dataset.state;
+      if (s === 'running') pause();
+      else if (s === 'paused') resume();
+      else if (s === 'over') restart();
+      else start();
     }
 
     function startLoop() { stopLoop(); timer = setInterval(tick, INTERVALS[settings.freq]); }
@@ -588,6 +647,7 @@ window.HungerSim = (function () {
       if (el.pauseBtn) el.pauseBtn.addEventListener('click', pause);
       if (el.resumeBtn) el.resumeBtn.addEventListener('click', resume);
       if (el.restartBtn) el.restartBtn.addEventListener('click', restart);
+      if (el.toggleBtn) el.toggleBtn.addEventListener('click', toggle);
 
       const rngBtn = $('random-arena-button');
       if (rngBtn) rngBtn.addEventListener('click', () => setArena(pick(D.arenas)));
@@ -644,6 +704,7 @@ window.HungerSim = (function () {
       bindControls();
       wireModals();
       buildArenaModal();
+      if (mode.randomArenaOnLoad) setArena(pick(D.arenas), true);
       generate(); render(); updateClock(); updateScoreboard();
       setButtons('idle');
     }
